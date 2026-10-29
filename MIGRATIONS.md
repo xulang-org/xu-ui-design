@@ -1,5 +1,11 @@
 # 资源接入与迁移
 
+## 0.1.1-dev.1 → 0.1.1-dev.2
+
+新增 icon-sm／md／lg／xl、brand-pressed 与 control-pressed Token，既有名称保留。按钮的图标颜色跟随文字，sm／md／lg 对应 16／20／24 px；空状态插画样式仅作用于直属插画。按钮按边框盒计量，导出的组件样式独立使用时也遵守 32／40／48 px 最小高度。请将 tokens.css 与 components.css 一起更新，避免缺少新增变量。
+
+select 可使用 `xu-select-wrap` 与装饰性的 chevron-down SVG，取得跨浏览器一致的高度、内边距和箭头；原生交互保持。完整结构见 `standards/07-forms.md`。既有未包装的 select 继续保留系统外观。
+
 ## 0.1.0 → 0.1.1-dev.1
 
 现有 Token 名称、CSS 类名和 48 个图标名称保留；无需改名迁移。新增图标是可选资源。组件实验室中的菜单、页签、表格、树和分栏提供独立行为契约，不自动替换产品控件。

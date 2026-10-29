@@ -12,10 +12,16 @@
 .contract-demo { min-width: 0; }
 .contract-demo > .xu-help { margin-top: 24px; }
 .contract-demo .field-stack > button { justify-self: start; }
+.button-specimen { display: grid; gap: var(--xu-space-6); }
+.button-size-row { display: grid; grid-template-columns: 88px minmax(0,1fr); align-items: center; gap: var(--xu-space-6); }
+.button-size-label { color: var(--xu-text); font-size: var(--xu-text-sm); font-weight: 600; }
+.button-size-label small { display: block; margin-top: var(--xu-space-1); color: var(--xu-muted); font: 400 var(--xu-text-xs)/1.5 var(--xu-font-mono); }
+.button-state-preview { margin-top: var(--xu-space-8); padding-top: var(--xu-space-6); border-top: 1px solid var(--xu-border); }
+.button-state-preview > p { margin-bottom: var(--xu-space-3); }
 .demo-result { margin: 24px 0 0; color: var(--xu-muted); font-size: .875rem; min-height: 1.65em; overflow-wrap: anywhere; }
 .xu-menu { position: fixed; min-width: 216px; padding: 8px; border: 1px solid var(--xu-control-border); border-radius: var(--xu-radius-md); background: var(--xu-surface); color: var(--xu-text); z-index: var(--xu-z-menu); }
 .xu-menu [role="menuitem"] { display: block; width: 100%; padding: 12px; border: none; border-radius: 4px; color: inherit; background: transparent; text-align: left; cursor: pointer; font-size: .875rem; min-height: 44px; }
-.xu-menu [role="menuitem"]:hover, .xu-menu [role="menuitem"]:focus { background: var(--xu-elevated); }
+.xu-menu [role="menuitem"]:not(:disabled):is(:hover,:focus) { background: var(--xu-elevated); }
 .xu-menu [role="menuitem"]:disabled { opacity: .5; cursor: not-allowed; }
 .xu-tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--xu-border); }
 .xu-tabs [role="tab"] { border: 0; border-bottom: 2px solid transparent; color: var(--xu-muted); background: transparent; min-height: 44px; padding: 12px 16px; font-size: .875rem; cursor: pointer; }
@@ -28,7 +34,10 @@
 .xu-tree, .xu-tree [role="group"] { list-style: none; padding: 0; margin: 0; }
 .xu-tree [role="group"] { padding-left: 24px; }
 .xu-tree [role="treeitem"] { border-radius: 4px; min-width: 0; outline-offset: 1px; }
-.tree-label { display: flex; align-items: center; gap: 8px; padding: 0 8px; cursor: pointer; font-size: .875rem; min-height: 44px; overflow-wrap: anywhere; }
+.tree-label { display: grid; grid-template-columns: var(--xu-target-min) var(--xu-icon-md) minmax(0,1fr); align-items: center; gap: var(--xu-space-2); padding: 0 var(--xu-space-2); cursor: pointer; font-size: .875rem; min-height: var(--xu-target-min); overflow-wrap: anywhere; }
+.tree-label > .xu-icon { grid-column: 2; }
+.xu-tree [role="treeitem"]:focus-visible { outline: none; }
+.xu-tree [role="treeitem"]:focus-visible > .tree-label { outline: 2px solid var(--xu-focus); outline-offset: -2px; border-radius: var(--xu-radius-sm); }
 .xu-tree [role="treeitem"][aria-selected="true"] > .tree-label { background: var(--xu-brand-soft); color: var(--xu-brand); border-radius: 4px; }
 .xu-tree [aria-expanded="true"] > .tree-label > [data-tree-toggle] { transform: rotate(0); }
 .xu-tree [aria-expanded="false"] > .tree-label > [data-tree-toggle] { transform: rotate(-90deg); }
@@ -38,6 +47,8 @@
 .xu-split-panels > section p, .xu-split-panels > section code { font-size: .875rem; overflow-wrap: anywhere; }
 .xu-separator { cursor: col-resize; background: var(--xu-elevated); touch-action: none; position: relative; }
 .xu-separator::before { content: ''; position: absolute; top: calc(50% - 16px); left: 21px; height: 32px; width: 2px; background: var(--xu-control-border); }
+.xu-separator:hover::before, .xu-separator:active::before { background: var(--xu-brand); }
+.xu-separator:focus-visible::before { background: var(--xu-focus); }
 .xu-separator:focus-visible { outline-offset: -2px; }
 @media (max-width:1199px) { .component-detail-layout { grid-template-columns: 1fr; } .component-related { padding: 20px 0 0; border-left: 0; border-top: 1px solid var(--xu-border); } }
-@media (max-width:599px) { .component-index { grid-template-columns: 1fr; } .xu-tabs [role="tab"] { padding-inline: 12px; } .xu-split-panels > section { padding: 12px; } }
+@media (max-width:599px) { .component-index { grid-template-columns: 1fr; } .button-size-row { grid-template-columns: 1fr; gap: var(--xu-space-2); } .button-size-label { display: flex; justify-content: space-between; align-items: baseline; } .button-size-label small { margin: 0; } .xu-tabs [role="tab"] { padding-inline: 12px; } .xu-split-panels > section { padding: 12px; } }

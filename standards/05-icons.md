@@ -16,6 +16,10 @@
 
 线宽随 viewBox 等比缩放：16 px 为 1 px，20 px 为 1.25 px，24 px 为 1.5 px，32 px 为 2 px。不设置 non-scaling-stroke；需特殊像素校正时另增经审查的尺寸变体。
 
+## 与控件组合
+
+按钮图标与文字共用 currentColor：不能单独设成 muted。sm／md／lg 按钮使用 16／20／24 px 图标，文本与图标相距 8 px，图标无外边距并按盒中心对齐。对应尺寸来自 icon-sm／md／lg Token，32 px 使用 icon-xl。空状态、警告或状态标记的装饰图标使用直属插画选择器，禁止用容器后代规则放大嵌套按钮的图标。
+
 ## 命名和分类
 
 文件使用小写 kebab-case，按形状命名，如 arrow-right、alert-triangle。中文 label 服务检索；具体业务含义由所在按钮的文字或可访问名称提供。禁止用同一图形暗示互相冲突的操作。
