@@ -6,7 +6,7 @@ for(const theme of ['dark','light']) {
     await page.setViewportSize({width:1440,height:900});await page.goto('/#/icons');
     await expect(page.getByRole('heading',{name:'ICON 图标库',exact:true})).toBeVisible();
     await page.mouse.move(0,0);
-    await expect(page).toHaveScreenshot(`icons-desktop-${theme}.png`);
+    await expect(page).toHaveScreenshot(`icons-desktop-${theme}.png`,{fullPage:true});
   });
   test(`@visual tabs mobile ${theme}`,async({page,browserName})=>{
     test.skip(browserName!=='chromium');

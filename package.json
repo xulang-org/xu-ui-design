@@ -14,7 +14,7 @@
     "dev": "node scripts/serve.mjs",
     "preview": "node scripts/serve.mjs",
     "test:browser": "playwright test --grep-invert @visual",
-    "test:visual": "playwright test --project=chromium --grep @visual",
+    "test:visual": "playwright test --config=playwright.visual.config.mjs",
     "package": "node scripts/build.mjs"
   },
   "devDependencies": {

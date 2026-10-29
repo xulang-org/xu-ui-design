@@ -59,6 +59,8 @@ npm run build
 
 接入与回退见 [MIGRATIONS.md](MIGRATIONS.md)，版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
+实际消费者见 [原生 Writing Desk 接入 PR](https://github.com/xulang-org/examples/pull/21)：SDK 0.10.11 下使用同一份生成资源，亮暗切换保留编辑内容。该接入仍待 dev 审查合并。
+
 ```html
 <link rel="stylesheet" href="./assets/tokens.css">
 <link rel="stylesheet" href="./assets/components.css">

@@ -43,6 +43,8 @@ jobs:
           path: |
             .local/browser-report/
             .local/browser-results/
+            .local/visual-report/
+            .local/visual-results/
             tests/browser/baselines/
           include-hidden-files: true
           if-no-files-found: warn
