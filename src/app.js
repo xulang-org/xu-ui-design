@@ -15,6 +15,11 @@ let pageCleanup;
 
 // The English client is compiled from this controller and the shared copy catalog.
 $('.skip-link').textContent = '跳到正文';
+$('.skip-link').addEventListener('click',event => {
+  event.preventDefault();
+  main.focus({preventScroll:true});
+  main.scrollIntoView({block:'start'});
+});
 $('.wordmark').setAttribute('aria-label','XUUI 设计系统首页');
 $('.wordmark-note').textContent = '设计标准与资源';
 $('#sidebar').setAttribute('aria-label','设计系统导航');
