@@ -30,3 +30,7 @@ Quick feedback takes 120 ms and general transitions take 200 ms, using ease-out.
 The first release does not claim full screen reader certification. Maintainers complete manual acceptance for the system combinations the product actually supports.
 
 Reference: [WCAG 2.2 Quick Reference](https://www.w3.org/WAI/WCAG22/quickref/).
+
+## Current acceptance status
+
+Actual screen-reader speech acceptance is deferred at the user’s request and remains unverified. Automated browser and axe results do not change that status. Native verification currently covers macOS arm64 editing and themes; other platforms and native screen-reader support remain unverified.

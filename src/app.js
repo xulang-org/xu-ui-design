@@ -18,6 +18,7 @@ $('.skip-link').textContent = '跳到正文';
 $('.wordmark').setAttribute('aria-label','XUUI 设计系统首页');
 $('.wordmark-note').textContent = '设计标准与资源';
 $('#sidebar').setAttribute('aria-label','设计系统导航');
+$('#menu-toggle').setAttribute('aria-label','展开导航');
 $('a[href="https://github.com/xulang-org/xu-ui-design"]').setAttribute('aria-label','查看 GitHub 仓库');
 $('meta[name="description"]').content = 'XUUI 设计系统：设计标准、语义 Token、SVG 图标与可操作的组件和页面参考。';
 
@@ -320,7 +321,7 @@ function render(focus = false) {
   updateThemeButton();
   bindPage();
   const title = $('h1', main);
-  document.title = `${title?.textContent || '设计标准'} · XUUI`;
+  document.title = activeRoute === 'overview' ? 'XUUI · 界面设计标准' : `${title?.textContent || '设计标准'} · XUUI`;
   if (section && /^section-\d+$/.test(section)) {
     const target = document.getElementById(section);
     target?.focus({ preventScroll:true }); target?.scrollIntoView({ block:'start' });

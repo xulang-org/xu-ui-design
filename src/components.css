@@ -58,5 +58,8 @@
 .xu-progress::-moz-progress-bar { background: var(--xu-brand); }
 .xu-spinner { animation: xu-spin 1s linear infinite; }
 @keyframes xu-spin { to { transform: rotate(360deg); } }
-@media (pointer: coarse), (max-width: 719px) { .xu-button, .xu-button[data-size], .xu-input, .xu-select { min-height: var(--xu-target-min); } }
+@media (pointer: coarse), (max-width: 719px) {
+  .xu-button, .xu-button[data-size], .xu-input, .xu-select { min-height: var(--xu-target-min); }
+  .xu-button[data-size="lg"] { min-height: max(var(--xu-control-lg),var(--xu-target-min)); }
+}
 @media (prefers-reduced-motion: reduce) { .xu-spinner { animation: none; } .xu-switch::after { transition: none; } }

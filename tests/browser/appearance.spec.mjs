@@ -27,11 +27,16 @@ for(const theme of ['dark','light']) {
 test('component exports honor outer dimensions without the showcase reset',async({page})=>{
   await page.goto('/');
   await page.setContent(`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><link rel="stylesheet" href="http://127.0.0.1:4174/assets/tokens.css"><link rel="stylesheet" href="http://127.0.0.1:4174/assets/components.css"></head><body>${['sm','md','lg'].map(size=>`<button type="button" class="xu-button primary" data-size="${size}"><svg class="xu-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>新建项目</button>`).join('')}</body></html>`);
-  for(const size of ['sm','md','lg']) {
+  for(const width of [390,1440]) for(const size of ['sm','md','lg']) {
+    await page.setViewportSize({width,height:900});
     const button=page.locator(`[data-size="${size}"]`);
     await expect(button).toHaveCSS('box-sizing','border-box');
-    const measured=await button.evaluate((element,size)=>({actual:element.getBoundingClientRect().height,
-      expected:parseFloat(getComputedStyle(element).getPropertyValue(`--xu-control-${size}`))}),size);
+    const measured=await button.evaluate((element,size)=>{
+      const style=getComputedStyle(element);
+      const base=parseFloat(style.getPropertyValue(`--xu-control-${size}`));
+      const target=parseFloat(style.getPropertyValue('--xu-target-min'));
+      return {actual:element.getBoundingClientRect().height,expected:innerWidth<720?Math.max(base,target):base};
+    },size);
     expect(measured.actual).toBe(measured.expected);
   }
 });

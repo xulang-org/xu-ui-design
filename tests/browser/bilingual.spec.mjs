@@ -30,6 +30,8 @@ test('browser language supplies the initial preference and unknown URL values ar
   await page.goto('/?lang=unsupported#/overview');
   await expect(page.locator('html')).toHaveAttribute('lang','en');
   await expect(page.getByRole('heading',{level:1})).toContainText('Interface design standards');
+  await expect(page).toHaveTitle('XUUI · Interface design standards');
+  await expect(page.locator('#menu-toggle')).toHaveAttribute('aria-label','Expand navigation');
 });
 
 test('language switching works when browser storage is unavailable',async({page})=>{

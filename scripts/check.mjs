@@ -58,9 +58,11 @@ assert.equal(docs.length, 12, 'Update documented standard inventory when changin
 assert.equal(new Set(docs.map((doc) => doc.id)).size, docs.length);
 for (const doc of docs) {
   assert.match(doc.id, /^\d{2}-[a-z-]+$/);
+  const outlines=[];
   for (const [locale,suffix] of [['en',''],['zh-CN','.zh-CN']]) {
     for (const key of ['title','group','summary']) assert.ok(doc[key][locale],`${doc.id}: missing ${locale} ${key}`);
     const source = await read(`standards/${doc.id}${suffix}.md`);
+    outlines.push((source.match(/^## /gm)||[]).length);
     assert.equal((source.match(/^# /gm) || []).length, 1, `One h1 required: ${doc.id} ${locale}`);
     if (locale === 'en') assert.ok(!/[\u3400-\u9fff]/u.test(source),`${doc.id}: untranslated English document`);
     for (const [,target] of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
@@ -68,6 +70,7 @@ for (const doc of docs) {
       assert.ok(docs.some((entry) => `${entry.id}${suffix}.md` === target), `Broken standard link: ${doc.id} -> ${target}`);
     }
   }
+  assert.equal(outlines[0],outlines[1],`${doc.id}: keep section deep links aligned across languages`);
 }
 for (const file of ['src/app.js','src/boot.js','scripts/localize.mjs','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs','scripts/package.mjs','scripts/check-hygiene.mjs','scripts/native-tokens.mjs','src/interactions.js','src/component-pages.js']) {
   const result = spawnSync(process.execPath, ['--check', new URL(file, root).pathname], { encoding:'utf8' });

@@ -27,7 +27,7 @@
   "试试“基础”“组件”，或清空关键词。": "Try Foundations or Components, or clear the search.",
   "这是一条演示通知，不会抢走键盘焦点。": "This demo notification does not move keyboard focus.",
   "从视觉基础、组件行为，到交付验收。": "Visual foundations, component behavior and delivery acceptance.",
-  "统一的视觉语言，具体到每一个细节。": "A shared visual language, defined down to the details.",
+  "统一的视觉语言，具体到每一个细节。": "A shared visual language, defined down to the details. ",
   "已完成创建交互演示，未写入远端。": " has completed the creation demo. Nothing was uploaded.",
   "已载入当前浏览器保存的示例设置。": "Loaded demo settings saved in this browser.",
   "结构、状态与键盘契约见下方规范。": "See the specification below for structure, states and keyboard behavior.",
