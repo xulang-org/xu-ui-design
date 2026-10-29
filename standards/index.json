@@ -1,0 +1,14 @@
+[
+  {"id":"01-principles","title":"设计原则","group":"开始","summary":"从品牌到交互的共同判断依据","demo":"overview"},
+  {"id":"02-color","title":"色彩与主题","group":"基础","summary":"语义色、双主题与对比度","demo":"foundations"},
+  {"id":"03-typography","title":"字体与排版","group":"基础","summary":"中英混排、字号与代码排版","demo":"foundations"},
+  {"id":"04-layout","title":"布局与间距","group":"基础","summary":"4 px 网格、密度和响应式规则","demo":"patterns"},
+  {"id":"05-icons","title":"ICON 图标","group":"基础","summary":"24 单位网格与 SVG 使用契约","demo":"icons"},
+  {"id":"06-actions","title":"操作与按钮","group":"组件","summary":"层级、交互状态与加载反馈","demo":"components"},
+  {"id":"07-forms","title":"表单与输入","group":"组件","summary":"标签、校验、选择和开关","demo":"components"},
+  {"id":"08-navigation","title":"导航与信息层级","group":"组件","summary":"当前位置、分组、页签与窄屏导航","demo":"components"},
+  {"id":"09-feedback","title":"反馈与浮层","group":"组件","summary":"状态、通知、确认与焦点管理","demo":"components"},
+  {"id":"10-patterns","title":"页面模式","group":"模式","summary":"设置页、数据列表与空状态","demo":"patterns"},
+  {"id":"11-accessibility","title":"可访问性与动效","group":"交付","summary":"键盘、语义、对比与减少动效","demo":"components"},
+  {"id":"12-delivery","title":"开发交付与治理","group":"交付","summary":"Token 接入、验收与版本管理","demo":"overview"}
+]

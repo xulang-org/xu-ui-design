@@ -1,0 +1,17 @@
+/dist/
+/node_modules/
+/.local/
+/docs/
+/notes/
+/reports/
+/tmp/
+/tests/
+/AGENTS.md
+/CLAUDE.md
+/REPOSITORIES.md
+/.impeccable.md
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
