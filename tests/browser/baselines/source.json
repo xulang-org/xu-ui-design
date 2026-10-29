@@ -1,15 +1,171 @@
 {
-  "sourceRevision": "8d79ae32b892ec603cf8c212cab3e3d46816dc7f",
-  "generationRun": "https://github.com/xulang-org/xu-ui-design/actions/runs/40902081648",
+  "sourceRevision": "420ecdbe3ebd4bebe4ce102e02aaa05b582c63c5",
+  "generationRun": "https://github.com/xulang-org/xu-ui-design/actions/runs/40943156667",
   "container": "mcr.microsoft.com/playwright:v1.64.1-noble",
   "browser": "Chromium (Playwright 1.64.1)",
-  "locale": "zh-CN",
+  "browserLocale": "zh-CN",
+  "contentLocales": [
+    "zh-CN",
+    "en"
+  ],
   "reducedMotion": "reduce",
-  "review": "Full desktop icon inventory in both themes; mobile tabs in both themes. Reviewed before committing candidates. Initial run fails intentionally because baselines were absent.",
+  "viewports": {
+    "desktop": [
+      1440,
+      900
+    ],
+    "mobileControls": [
+      390,
+      900
+    ],
+    "mobileTabs": [
+      390,
+      844
+    ]
+  },
+  "review": "Reviewed all 28 language/theme renders. Full icon inventory, mobile tabs, empty-state action icon color/centering, three button sizes, touch targets, and row-only tree focus. Four mobile button renders were reviewed again after retaining the 48 px large control. Other 24 renders are byte-identical to the first reviewed candidates from run 40942056043. Candidates were copied explicitly after review; no CI auto-update.",
   "sha256": {
-    "icons-desktop-dark.png": "dcd527368984f6b13b5c99c964eb156ccc00f7fb1d3635291cc4f96f8478b573",
-    "icons-desktop-light.png": "e2cb736ced68f53123c8094501a74ad1d032bb886db51d449994711abfca0a2f",
-    "tabs-mobile-dark.png": "14718a87660e5396edac95cea8ac1b03f51998316a27bbcc8daeeff08e63fcda",
-    "tabs-mobile-light.png": "05adc22eb28e6f98846c48d08d6c1622749c80443074bfb5ba4448a880dc9ba2"
+    "button-proportions-desktop-dark-en.png": "21422584c01a6f911e46be6c6ba0a20d98cedbe6407abde1f9ef3330f9ced3d3",
+    "button-proportions-desktop-dark.png": "c1ed4d22b4f8f21d369dec07698f5732ec929726594e5214129c65084b44534e",
+    "button-proportions-desktop-light-en.png": "1740237d48754fb28700255f7d44a01275e4369eca7091d91dfdc0b2e17611cc",
+    "button-proportions-desktop-light.png": "3c7ad625400056b71cfba918c0a1d697da8a457de3ca98844dae59e42664df80",
+    "button-proportions-mobile-dark-en.png": "f0e94484840741caa1ae7501dc3ee92ec04de61f296831a1637ab94b282c540e",
+    "button-proportions-mobile-dark.png": "75d00732a347b6ca1692a0a3cf55814279da8cf4ae472fdc36a2474ebc66cbec",
+    "button-proportions-mobile-light-en.png": "f4b90872a60134b1a391f698aaa2050839f271dcf639762b94e745a49f498b70",
+    "button-proportions-mobile-light.png": "52c8bc98b8c22bc3c62a0de4faa2ae8d2dca493a58fb5154d1bcfd545e692516",
+    "empty-state-desktop-dark-en.png": "49ee31359e68eced6311774a18f83dc94b71f73023311fa16f1f3e2e6fe5c9fc",
+    "empty-state-desktop-dark.png": "94b89d14565eaaf5334a83ef63799736f6aef63aec6bdc26b44744658b4a7b24",
+    "empty-state-desktop-light-en.png": "0a6c5c14da6acf63bc3f6c9ffe8672f99a932ac8e0712277011e1713fcfa6825",
+    "empty-state-desktop-light.png": "2e0a45dfadb103d7533c4cb85e7b88f984af8851e09fbb942edca986d33933c5",
+    "empty-state-mobile-dark-en.png": "0076a336ab602cf2f1e2cc376afd76e029dc086693bf1bf1c480ad4502cbaa86",
+    "empty-state-mobile-dark.png": "b05542ed04225b0c355be0547b2664acd1e946f13e25823048a26641f583afe5",
+    "empty-state-mobile-light-en.png": "f399d3e2b001291617215ec4d1e811a577c862cae539cbe375e4bbc31ce1efb9",
+    "empty-state-mobile-light.png": "90e0d70e6efc603fe83a9273163ba94efbff7692659661f8f1b8cd79a7914494",
+    "icons-desktop-dark-en.png": "8d150bd49a4e5c04b190c149cab7bfb7f99c83c2f866e4aec8c811773c4284f1",
+    "icons-desktop-dark.png": "21174a7c8cf63c4d1c2986706ae1621926a3c7666e916729c2cf82adbb7489a7",
+    "icons-desktop-light-en.png": "4fa2d186c192b84c2db4eca8968712cb8cfe54811cfdb08e11c1bb71c5f30d0b",
+    "icons-desktop-light.png": "a39f3b3bd33b4408168f0d7e8b074de4eab11874b37c76696ccd389188febd26",
+    "tabs-mobile-dark-en.png": "9349ed1eef1055c7370b1a5f232e47b1f3f46b5dcf423d1d266d28b7b9d5dc23",
+    "tabs-mobile-dark.png": "f587cc810885a0644b9c47747a26ba67eab5e5b21df5bd5e5b18e60fc6b9e93b",
+    "tabs-mobile-light-en.png": "99d47d73be0a818361021cacac0eeede221d297b9f6637d5e6d6a31fd48a213f",
+    "tabs-mobile-light.png": "039545a0b7487cb9f8c6d3fddc71d4202df03fc3caadf4a639ca2ea10fa6a822",
+    "tree-focus-dark-en.png": "dd22aaf12427c9e679ccba6eaf16999b5387d29e990e9f8ec67873d068d70c93",
+    "tree-focus-dark.png": "dd22aaf12427c9e679ccba6eaf16999b5387d29e990e9f8ec67873d068d70c93",
+    "tree-focus-light-en.png": "2025becab4f7dba0aee3293d1cb1cf3868d1597dc569b87dc262eb5f435d3692",
+    "tree-focus-light.png": "2025becab4f7dba0aee3293d1cb1cf3868d1597dc569b87dc262eb5f435d3692"
+  },
+  "imageDimensions": {
+    "button-proportions-desktop-dark-en.png": [
+      876,
+      436
+    ],
+    "button-proportions-desktop-dark.png": [
+      876,
+      436
+    ],
+    "button-proportions-desktop-light-en.png": [
+      876,
+      436
+    ],
+    "button-proportions-desktop-light.png": [
+      876,
+      436
+    ],
+    "button-proportions-mobile-dark-en.png": [
+      358,
+      730
+    ],
+    "button-proportions-mobile-dark.png": [
+      358,
+      591
+    ],
+    "button-proportions-mobile-light-en.png": [
+      358,
+      730
+    ],
+    "button-proportions-mobile-light.png": [
+      358,
+      591
+    ],
+    "empty-state-desktop-dark-en.png": [
+      1124,
+      297
+    ],
+    "empty-state-desktop-dark.png": [
+      1124,
+      274
+    ],
+    "empty-state-desktop-light-en.png": [
+      1124,
+      297
+    ],
+    "empty-state-desktop-light.png": [
+      1124,
+      274
+    ],
+    "empty-state-mobile-dark-en.png": [
+      358,
+      301
+    ],
+    "empty-state-mobile-dark.png": [
+      358,
+      301
+    ],
+    "empty-state-mobile-light-en.png": [
+      358,
+      301
+    ],
+    "empty-state-mobile-light.png": [
+      358,
+      301
+    ],
+    "icons-desktop-dark-en.png": [
+      1440,
+      2382
+    ],
+    "icons-desktop-dark.png": [
+      1440,
+      2382
+    ],
+    "icons-desktop-light-en.png": [
+      1440,
+      2382
+    ],
+    "icons-desktop-light.png": [
+      1440,
+      2382
+    ],
+    "tabs-mobile-dark-en.png": [
+      390,
+      844
+    ],
+    "tabs-mobile-dark.png": [
+      390,
+      844
+    ],
+    "tabs-mobile-light-en.png": [
+      390,
+      844
+    ],
+    "tabs-mobile-light.png": [
+      390,
+      844
+    ],
+    "tree-focus-dark-en.png": [
+      810,
+      177
+    ],
+    "tree-focus-dark.png": [
+      810,
+      177
+    ],
+    "tree-focus-light-en.png": [
+      810,
+      177
+    ],
+    "tree-focus-light.png": [
+      810,
+      177
+    ]
   }
 }
