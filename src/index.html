@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="XUUI 设计系统：设计标准、语义 Token、SVG 图标与可操作的组件和页面参考。">
+  <title>XUUI — 设计标准与效果展厅</title>
+  <link rel="icon" href="./assets/brand/xu-classic.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/tokens.css">
+  <link rel="stylesheet" href="./assets/components.css">
+  <link rel="stylesheet" href="./assets/site.css">
+  <script>
+    try { const saved = localStorage.getItem('xu-ui-theme'); if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved; } catch {}
+  </script>
+  <script type="module" src="./assets/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="topbar">
+    <a class="wordmark" href="#/overview" aria-label="XUUI 设计系统首页"><img src="./assets/brand/xu-classic.svg" alt="" width="42" height="42"><strong>XU<span>UI</span></strong><span class="wordmark-note">设计标准与资源</span></a>
+    <div class="top-actions"><span class="version">{{VERSION}}</span><button type="button" class="xu-icon-button" id="theme-toggle" aria-label="切换至亮色主题"></button><a class="xu-icon-button" href="https://github.com/xulang-org/xu-ui-design" aria-label="查看 GitHub 仓库"><svg class="xu-icon" aria-hidden="true"><use href="./assets/icons.svg#code"></use></svg></a><button type="button" class="xu-icon-button mobile-menu" id="menu-toggle" aria-label="展开导航" aria-expanded="false" aria-controls="sidebar"><svg class="xu-icon" aria-hidden="true"><use href="./assets/icons.svg#menu"></use></svg></button></div>
+  </header>
+  <div class="shell"><aside class="sidebar" id="sidebar" aria-label="设计系统导航"></aside><main id="main" tabindex="-1"><div class="loading"><p>正在载入设计标准…</p></div></main></div>
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="detail-dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div></dialog>
+  <noscript><p class="noscript">交互式展厅需要 JavaScript。可直接阅读 <a href="./standards/01-principles.md">设计原则源文档</a> 或访问 GitHub 仓库中的 standards 目录。</p></noscript>
+</body>
+</html>
