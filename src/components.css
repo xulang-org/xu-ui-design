@@ -25,7 +25,7 @@
 .xu-input[readonly] { background: var(--xu-elevated); }
 .xu-field { display: grid; gap: var(--xu-space-2); }
 .xu-field label, .xu-field legend { font-size: var(--xu-text-sm); font-weight: 600; }
-.xu-help { margin: 0; color: var(--xu-muted); font-size: var(--xu-text-xs); }
+.xu-help { margin: 0; color: var(--xu-muted); font-size: var(--xu-text-sm); }
 .xu-error { margin: 0; color: var(--xu-danger); font-size: var(--xu-text-sm); min-height: 1.5em; }
 .xu-check { display: flex; align-items: center; gap: var(--xu-space-2); min-height: var(--xu-target-min); cursor: pointer; font-size: var(--xu-text-sm); }
 .xu-check input { accent-color: var(--xu-brand); width: 18px; height: 18px; }

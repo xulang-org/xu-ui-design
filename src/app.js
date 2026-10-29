@@ -52,14 +52,22 @@ function closeMenu(restore = false) {
 }
 
 function navigation() {
-  const entries = [['overview','总览','grid'], ['standards','标准文档','file'], ['foundations','基础与 Token','palette'], ['components','组件实验室','layers'], ['icons','ICON 图标库','square'], ['patterns','页面模式','monitor']];
+  const entries = [['overview','总览','grid'], ['standards','设计标准','file'], ['foundations','基础与 Token','palette'], ['components','组件实验室','layers'], ['icons','ICON 图标库','square'], ['patterns','页面模式','monitor']];
   const current = (route) => activeRoute === route ? 'aria-current="page"' : '';
-  $('#sidebar').innerHTML = `<nav><div class="nav-label">EXPLORE / 探索</div>${entries.map(([id, title, name]) => `<a class="nav-link" href="#/${id}" ${current(id)}>${icon(name)}${title}</a>`).join('')}<div class="nav-label">STANDARDS / 设计标准</div>${data.docs.map((doc, i) => `<a class="nav-link" href="#/standards/${doc.id}" ${current(`standards/${doc.id}`)}><span class="nav-number">${String(i + 1).padStart(2, '0')}</span>${doc.title}</a>`).join('')}</nav><div class="sidebar-footer">规范与效果，同一份来源。<a href="./tokens/tokens.json" download>下载设计 Token ${icon('download')}</a></div>`;
+  const reading = activeRoute.startsWith('standards');
+  $('#sidebar').innerHTML = `<nav aria-label="主要导航">
+    <div class="nav-label">设计资源</div>
+    ${entries.map(([id, title, name]) => `<a class="nav-link" href="#/${id}" ${current(id)}>${icon(name)}${title}</a>`).join('')}
+    <details class="nav-standards" ${reading ? 'open' : ''}>
+      <summary>规范目录 <span>${data.docs.length}</span></summary>
+      ${data.docs.map((doc, i) => `<a class="nav-link sub-link" href="#/standards/${doc.id}" ${current(`standards/${doc.id}`)}><span class="nav-number">${String(i + 1).padStart(2, '0')}</span>${doc.title}</a>`).join('')}
+    </details>
+  </nav><div class="sidebar-footer"><span class="sidebar-status">浏览器参考实现</span><p>规范与效果，同一份来源。</p><a href="./tokens/tokens.json" download>${icon('download')} 下载设计 Token</a></div>`;
 }
 
 const breadcrumbs = (title) => `<div class="breadcrumbs"><a href="#/overview">XUUI</a><span>/</span><span>${esc(title)}</span></div>`;
-const heading = (en, title, text) => `<div class="page-heading"><div class="eyebrow">${en}</div><h1 tabindex="-1">${title}</h1><p class="lead">${text}</p></div>`;
-const footer = () => `<footer class="footnote"><span>XUUI / ${data.version} · 设计标准与浏览器参考实现</span><span>PRECISE BY DESIGN.</span></footer>`;
+const heading = (en, title, text) => `<div class="page-heading"><h1 tabindex="-1">${title}</h1><p class="lead">${text}</p></div>`;
+const footer = () => `<footer class="footnote"><span>XUUI / ${data.version} · 设计标准与浏览器参考实现</span><span>XUUI DESIGN SYSTEM</span></footer>`;
 const demoTitle = (title, standard) => `<div class="demo-title"><h2>${title}</h2><a href="#/standards/${standard}">阅读对应标准 ${icon('arrow-right')}</a></div>`;
 const code = (content) => `<details><summary>查看使用代码</summary><pre tabindex="0"><code>${esc(content)}</code></pre></details>`;
 
@@ -69,52 +77,111 @@ function swatches() {
 }
 
 function overview() {
-  return `${breadcrumbs('设计系统')}<section class="hero"><div><div class="eyebrow">XUUI / DESIGN LANGUAGE</div><h1 tabindex="-1"><span>让界面有序，</span><span class="brand">让体验一致。</span></h1><p>从一枚图标，到每一个交互细节。<br>为 XU 生态建立可复用、可验证、可持续的设计语言。</p><div class="hero-actions">${link(`开始阅读 ${icon('arrow-right')}`, 'standards', 'primary')}${link('探索组件', 'components')}</div><div class="hero-notes"><span><b>${data.docs.length}</b> 篇设计标准</span><span><b>${data.icons.length}</b> 枚 SVG 图标</span><span><b>02</b> 套主题</span></div></div><div><div class="workbench"><div class="window-bar"><span class="window-dots"><i></i><i></i><i></i></span><span class="mono">workspace / appearance</span><span>01</span></div><div class="workbench-body"><span class="xu-badge">LIVE REFERENCE · 可交互预览</span><h2>工作区，恰如所需。</h2><p class="workbench-caption">一套变量，贯穿每一处细节。</p><div class="spec-line"><span>外观主题</span><div class="theme-choices">${button('曜石', 'data-set-theme="dark" aria-pressed="true" data-size="sm"')}${button('宣纸', 'data-set-theme="light" aria-pressed="false" data-size="sm"')}</div></div><div class="spec-line"><span>自动保存 <span class="muted">/ 演示</span></span><label class="xu-check"><input type="checkbox" class="xu-switch" role="switch" aria-label="演示自动保存" data-demo-switch checked></label></div><div class="workbench-bottom"><span class="xu-badge success">${icon('check-circle')}标准已就绪</span>${link(`查看规范 ${icon('arrow-right')}`, 'standards/04-layout', 'ghost')}</div><div class="ruler"><span>4 PX GRID</span><span>24 / 40 / 48</span><span>1.5 STROKE</span></div></div></div></div></section><div class="section-heading"><h2><span class="section-no">01</span>色彩有语义，设计有依据。</h2><a href="#/foundations">全部基础规范 ${icon('arrow-right')}</a></div><div id="overview-colors">${swatches()}</div><div class="resource-grid"><a href="#/standards" class="resource"><span class="resource-mark">01 / DOCUMENTATION</span><h3>设计标准</h3><p>原则、布局、状态与交付。<br>让每一次设计决定都有据可循。</p></a><a href="#/components" class="resource"><span class="resource-mark">02 / COMPONENTS</span><h3>组件实验室</h3><p>真实操作，实时反馈。<br>核对按钮、表单与浮层的每种状态。</p></a><a href="#/icons" class="resource"><div class="resource-icons">${['box','git-branch','terminal','sliders','arrow-right'].map((v) => icon(v)).join('')}</div><h3>ICON，精确到每一笔。</h3><p>统一网格与线宽，支持检索和 SVG 导出。</p></a></div>${footer()}`;
+  return `${breadcrumbs('总览')}
+    <section class="overview-cover">
+      <div class="cover-intro"><h1 tabindex="-1">XUUI<span>界面设计标准</span></h1>
+        <p class="cover-description">统一的视觉语言，具体到每一个细节。<br>在这里查阅规范、检验组件，找到可直接使用的设计资源。</p>
+        <div class="hero-actions">${link(`浏览设计标准 ${icon('arrow-right')}`, 'standards', 'primary')}${link('探索组件', 'components')}</div>
+        <p class="cover-edition">为 XU 生态的设计与开发协作而建 · ${data.version}</p>
+      </div>
+      <section class="cover-specimen" aria-label="可交互组件预览">
+        <div class="specimen-header"><h2>组件预览</h2><span class="xu-badge success">${icon('check-circle')}可操作</span></div>
+        <div class="specimen-content"><div class="xu-field"><label for="cover-workspace">工作区名称</label><input id="cover-workspace" class="xu-input" value="XU Workspace" readonly></div>
+        <div class="spec-line"><span>外观主题</span><div class="theme-choices">${button('曜石', 'data-set-theme="dark" aria-pressed="true"')}${button('宣纸', 'data-set-theme="light" aria-pressed="false"')}</div></div>
+        <div class="spec-line"><span>自动保存 <span class="muted small">演示</span></span><label class="xu-check"><input type="checkbox" class="xu-switch" role="switch" aria-label="演示自动保存" data-demo-switch checked></label></div>
+        <div class="specimen-bottom"><span class="small muted">使用统一 Token 构建</span>${link(`查看组件 ${icon('arrow-right')}`, 'components', 'ghost')}</div></div>
+      </section>
+    </section>
+    <section class="overview-resources" aria-labelledby="resources-title"><div class="section-heading"><h2 id="resources-title">从这里开始</h2><span class="small muted">标准、实现与效果，相互对应</span></div>
+      <a class="resource-row" href="#/standards"><span class="resource-symbol">${icon('file')}</span><div><h3>设计标准</h3><p>从视觉基础、组件行为，到交付验收。</p></div><span class="resource-detail">${data.docs.length} 篇文档</span>${icon('arrow-right')}</a>
+      <a class="resource-row" href="#/icons"><span class="resource-symbol">${icon('grid')}</span><div><h3>ICON 图标库</h3><p>统一网格与线宽，按需检索、复制和下载。</p></div><span class="resource-detail">${data.icons.length} 枚 SVG</span>${icon('arrow-right')}</a>
+      <a class="resource-row" href="#/patterns"><span class="resource-symbol">${icon('monitor')}</span><div><h3>页面模式</h3><p>通过设置、列表和空状态，核对完整任务。</p></div><span class="resource-detail">交互示例</span>${icon('arrow-right')}</a>
+    </section>
+    <section><div class="section-heading"><h2>设计基础</h2><a href="#/foundations">查看全部 Token ${icon('arrow-right')}</a></div><div id="overview-colors">${swatches()}</div></section>${footer()}`;
 }
 
 function standards() {
-  return `${breadcrumbs('标准文档')}${heading('DOCUMENTATION / 12 STANDARDS','把设计共识，写成标准。','从视觉基础到交付验收，每篇标准都关联对应效果。选择一篇开始阅读，或通过关键词查找。')}<div class="toolbar"><div class="xu-field"><label for="doc-search">查找标准</label><input class="xu-input" type="search" id="doc-search" placeholder="例如：图标、表单、主题"></div></div><p class="result-count" id="doc-count" role="status">${data.docs.length} 篇标准</p><div class="docs-grid" id="doc-results"></div>`;
+  return `${breadcrumbs('标准文档')}${heading('DOCUMENTATION / 12 STANDARDS','设计标准','从视觉基础到交付验收，每篇标准都关联对应效果。选择一篇开始阅读，或通过关键词查找。')}<div class="toolbar"><div class="xu-field"><label for="doc-search">查找标准</label><input class="xu-input" type="search" id="doc-search" placeholder="例如：图标、表单、主题"></div></div><p class="result-count" id="doc-count" role="status">${data.docs.length} 篇标准</p><div class="docs-grid" id="doc-results"></div>`;
 }
 
 function updateDocs() {
   const query = $('#doc-search').value.trim().toLowerCase();
   const docs = data.docs.filter((doc) => `${doc.title} ${doc.summary} ${doc.group}`.toLowerCase().includes(query));
   $('#doc-count').textContent = `${docs.length} 篇标准`;
-  $('#doc-results').innerHTML = docs.length ? docs.map((doc) => `<a href="#/standards/${doc.id}" class="doc-card"><span class="num">${doc.id.slice(0, 2)}</span><div><h2>${doc.title}</h2><p>${doc.summary}</p></div>${icon('arrow-right')}</a>`).join('') : `<div class="empty"><h3>没有找到对应标准</h3><p>试试“基础”“组件”，或清空关键词。</p>${button('清空搜索', 'id="clear-doc-search"')}</div>`;
+  const groups = [...new Set(docs.map((doc) => doc.group))];
+  $('#doc-results').innerHTML = docs.length ? groups.map((group) => `<section class="doc-group"><h2>${group}<span>${docs.filter((doc) => doc.group === group).length} 篇</span></h2><div>${docs.filter((doc) => doc.group === group).map((doc) => `<a href="#/standards/${doc.id}" class="doc-card"><span class="num">${doc.id.slice(0, 2)}</span><div><h3>${doc.title}</h3><p>${doc.summary}</p></div>${icon('arrow-right')}</a>`).join('')}</div></section>`).join('') : `<div class="empty"><h3>没有找到对应标准</h3><p>试试“基础”“组件”，或清空关键词。</p>${button('清空搜索', 'id="clear-doc-search"')}</div>`;
   $('#clear-doc-search')?.addEventListener('click', () => { $('#doc-search').value = ''; updateDocs(); $('#doc-search').focus(); });
 }
 
 function documentView(id) {
-  const doc = data.docs.find((item) => item.id === id);
+  const index = data.docs.findIndex((item) => item.id === id);
+  const doc = data.docs[index];
   if (!doc) return missing();
-  return `${breadcrumbs(`标准 / ${doc.title}`)}<div class="document"><div class="document-actions"><a class="small muted" href="#/standards">${icon('arrow-left')} 全部标准</a><div class="row"><a class="xu-button" href="./standards/${id}.md" download>${icon('download')} Markdown 源文件</a>${link('查看对应效果', doc.demo, 'primary')}</div></div><article>${doc.html}</article><div class="xu-alert info">${icon('info')}<p>规范对应 ${data.version}。使用资源前运行构建，Token 和 SVG 从同一源文件导出。</p></div></div>${footer()}`;
+  const sections = [];
+  const html = doc.html.replace(/<h2>(.*?)<\/h2>/g, (_, title) => {
+    const anchor = `section-${sections.length + 1}`;
+    sections.push({ anchor, title });
+    return `<h2 id="${anchor}" tabindex="-1">${title}</h2>`;
+  });
+  const next = data.docs[index + 1];
+  return `${breadcrumbs(`设计标准 / ${doc.title}`)}<div class="reading-layout"><aside class="doc-outline" aria-label="本篇目录"><details ${window.matchMedia('(min-width: 1280px)').matches ? 'open' : ''}><summary>本篇目录</summary>${sections.map(({anchor,title}) => `<a href="#/standards/${id}#${anchor}">${title}</a>`).join('')}</details></aside><div class="document">
+    <div class="document-actions"><a class="small muted" href="#/standards">${icon('arrow-left')} 全部标准</a><a class="text-action" href="./standards/${id}.md" download>${icon('download')} Markdown</a></div>
+    <article>${html}</article>
+    <div class="document-next"><div><span class="small muted">将标准用到界面中</span><p>查看这篇规范对应的实际效果。</p></div>${link(`查看对应效果 ${icon('arrow-right')}`, doc.demo, 'primary')}</div>
+    ${next ? `<a class="next-standard" href="#/standards/${next.id}"><span>继续阅读</span><strong>${next.title}</strong>${icon('arrow-right')}</a>` : ''}
+    </div></div>${footer()}`;
 }
 
 function foundations() {
   const mode = document.documentElement.dataset.theme;
   const theme = data.tokens.themes[mode];
   const rows = Object.entries(theme).filter(([, value]) => /^#[0-9a-f]{6}$/.test(value));
-  return `${breadcrumbs('基础与 Token')}${heading('FOUNDATIONS / DESIGN TOKENS','以规则，构成秩序。','所有变量来自 tokens/tokens.json。切换顶部主题查看对应色值；点击变量复制 CSS 用法。')}<div class="row"><a class="xu-button" href="./tokens/tokens.json" download>${icon('download')} 下载 Token JSON</a><a class="xu-button" href="./assets/tokens.css" download>下载 CSS 变量</a></div><section class="demo-section"><div class="section-heading"><h2>01 / 语义色 · ${mode === 'dark' ? '曜石暗夜' : '宣纸雪岩'}</h2><a href="#/standards/02-color">使用规则 ${icon('arrow-right')}</a></div>${swatches()}<div class="token-list">${rows.map(([key, value]) => `<button type="button" class="token-button" data-copy-token="${key}" aria-label="复制 --xu-${key}"><i class="token-swatch" style="background:var(--xu-${key})"></i><code class="token-name">--xu-${key}</code><span>${value.toUpperCase()}</span></button>`).join('')}</div></section><section class="demo-section">${demoTitle('02 / 文字对比度', '02-color')}<p class="small muted">下列值由构建时计算，背景为当前主题的 surface；完整约定组合由 check 命令验证。</p><div class="table-scroll" role="region" aria-label="主题文字对比度" tabindex="0"><table><thead><tr><th scope="col">文字角色</th><th scope="col">对比度</th><th scope="col">项目门槛</th></tr></thead><tbody>${Object.entries(data.ratios[mode]).map(([key, ratio]) => `<tr><td><code>--xu-${key}</code></td><td>${ratio}:1</td><td>${icon('check')} ≥ 4.5:1</td></tr>`).join('')}</tbody></table></div></section><section class="demo-section">${demoTitle('03 / 字体与层级', '03-typography')}<div class="demo-frame"><div class="type-specimen">秩序之中，自有锋芒。<br>Precision in every detail.</div><p>正文 16 / 1.65 · 设计与开发，使用同一种语言。</p><p class="mono small muted">const design = 'consistent'; // Token / Code</p><div class="row">${[12,14,16,20,28,40].map((size) => `<span style="font-size:${size}px">Aa<span class="small muted"> ${size}</span></span>`).join('')}</div></div></section><section class="demo-section">${demoTitle('04 / 空间刻度', '04-layout')}<div class="demo-frame"><div class="spacing-demo">${[1,2,3,4,6,8,12,16].map((size) => `<div class="spacing-item"><div class="spacing-bar" style="width:var(--xu-space-${size})"></div>${size * 4} px</div>`).join('')}</div></div></section>${footer()}`;
+  return `${breadcrumbs('基础与 Token')}${heading('FOUNDATIONS / DESIGN TOKENS','基础与 Token','所有变量来自 tokens/tokens.json。切换顶部主题查看对应色值；点击变量复制 CSS 用法。')}<div class="row"><a class="xu-button" href="./tokens/tokens.json" download>${icon('download')} 下载 Token JSON</a><a class="xu-button" href="./assets/tokens.css" download>下载 CSS 变量</a></div><section class="demo-section"><div class="section-heading"><h2>语义色 · ${mode === 'dark' ? '曜石暗夜' : '宣纸雪岩'}</h2><a href="#/standards/02-color">使用规则 ${icon('arrow-right')}</a></div>${swatches()}<div class="token-list">${rows.map(([key, value]) => `<button type="button" class="token-button" data-copy-token="${key}" aria-label="复制 --xu-${key}"><i class="token-swatch" style="background:var(--xu-${key})"></i><code class="token-name">--xu-${key}</code><span>${value.toUpperCase()}</span></button>`).join('')}</div></section><section class="demo-section">${demoTitle('文字对比度', '02-color')}<p class="small muted">下列值由构建时计算，背景为当前主题的 surface；完整约定组合由 check 命令验证。</p><div class="table-scroll" role="region" aria-label="主题文字对比度" tabindex="0"><table><thead><tr><th scope="col">文字角色</th><th scope="col">对比度</th><th scope="col">项目门槛</th></tr></thead><tbody>${Object.entries(data.ratios[mode]).map(([key, ratio]) => `<tr><td><code>--xu-${key}</code></td><td>${ratio}:1</td><td>${icon('check')} ≥ 4.5:1</td></tr>`).join('')}</tbody></table></div></section><section class="demo-section">${demoTitle('字体与层级', '03-typography')}<div class="demo-frame"><div class="type-specimen">秩序之中，自有锋芒。<br>Precision in every detail.</div><p>正文 16 / 1.65 · 设计与开发，使用同一种语言。</p><p class="mono small muted">const design = 'consistent'; // Token / Code</p><div class="row">${[12,14,16,20,28,40].map((size) => `<span style="font-size:${size}px">Aa<span class="small muted"> ${size}</span></span>`).join('')}</div></div></section><section class="demo-section">${demoTitle('空间刻度', '04-layout')}<div class="demo-frame"><div class="spacing-demo">${[1,2,3,4,6,8,12,16].map((size) => `<div class="spacing-item"><div class="spacing-bar" style="width:var(--xu-space-${size})"></div>${size * 4} px</div>`).join('')}</div></div></section>${footer()}`;
 }
 
 function components() {
-  return `${breadcrumbs('组件实验室')}${heading('COMPONENT LAB / INTERACTIVE','细节，经得起操作。','用真实交互检查组件的层级、状态和反馈。这里的所有操作都是浏览器演示，不连接远端服务。')}<div class="filter-row" aria-label="组件筛选">${[['all','全部组件'],['actions','操作'],['forms','输入'],['feedback','反馈']].map(([id,title]) => `<button type="button" data-component-filter="${id}" aria-pressed="${id === 'all'}">${title}</button>`).join('')}</div><section class="demo-section" data-component="actions">${demoTitle('01 / 操作与按钮','06-actions')}<div class="demo-frame"><div class="toolbar"><div class="xu-field compact"><label for="button-size">预览尺寸</label><select class="xu-select" id="button-size"><option value="sm">sm · 32 px</option><option value="md" selected>md · 40 px</option><option value="lg">lg · 48 px</option></select></div><span class="small muted">悬停、按下或用 Tab 查看焦点状态。</span></div><div class="demo-buttons" id="sized-buttons"><span class="state-label">层级</span>${button(`${icon('plus')}新建项目`, 'data-notify="新建项目：交互演示已触发。"', 'primary')}${button('次要操作','data-notify="已触发次要操作。"')}${button('轻量操作','data-notify="已触发轻量操作。"','ghost')}${button(`${icon('trash')}删除`,'data-confirm','danger')}</div><div class="demo-buttons"><span class="state-label">状态</span>${button('点击加载','id="loading-demo"','primary')}${button('暂不可用','disabled')}${button(icon('sliders'),'aria-label="调整演示参数" data-notify="参数按钮可用。"','icon-only')}</div><p class="xu-help" style="margin-top:16px">禁用原因示例：尚未选择项目，当前操作不可用。</p><div class="component-meta">HEIGHT 32 / 40 / 48 · GAP 8 · RADIUS 8 · FOCUS 2</div>${code('<button type="button" class="xu-button primary" data-size="md">保存设置</button>')}</div></section><section class="demo-section" data-component="forms">${demoTitle('02 / 表单与选择','07-forms')}<div class="demo-frame"><div class="two-columns"><form id="demo-form" class="field-stack" novalidate><div class="xu-field"><label for="demo-name">项目名称 <span class="muted small">必填</span></label><input class="xu-input" id="demo-name" name="name" maxlength="40" required placeholder="例如：stone-workbench" aria-describedby="demo-name-help demo-name-error"><p class="xu-help" id="demo-name-help">使用 1–40 个字符。试试留空后提交。</p><p class="xu-error" id="demo-name-error"></p></div><div class="xu-field"><label for="demo-platform">目标平台</label><select class="xu-select" id="demo-platform" name="platform"><option>桌面应用</option><option>Web 应用</option><option>命令行工具</option></select></div><label class="xu-check"><input type="checkbox" name="template" checked>包含示例模板</label><div><button type="submit" class="xu-button primary">验证并创建 ${icon('arrow-right')}</button></div><p id="demo-form-status" class="small muted" role="status"></p></form><div class="field-stack"><div class="xu-field"><label for="readonly-input">只读输入</label><input id="readonly-input" class="xu-input" value="xulang-org / xu-ui-design" readonly></div><div class="xu-field"><label for="disabled-input">禁用输入</label><input id="disabled-input" class="xu-input" value="由组织统一管理" disabled><p class="xu-help">示例：组织策略禁止修改。</p></div><div class="xu-field"><label for="demo-description">项目说明</label><textarea id="demo-description" class="xu-textarea" placeholder="可选，描述这个项目的用途。" maxlength="200"></textarea></div><label class="xu-check"><input type="checkbox" class="xu-switch" role="switch" data-demo-switch checked>启用演示通知</label></div></div>${code('<label for="name">项目名称</label>\n<input class="xu-input" id="name" required aria-describedby="help">\n<p id="help" class="xu-help">使用 1–40 个字符。</p>')}</div></section><section class="demo-section" data-component="feedback">${demoTitle('03 / 状态与反馈','09-feedback')}<div class="demo-frame"><div class="row">${[['success','check-circle','已完成'],['warning','alert-triangle','需注意'],['danger','x-circle','未通过'],['info','info','信息']].map(([type,name,label]) => `<span class="xu-badge ${type}">${icon(name)}${label}</span>`).join('')}</div><div class="field-stack" style="margin-top:24px"><div class="xu-alert info">${icon('info')}<p><strong>这是一条说明。</strong><br>颜色、图标与文字共同表达信息，避免单靠颜色判断。</p></div><div class="xu-alert warning">${icon('alert-triangle')}<p><strong>保存前请检查。</strong><br>关键反馈保留在页面内，让用户有时间阅读和恢复。</p></div><div><label for="demo-progress" class="small">确定进度示例 · 68%</label><progress id="demo-progress" class="xu-progress" max="100" value="68">68%</progress></div></div><div class="row" style="margin-top:24px">${button('显示短通知','data-notify="这是一条演示通知，不会抢走键盘焦点。"')}${button('打开确认对话框','data-confirm')}</div>${code('<dialog aria-labelledby="title">\n  <h2 id="title">确认操作</h2>\n  <button type="button">取消</button>\n</dialog>\n<!-- 使用 showModal() 打开，close() 关闭。 -->')}</div></section>${footer()}`;
+  return `${breadcrumbs('组件实验室')}${heading('COMPONENT LAB / INTERACTIVE','组件实验室','用真实交互检查组件的层级、状态和反馈。这里的所有操作都是浏览器演示，不连接远端服务。')}<div class="filter-row" aria-label="组件筛选">${[['all','全部组件'],['actions','操作'],['forms','输入'],['feedback','反馈']].map(([id,title]) => `<button type="button" data-component-filter="${id}" aria-pressed="${id === 'all'}">${title}</button>`).join('')}</div><section class="demo-section" data-component="actions">${demoTitle('操作与按钮','06-actions')}<div class="demo-frame"><div class="toolbar"><div class="xu-field compact"><label for="button-size">预览尺寸</label><select class="xu-select" id="button-size"><option value="sm">sm · 32 px</option><option value="md" selected>md · 40 px</option><option value="lg">lg · 48 px</option></select></div><span class="small muted">悬停、按下或用 Tab 查看焦点状态。</span></div><div class="demo-buttons" id="sized-buttons"><span class="state-label">层级</span>${button(`${icon('plus')}新建项目`, 'data-notify="新建项目：交互演示已触发。"', 'primary')}${button('次要操作','data-notify="已触发次要操作。"')}${button('轻量操作','data-notify="已触发轻量操作。"','ghost')}${button(`${icon('trash')}删除`,'data-confirm','danger')}</div><div class="demo-buttons"><span class="state-label">状态</span>${button('点击加载','id="loading-demo"','primary')}${button('暂不可用','disabled')}${button(icon('sliders'),'aria-label="调整演示参数" data-notify="参数按钮可用。"','icon-only')}</div><p class="xu-help" style="margin-top:16px">禁用原因示例：尚未选择项目，当前操作不可用。</p><div class="component-meta">HEIGHT 32 / 40 / 48 · GAP 8 · RADIUS 8 · FOCUS 2</div>${code('<button type="button" class="xu-button primary" data-size="md">保存设置</button>')}</div></section><section class="demo-section" data-component="forms">${demoTitle('表单与选择','07-forms')}<div class="demo-frame"><div class="two-columns"><form id="demo-form" class="field-stack" novalidate><div class="xu-field"><label for="demo-name">项目名称 <span class="muted small">必填</span></label><input class="xu-input" id="demo-name" name="name" maxlength="40" required placeholder="例如：stone-workbench" aria-describedby="demo-name-help demo-name-error"><p class="xu-help" id="demo-name-help">使用 1–40 个字符。试试留空后提交。</p><p class="xu-error" id="demo-name-error"></p></div><div class="xu-field"><label for="demo-platform">目标平台</label><select class="xu-select" id="demo-platform" name="platform"><option>桌面应用</option><option>Web 应用</option><option>命令行工具</option></select></div><label class="xu-check"><input type="checkbox" name="template" checked>包含示例模板</label><div><button type="submit" class="xu-button primary">验证并创建 ${icon('arrow-right')}</button></div><p id="demo-form-status" class="small muted" role="status"></p></form><div class="field-stack"><div class="xu-field"><label for="readonly-input">只读输入</label><input id="readonly-input" class="xu-input" value="xulang-org / xu-ui-design" readonly></div><div class="xu-field"><label for="disabled-input">禁用输入</label><input id="disabled-input" class="xu-input" value="由组织统一管理" disabled><p class="xu-help">示例：组织策略禁止修改。</p></div><div class="xu-field"><label for="demo-description">项目说明</label><textarea id="demo-description" class="xu-textarea" placeholder="可选，描述这个项目的用途。" maxlength="200"></textarea></div><label class="xu-check"><input type="checkbox" class="xu-switch" role="switch" data-demo-switch checked>启用演示通知</label></div></div>${code('<label for="name">项目名称</label>\n<input class="xu-input" id="name" required aria-describedby="help">\n<p id="help" class="xu-help">使用 1–40 个字符。</p>')}</div></section><section class="demo-section" data-component="feedback">${demoTitle('状态与反馈','09-feedback')}<div class="demo-frame"><div class="row">${[['success','check-circle','已完成'],['warning','alert-triangle','需注意'],['danger','x-circle','未通过'],['info','info','信息']].map(([type,name,label]) => `<span class="xu-badge ${type}">${icon(name)}${label}</span>`).join('')}</div><div class="field-stack" style="margin-top:24px"><div class="xu-alert info">${icon('info')}<p><strong>这是一条说明。</strong><br>颜色、图标与文字共同表达信息，避免单靠颜色判断。</p></div><div class="xu-alert warning">${icon('alert-triangle')}<p><strong>保存前请检查。</strong><br>关键反馈保留在页面内，让用户有时间阅读和恢复。</p></div><div><label for="demo-progress" class="small">确定进度示例 · 68%</label><progress id="demo-progress" class="xu-progress" max="100" value="68">68%</progress></div></div><div class="row" style="margin-top:24px">${button('显示短通知','data-notify="这是一条演示通知，不会抢走键盘焦点。"')}${button('打开确认对话框','data-confirm')}</div>${code('<dialog aria-labelledby="title">\n  <h2 id="title">确认操作</h2>\n  <button type="button">取消</button>\n</dialog>\n<!-- 使用 showModal() 打开，close() 关闭。 -->')}</div></section>${footer()}`;
 }
 
+let selectedIcon = 'plus';
 function icons() {
   const categories = [...new Set(data.icons.map((item) => item.category))];
-  return `${breadcrumbs('ICON 图标库')}${heading('ICONOGRAPHY / 48 ORIGINAL SVG','一笔一画，统一表达。','24 单位网格 · 1.5 单位线宽 · currentColor。选择图标查看细节、复制内联 SVG 或下载文件。')}<div class="row" style="margin-bottom:28px"><a class="xu-button" href="./assets/icons.svg" download>${icon('download')} 下载 SVG Sprite</a><a class="xu-button" href="#/standards/05-icons">阅读 ICON 标准</a></div><div class="toolbar"><div class="xu-field"><label for="icon-search">检索图标</label><input type="search" class="xu-input" id="icon-search" placeholder="英文名、中文名或分类，如 arrow / 搜索"></div><div class="xu-field compact"><label for="icon-category">分类</label><select class="xu-select" id="icon-category"><option value="all">全部分类</option>${categories.map((v) => `<option>${v}</option>`).join('')}</select></div><div class="xu-field compact"><label for="icon-size">预览尺寸</label><select class="xu-select" id="icon-size">${[16,20,24,32].map((v) => `<option value="${v}" ${v === 24 ? 'selected' : ''}>${v} px</option>`).join('')}</select></div></div><p class="result-count" id="icon-count" role="status"></p><div class="icon-grid" id="icon-results"></div>${footer()}`;
+  return `${breadcrumbs('ICON 图标库')}<div class="library-header"><div>${heading('', 'ICON 图标库', '48 枚线性图标，与 XUUI 组件共用一套视觉语言。')}</div><a class="xu-button" href="./assets/icons.svg" download>${icon('download')} 下载 Sprite</a></div>
+    <div class="icon-contract"><span><strong>24 × 24</strong> 标准网格</span><span><strong>1.5</strong> 母版线宽</span><span><strong>SVG</strong> currentColor</span><a href="#/standards/05-icons">阅读图标规范 ${icon('arrow-right')}</a></div>
+    <div class="toolbar icon-toolbar"><div class="xu-field"><label for="icon-search">检索图标</label><div class="search-field">${icon('search')}<input type="search" class="xu-input" id="icon-search" placeholder="搜索名称，例如 arrow 或向右"></div></div><div class="xu-field compact"><label for="icon-category">分类</label><select class="xu-select" id="icon-category"><option value="all">全部分类</option>${categories.map((v) => `<option>${v}</option>`).join('')}</select></div><div class="xu-field compact"><label for="icon-size">预览尺寸</label><select class="xu-select" id="icon-size">${[16,20,24,32].map((v) => `<option value="${v}" ${v === 24 ? 'selected' : ''}>${v} px</option>`).join('')}</select></div></div>
+    <div class="icon-workspace"><div class="icon-catalog"><p class="result-count" id="icon-count" role="status"></p><div id="icon-results"></div></div><aside class="icon-inspector" id="icon-inspector" aria-label="所选图标详情"></aside></div>${footer()}`;
+}
+
+function svgSource(item) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${item.body}</svg>`;
+}
+
+function updateInspector() {
+  const item = data.icons.find((entry) => entry.name === selectedIcon);
+  const source = svgSource(item);
+  $('#icon-inspector').innerHTML = `<div class="inspector-heading"><span class="small muted">图标详情</span><span class="xu-badge">${item.category}</span></div><div class="icon-blueprint">${icon(item.name)}<span>24 × 24</span></div><h2>${item.label}</h2><p class="icon-identifier">${item.name}</p>
+    <div class="icon-sizes" aria-label="不同尺寸对照">${[16,20,24,32].map((size) => `<div><span style="--sample-size:${size}px">${icon(item.name)}</span><small>${size} px</small></div>`).join('')}</div>
+    <div class="inspector-actions">${button(`${icon('copy')}复制 SVG`,'id="inspector-copy"','primary')}<a class="xu-button" href="./icons/${item.name}.svg" download="${item.name}.svg">${icon('download')}下载</a></div>
+    <details class="inspector-code"><summary>查看 SVG 源码</summary><label class="sr-only" for="inspector-source">所选图标 SVG 源码</label><textarea id="inspector-source" class="xu-textarea source-code" readonly spellcheck="false">${esc(source)}</textarea></details>
+    <p class="inspector-note">装饰图标使用 aria-hidden。仅图标按钮仍需提供可访问名称。</p>`;
+  $('#inspector-copy').addEventListener('click', async () => {
+    const field = $('#inspector-source');
+    // Keep source available when clipboard access fails, without a blocking modal.
+    try { await navigator.clipboard.writeText(source); notify('已复制到剪贴板'); }
+    catch { $('.inspector-code').open = true; field.focus(); field.select(); notify('复制未完成，请手动复制已选中的源码。'); }
+  });
 }
 
 function updateIcons() {
   const query = $('#icon-search').value.trim().toLowerCase();
   const category = $('#icon-category').value;
   const results = data.icons.filter((item) => `${item.name} ${item.label} ${item.category}`.toLowerCase().includes(query) && (category === 'all' || item.category === category));
-  $('#icon-count').textContent = `${results.length} / ${data.icons.length} 枚图标 · 点击查看与导出`;
+  $('#icon-count').textContent = `${results.length} / ${data.icons.length} 枚图标`;
   const container = $('#icon-results');
-  container.classList.toggle('icon-grid', !!results.length);
   container.style.setProperty('--preview-icon-size', `${$('#icon-size').value}px`);
-  container.innerHTML = results.length ? results.map((item) => `<button type="button" class="icon-tile" data-icon="${item.name}" aria-label="查看 ${item.label} ${item.name}">${icon(item.name)}<span>${item.name}</span></button>`).join('') : `<div class="empty">${icon('search')}<h3>没有找到匹配图标</h3><p>试试其他关键词，或恢复全部分类。</p>${button('清空筛选','id="clear-icon-search"')}</div>`;
+  const groups = [...new Set(results.map((item) => item.category))];
+  container.innerHTML = results.length ? groups.map((group) => `<section class="icon-group"><div class="icon-group-heading"><h2>${group}</h2><span>${results.filter((item) => item.category === group).length}</span></div><div class="icon-grid">${results.filter((item) => item.category === group).map((item) => `<button type="button" class="icon-tile" data-icon="${item.name}" aria-pressed="${item.name === selectedIcon}" aria-label="查看 ${item.label} ${item.name}"><span class="tile-art">${icon(item.name)}</span><span class="icon-label">${item.label}</span><span class="icon-name">${item.name}</span></button>`).join('')}</div></section>`).join('') : `<div class="empty">${icon('search')}<h3>没有找到匹配图标</h3><p>试试其他关键词，或恢复全部分类。</p>${button('清空筛选','id="clear-icon-search"')}</div>`;
+  updateInspector();
   $('#clear-icon-search')?.addEventListener('click', () => { $('#icon-search').value = ''; $('#icon-category').value = 'all'; updateIcons(); $('#icon-search').focus(); });
 }
 
@@ -126,7 +193,7 @@ const projects = [
 ];
 
 function patterns() {
-  return `${breadcrumbs('页面模式')}${heading('PATTERNS / REAL SCENARIOS','从组件，到完整体验。','设置、数据列表、空状态。以下均为演示数据，帮助检查组件组合后的层级和操作路径。')}<section class="demo-section">${demoTitle('01 / 工作区设置','10-patterns')}<div class="demo-frame"><div class="pattern-header"><div><h2>工作区设置</h2><p>示例 · 仅保存至当前浏览器</p></div><span class="xu-badge">LOCAL DEMO</span></div><div class="settings-layout"><div class="settings-rail" aria-hidden="true"><span>基本设置</span><span>外观与主题</span><span>通知偏好</span></div><form id="settings-form" class="field-stack" novalidate><div class="xu-field"><label for="workspace-name">工作区名称 <span class="muted small">必填</span></label><input class="xu-input" id="workspace-name" name="name" required maxlength="40" aria-describedby="workspace-help workspace-error"><p class="xu-help" id="workspace-help">使用 1–40 个字符；请勿填写私密信息。</p><p class="xu-error" id="workspace-error"></p></div><div class="xu-field"><label for="workspace-density">界面密度偏好</label><select class="xu-select" id="workspace-density" name="density"><option value="comfortable">舒适 · 较多留白</option><option value="compact">紧凑 · 更多信息</option></select><p class="xu-help">此示例仅保存偏好值，不改变整个展厅布局。</p></div><label class="xu-check"><input type="checkbox" id="workspace-autosave" name="autosave">保存时保留本地草稿（示例偏好）</label><div><button type="submit" class="xu-button primary">${icon('check')} 保存到本地</button></div><p id="settings-status" class="small muted" role="status">尚未保存。</p></form></div></div></section><section class="demo-section">${demoTitle('02 / 项目列表','10-patterns')}<div class="demo-frame"><div class="pattern-header"><div><h2>项目工作台</h2><p>4 条本地演示记录 · 非真实仓库状态</p></div>${button(`${icon('plus')}新建演示项目`,'id="new-demo-project"','primary')}</div><div class="toolbar"><div class="xu-field"><label for="project-search">搜索项目</label><input type="search" class="xu-input" id="project-search" placeholder="按项目名称或说明查找"></div><div class="xu-field compact"><label for="project-status">状态</label><select class="xu-select" id="project-status"><option value="all">全部状态</option><option value="active">进行中</option><option value="draft">草稿</option><option value="archived">已归档</option></select></div></div><div id="project-table"></div><p id="project-count" class="result-count" role="status" style="margin-top:16px"></p></div></section><section class="demo-section">${demoTitle('03 / 初始空状态','10-patterns')}<div class="empty">${icon('folder')}<h3>为下一个想法，建立工作区。</h3><p>当前是空状态示例。先创建一个项目，再逐步添加内容。</p>${link(`${icon('plus')}尝试创建交互`, 'components', 'primary')}</div></section>${footer()}`;
+  return `${breadcrumbs('页面模式')}${heading('PATTERNS / REAL SCENARIOS','页面模式','设置、数据列表、空状态。以下均为演示数据，帮助检查组件组合后的层级和操作路径。')}<section class="demo-section">${demoTitle('工作区设置','10-patterns')}<div class="demo-frame"><div class="pattern-header"><div><h2>工作区设置</h2><p>示例 · 仅保存至当前浏览器</p></div><span class="xu-badge">LOCAL DEMO</span></div><div class="settings-layout"><div class="settings-rail" aria-hidden="true"><span>基本设置</span><span>外观与主题</span><span>通知偏好</span></div><form id="settings-form" class="field-stack" novalidate><div class="xu-field"><label for="workspace-name">工作区名称 <span class="muted small">必填</span></label><input class="xu-input" id="workspace-name" name="name" required maxlength="40" aria-describedby="workspace-help workspace-error"><p class="xu-help" id="workspace-help">使用 1–40 个字符；请勿填写私密信息。</p><p class="xu-error" id="workspace-error"></p></div><div class="xu-field"><label for="workspace-density">界面密度偏好</label><select class="xu-select" id="workspace-density" name="density"><option value="comfortable">舒适 · 较多留白</option><option value="compact">紧凑 · 更多信息</option></select><p class="xu-help">此示例仅保存偏好值，不改变整个展厅布局。</p></div><label class="xu-check"><input type="checkbox" id="workspace-autosave" name="autosave">保存时保留本地草稿（示例偏好）</label><div><button type="submit" class="xu-button primary">${icon('check')} 保存到本地</button></div><p id="settings-status" class="small muted" role="status">尚未保存。</p></form></div></div></section><section class="demo-section">${demoTitle('项目列表','10-patterns')}<div class="demo-frame"><div class="pattern-header"><div><h2>项目工作台</h2><p>4 条本地演示记录 · 非真实仓库状态</p></div>${button(`${icon('plus')}新建演示项目`,'id="new-demo-project"','primary')}</div><div class="toolbar"><div class="xu-field"><label for="project-search">搜索项目</label><input type="search" class="xu-input" id="project-search" placeholder="按项目名称或说明查找"></div><div class="xu-field compact"><label for="project-status">状态</label><select class="xu-select" id="project-status"><option value="all">全部状态</option><option value="active">进行中</option><option value="draft">草稿</option><option value="archived">已归档</option></select></div></div><div id="project-table"></div><p id="project-count" class="result-count" role="status" style="margin-top:16px"></p></div></section><section class="demo-section">${demoTitle('初始空状态','10-patterns')}<div class="empty">${icon('folder')}<h3>为下一个想法，建立工作区。</h3><p>当前是空状态示例。先创建一个项目，再逐步添加内容。</p>${link(`${icon('plus')}尝试创建交互`, 'components', 'primary')}</div></section>${footer()}`;
 }
 
 let sortAscending = true;
@@ -165,7 +232,7 @@ function confirmDemo(trigger) {
 
 function iconDetail(name, trigger) {
   const item = data.icons.find((entry) => entry.name === name);
-  const source = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${item.body}</svg>`;
+  const source = svgSource(item);
   dialog.removeAttribute('aria-describedby');
   openDialog(`<div class="dialog-heading"><div><h2 id="dialog-title">${item.label}</h2><span class="mono small muted">${item.name}</span></div>${button(icon('x'),'data-close-dialog aria-label="关闭图标详情" autofocus','ghost icon-only')}</div><div class="icon-enlarged">${icon(item.name)}</div><p class="small muted">${item.category} / 24 × 24 / 1.5 stroke<br>复制用于装饰的内联 SVG；仅图标按钮仍须提供可访问名称。</p><label for="icon-source" class="small">SVG 源码</label><textarea id="icon-source" class="xu-textarea source-code" readonly spellcheck="false">${esc(source)}</textarea><div class="row">${button(`${icon('copy')}复制 SVG`,'id="copy-icon"','primary')}<a class="xu-button" href="./icons/${item.name}.svg" download="${item.name}.svg">${icon('download')}下载 SVG</a></div>`, trigger);
   $('#copy-icon').addEventListener('click', () => copy(source, $('#icon-source')));
@@ -225,16 +292,21 @@ function bindPage() {
 }
 
 function render(focus = false) {
-  activeRoute = location.hash.replace(/^#\//, '').replace(/\/$/, '') || 'overview';
+  const [route, section] = location.hash.replace(/^#\//, '').split('#');
+  activeRoute = route.replace(/\/$/, '') || 'overview';
   if (activeRoute === '#main') activeRoute = 'overview';
   const views = { overview, standards, foundations, components, icons, patterns };
   main.innerHTML = activeRoute.startsWith('standards/') ? documentView(activeRoute.slice(10)) : (views[activeRoute] || missing)();
+  main.dataset.view = activeRoute.split('/')[0];
   navigation();
   updateThemeButton();
   bindPage();
   const title = $('h1', main);
   document.title = `${title?.textContent || '设计标准'} · XUUI`;
-  if (focus) { title?.setAttribute('tabindex','-1'); title?.focus({ preventScroll:true }); window.scrollTo(0,0); }
+  if (section && /^section-\d+$/.test(section)) {
+    const target = document.getElementById(section);
+    target?.focus({ preventScroll:true }); target?.scrollIntoView({ block:'start' });
+  } else if (focus) { title?.setAttribute('tabindex','-1'); title?.focus({ preventScroll:true }); window.scrollTo(0,0); }
 }
 
 $('#theme-toggle').addEventListener('click', () => {
@@ -255,7 +327,12 @@ document.addEventListener('click', (event) => {
   if (target.matches('[data-copy-token]')) copy(`var(--xu-${target.dataset.copyToken})`);
   if (target.matches('[data-confirm]')) confirmDemo(target);
   if (target.matches('[data-close-dialog]')) dialog.close();
-  if (target.matches('[data-icon]')) iconDetail(target.dataset.icon, target);
+  if (target.matches('[data-icon]')) {
+    selectedIcon = target.dataset.icon;
+    $$('[data-icon]').forEach((entry) => entry.setAttribute('aria-pressed', String(entry === target)));
+    if (window.matchMedia('(min-width: 840px)').matches) updateInspector();
+    else iconDetail(selectedIcon, target);
+  }
   if (target.matches('[data-project]')) {
     const project = projects.find((item) => item.name === target.dataset.project);
     dialog.removeAttribute('aria-describedby');

@@ -1,6 +1,6 @@
 {
   "name": "@xulang-org/xu-ui-design",
-  "version": "0.1.0-dev.1",
+  "version": "0.1.0-dev.2",
   "private": true,
   "description": "XU UI standards, tokens, SVG icons and interactive reference showcase",
   "type": "module",
