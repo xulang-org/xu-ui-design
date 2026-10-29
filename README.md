@@ -2,11 +2,11 @@
 
 XU 生态的 UI 设计标准库：**标准文档、设计 Token、SVG 图标、可操作的效果展厅**。
 
-当前版本为 `0.1.0`。这是一套浏览器参考实现，可供其他技术栈按契约实现；不代表 XU 原生 UI 已提供相同组件。
+当前开发版本为 `0.1.1-dev.1`，正式基线为 `0.1.0`。浏览器提供组件契约与交互实现；原生适配针对 SDK 0.10.11 的 Editor，其他原生组件须按实际 SDK 验证。
 
 ## 运行效果展示
 
-需要 Node.js 22 或以上，无第三方依赖，无须安装 XU SDK。
+需要 Node.js 22 或以上，无外部运行依赖，无须安装 XU SDK。浏览器测试通过 `npm ci` 安装开发依赖。
 
 ```sh
 git clone https://github.com/xulang-org/xu-ui-design.git
@@ -24,8 +24,8 @@ npm run dev
 | 总览 | XU 品牌、工作区预览、亮／暗主题切换 |
 | 标准文档 | 12 篇标准、分组检索、篇内目录、在线阅读、Markdown 下载 |
 | 基础与 Token | 双主题色值、复制 CSS 变量、对比度、排版、间距 |
-| 组件实验室 | 按钮尺寸、加载与禁用、表单校验、选择、通知与模态框 |
-| ICON | 48 个 SVG、语义分组、双语名称、检视区、四档尺寸、复制和下载 |
+| 组件实验室 | 八份独立契约：按钮、输入、反馈、菜单、页签、分页表格、树和分栏 |
+| ICON | 60 个 SVG、语义分组、双语名称、检视区、四档尺寸、复制和下载 |
 | 页面模式 | 本地设置保存、项目检索与状态筛选、排序、详情、空状态 |
 
 深链接示例：`http://127.0.0.1:4173/#/icons`。也支持部署到子目录，例如 `/xu-ui-design/`；无需服务器重写 hash 路由。
@@ -52,7 +52,12 @@ npm run build
 - `assets/components.css`：按钮、输入、选择、开关、状态与进度的参考样式。
 - `assets/icons.svg`：同源外部 SVG Sprite；`icons/*.svg` 为带名称的独立 SVG。
 - `tokens/tokens.json`：项目自定义扁平 Token 数据，不宣称 DTCG 格式兼容。
-- `standards/*.md`：可离线保存的规范源文档。
+- `standards/*.md`、`components/*.md`：标准与组件契约。
+- `assets/interactions.js`：可卸载的菜单、页签、表格、树和分栏行为。
+- `xu/xuui_tokens/mod.xu`：SDK 0.10.11 原生 Theme／Editor 适配。
+- `downloads/xu-ui-resources-0.1.1-dev.1.tar.gz`、`SHA256SUMS` 和 `manifest.json`：版本资源包与来源、校验信息。
+
+接入与回退见 [MIGRATIONS.md](MIGRATIONS.md)，版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
 ```html
 <link rel="stylesheet" href="./assets/tokens.css">
@@ -73,6 +78,8 @@ npm run build
 
 `npm run check` 校验主题结构、已定义配色组合的对比度、SVG 安全白名单、文档链接、脚本语法、Token 引用和构建资源。此检查不等于整站 WCAG 认证；屏幕阅读器与目标平台的人工验收另见可访问性标准。
 
-CI 对 `dev`／`main` 及 PR 执行检查并上传 `xu-ui-showcase` 静态产物；默认不发布网站、不改变仓库保护。GitHub Actions 产物下载后解压，可通过任意静态 HTTP 服务预览。正式部署须在 `dev` 集成验证后获得发布授权。
+CI 对 `dev`／`main` 及 PR 执行资源检查、三浏览器行为、双主题 axe 和 Chromium 视觉回归，上传静态展厅与验收证据。测试方法与基线来源见 [浏览器验收](tests/browser/README.md)。
+
+Pages 工作流仅在 `main` 构建和浏览器验收通过后部署。预定地址为 `https://xulang-org.github.io/xu-ui-design/`；工作流和仓库 Pages 设置完成、实际部署成功后才可作为在线入口。新变更须先经 PR 合入 `dev` 并验证，再按发布授权进入 `main`。失败可回滚源码后重新部署，不改写长期分支历史。
 
 参与维护请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。

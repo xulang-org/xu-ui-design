@@ -5,7 +5,8 @@
 /notes/
 /reports/
 /tmp/
-/tests/
+/tests/*
+!/tests/browser/
 /AGENTS.md
 /CLAUDE.md
 /REPOSITORIES.md

@@ -6,10 +6,12 @@
 
 | 来源 | 生成或消费结果 |
 | --- | --- |
-| tokens/tokens.json | assets/tokens.css、基础展厅、对比度检查 |
+| tokens/tokens.json | assets/tokens.css、原生 Editor 适配、基础展厅、对比度检查 |
 | icons/catalog.json | SVG sprite、独立 SVG、检索展厅 |
 | standards/index.json 与 Markdown | 文档导航、在线阅读和源码下载 |
 | src/components.css | 可复用的参考组件样式 |
+| components/index.json 与 Markdown | 独立组件契约、状态矩阵与验收 |
+| src/interactions.js | 可卸载的行为控制器 |
 | src/app.js | 展厅交互与页面模式 |
 
 ## 构建与使用
@@ -34,8 +36,10 @@ npm run dev
 
 ## 发布和回滚
 
-CI 构建静态展厅并保存 artifact，不自动部署。维护者可将 dist/ 发布到静态主机；正式发布必须先取得授权。失败通过修复 PR 或 revert PR 恢复，不强推长期分支，不移动已发布标签。
+CI 为 PR、dev 和 main 构建并验收；Pages 仅在 main 通过资源检查、浏览器行为和视觉回归后部署，PR 不具有 Pages 写权限。正式发布必须先取得授权并完成 dev 集成。部署入口是否可用以实际工作流成功和在线访问结果为准。失败通过修复 PR 或 revert PR 恢复并重新部署，不强推长期分支，不移动已发布标签。
+
+每次构建同时输出 downloads/ 下的版本资源包、SHA256SUMS 和逐文件 manifest；资源包附许可、变更与迁移说明。消费者固定完整版本、来源提交及校验值，升级时核验并整套替换，保留旧包用于回退。
 
 ## 交付门槛
 
-check 验证 Token 结构、定义配色组合、SVG 白名单、文档链接和构建资源。浏览器另检导航、主题、表单、对话框、图标检索与下载、窄屏布局。记录实际检查范围，不以自动颜色检查替代完整可访问性验收。
+check 验证 Token 结构、定义配色组合、SVG 白名单、文档链接和构建资源。Playwright 在 Chromium、Firefox、WebKit 检查行为；axe 覆盖八组件双主题窄屏，固定 Linux Chromium 基线检查视觉。人工另检导航、主题、屏幕阅读器与实际任务。记录实际检查范围，不以自动颜色检查替代完整可访问性验收。

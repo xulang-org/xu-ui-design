@@ -1,0 +1,66 @@
+[
+  {
+    "id": "button",
+    "title": "按钮",
+    "group": "操作",
+    "summary": "动作层级、尺寸、加载与重复提交",
+    "standard": "06-actions",
+    "native": "widgets.Button / widgets.button；基础动作契约可对应，宿主事件使用 widgets.Action。"
+  },
+  {
+    "id": "input",
+    "title": "文本输入",
+    "group": "输入",
+    "summary": "标签、帮助、错误、只读与输入恢复",
+    "standard": "07-forms",
+    "native": "widgets.Editor / widgets.input / widgets.text_area；原生 IME、选区与剪贴板由宿主处理。"
+  },
+  {
+    "id": "feedback",
+    "title": "反馈与确认",
+    "group": "反馈",
+    "summary": "状态文字、通知、等待与确认",
+    "standard": "09-feedback",
+    "native": "跨宿主交互原则；此库的浏览器 dialog 不等于原生宿主已经提供同名 API。"
+  },
+  {
+    "id": "menu",
+    "title": "操作菜单",
+    "group": "导航",
+    "summary": "展开、方向键、禁用项与退出",
+    "standard": "08-navigation",
+    "native": "原生 widgets.Menu 与 ui.MenuEntry 均有菜单能力；层级、快捷键和宿主菜单栏需要单独适配。"
+  },
+  {
+    "id": "tabs",
+    "title": "页签",
+    "group": "导航",
+    "summary": "选中关系、方向键与关联面板",
+    "standard": "08-navigation",
+    "native": "有原生页签控件时按宿主焦点模型适配；本库只承诺此 Web 自动激活模式。"
+  },
+  {
+    "id": "table",
+    "title": "表格与分页",
+    "group": "数据",
+    "summary": "排序、分页、空结果和操作名称",
+    "standard": "10-patterns",
+    "native": "widgets.Table 支持原生表格与排序；分页属于应用数据模型，不声称由宿主自动提供。"
+  },
+  {
+    "id": "tree",
+    "title": "文件树",
+    "group": "数据",
+    "summary": "展开层级、选中项目与可见项导航",
+    "standard": "08-navigation",
+    "native": "原生 Tree 能力需要对照实际 SDK 接口验证；此 Web 树使用 WAI-ARIA tree 模型。"
+  },
+  {
+    "id": "splitter",
+    "title": "分割面板",
+    "group": "布局",
+    "summary": "受约束的面板尺寸与键盘调整",
+    "standard": "04-layout",
+    "native": "原生分割布局按宿主尺寸约束适配；Web 指针捕获与 DOM separator 不能直接当作原生实现。"
+  }
+]

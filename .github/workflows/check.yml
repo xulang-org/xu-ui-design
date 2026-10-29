@@ -15,9 +15,32 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm run check
+      - run: npm run check:hygiene && npm run check
       - uses: actions/upload-artifact@v4
         with:
           name: xu-ui-showcase
           path: dist/
           if-no-files-found: error
+  browsers:
+    name: XUUI / browser acceptance
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run test:browser
+      - run: npm run test:visual
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: xu-ui-browser-evidence
+          path: |
+            .local/browser-report/
+            .local/browser-results/
+            tests/browser/baselines/
+          include-hidden-files: true
+          if-no-files-found: warn

@@ -1,0 +1,43 @@
+.component-index { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 32px; margin: 24px 0 48px; }
+.component-entry { padding: 24px 0; border-top: 1px solid var(--xu-border); text-decoration: none; }
+.component-entry h2 { font-size: 1.125rem; margin: 0 0 8px; }
+.component-entry p { font-size: .875rem; color: var(--xu-muted); margin-bottom: 12px; }
+.component-entry > span { font-size: .75rem; color: var(--xu-muted); display: flex; align-items: center; gap: 12px; }
+.component-entry:hover h2 { color: var(--xu-brand); }
+.component-detail-layout { display: grid; grid-template-columns: minmax(0,1fr) 216px; gap: 32px; align-items: start; }
+.component-related { color: var(--xu-muted); font-size: .875rem; border-left: 1px solid var(--xu-border); padding-left: 24px; }
+.component-related a { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.native-mapping { margin-top: 24px; line-height: 1.8; }
+.component-contract { margin-top: 48px; }
+.contract-demo { min-width: 0; }
+.contract-demo > .xu-help { margin-top: 24px; }
+.contract-demo .field-stack > button { justify-self: start; }
+.demo-result { margin: 24px 0 0; color: var(--xu-muted); font-size: .875rem; min-height: 1.65em; overflow-wrap: anywhere; }
+.xu-menu { position: fixed; min-width: 216px; padding: 8px; border: 1px solid var(--xu-control-border); border-radius: var(--xu-radius-md); background: var(--xu-surface); color: var(--xu-text); z-index: var(--xu-z-menu); }
+.xu-menu [role="menuitem"] { display: block; width: 100%; padding: 12px; border: none; border-radius: 4px; color: inherit; background: transparent; text-align: left; cursor: pointer; font-size: .875rem; min-height: 44px; }
+.xu-menu [role="menuitem"]:hover, .xu-menu [role="menuitem"]:focus { background: var(--xu-elevated); }
+.xu-menu [role="menuitem"]:disabled { opacity: .5; cursor: not-allowed; }
+.xu-tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--xu-border); }
+.xu-tabs [role="tab"] { border: 0; border-bottom: 2px solid transparent; color: var(--xu-muted); background: transparent; min-height: 44px; padding: 12px 16px; font-size: .875rem; cursor: pointer; }
+.xu-tabs [role="tab"][aria-selected="true"] { color: var(--xu-text); border-bottom-color: var(--xu-brand); }
+.xu-tabs [role="tab"]:disabled { opacity: .5; cursor: not-allowed; }
+.xu-tabpanel { padding: 24px 0; }
+.xu-tabpanel p { font-size: .875rem; color: var(--xu-muted); }
+.pagination { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.pagination p { margin: 0; font-size: .875rem; color: var(--xu-muted); }
+.xu-tree, .xu-tree [role="group"] { list-style: none; padding: 0; margin: 0; }
+.xu-tree [role="group"] { padding-left: 24px; }
+.xu-tree [role="treeitem"] { border-radius: 4px; min-width: 0; outline-offset: 1px; }
+.tree-label { display: flex; align-items: center; gap: 8px; padding: 0 8px; cursor: pointer; font-size: .875rem; min-height: 44px; overflow-wrap: anywhere; }
+.xu-tree [role="treeitem"][aria-selected="true"] > .tree-label { background: var(--xu-brand-soft); color: var(--xu-brand); border-radius: 4px; }
+.xu-tree [aria-expanded="true"] > .tree-label > [data-tree-toggle] { transform: rotate(0); }
+.xu-tree [aria-expanded="false"] > .tree-label > [data-tree-toggle] { transform: rotate(-90deg); }
+.xu-tree [data-tree-toggle] { display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; flex-shrink: 0; }
+.xu-split-panels { display: grid; grid-template-columns: minmax(0,calc((100% - 44px) * var(--split-ratio,.5))) 44px minmax(0,1fr); min-height: 200px; border: 1px solid var(--xu-border); margin-top: 20px; border-radius: 8px; overflow: hidden; }
+.xu-split-panels > section { padding: 16px; min-width: 0; overflow: auto; background: var(--xu-canvas); }
+.xu-split-panels > section p, .xu-split-panels > section code { font-size: .875rem; overflow-wrap: anywhere; }
+.xu-separator { cursor: col-resize; background: var(--xu-elevated); touch-action: none; position: relative; }
+.xu-separator::before { content: ''; position: absolute; top: calc(50% - 16px); left: 21px; height: 32px; width: 2px; background: var(--xu-control-border); }
+.xu-separator:focus-visible { outline-offset: -2px; }
+@media (max-width:1199px) { .component-detail-layout { grid-template-columns: 1fr; } .component-related { padding: 20px 0 0; border-left: 0; border-top: 1px solid var(--xu-border); } }
+@media (max-width:599px) { .component-index { grid-template-columns: 1fr; } .xu-tabs [role="tab"] { padding-inline: 12px; } .xu-split-panels > section { padding: 12px; } }

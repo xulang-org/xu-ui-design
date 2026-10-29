@@ -46,5 +46,17 @@
   {"name":"bell","label":"通知","category":"通用","body":"<path d='M6 9a6 6 0 0 1 12 0v6l3 3H3l3-3V9Zm4 12h4'/>"},
   {"name":"eye","label":"查看","category":"通用","body":"<path d='M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z'/><circle cx='12' cy='12' r='3'/>"},
   {"name":"clock","label":"时钟","category":"通用","body":"<circle cx='12' cy='12' r='9'/><path d='M12 6v6l4 3'/>"},
-  {"name":"keyboard","label":"键盘","category":"通用","body":"<rect x='2' y='5' width='20' height='14' rx='2'/><path d='M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10'/>"}
+  {"name":"keyboard","label":"键盘","category":"通用","body":"<rect x='2' y='5' width='20' height='14' rx='2'/><path d='M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10'/>"},
+  {"name":"play","label":"运行","category":"开发","body":"<path d='m8 4 12 8-12 8V4Z'/>"},
+  {"name":"pause","label":"暂停","category":"开发","body":"<path d='M8 4v16M16 4v16'/>"},
+  {"name":"stop","label":"停止","category":"开发","body":"<rect x='5' y='5' width='14' height='14' rx='1'/>"},
+  {"name":"bug","label":"调试","category":"开发","body":"<rect x='7' y='8' width='10' height='12' rx='5'/><path d='M9 8V5h6v3M4 6l3 3m13-3-3 3M3 13h4m10 0h4M4 20l4-3m12 3-4-3M12 9v10'/>"},
+  {"name":"hammer","label":"构建","category":"开发","body":"<path d='m13 3 8 8-4 4-8-8 4-4Zm-2 8L3 19l2 2 8-8M5 3l4 4'/>"},
+  {"name":"octagon","label":"断点","category":"开发","body":"<path d='M8 3h8l5 5v8l-5 5H8l-5-5V8l5-5Z'/><circle cx='12' cy='12' r='2'/>"},
+  {"name":"step-forward","label":"单步执行","category":"开发","body":"<path d='m5 5 10 7-10 7V5ZM19 4v16'/>"},
+  {"name":"step-over","label":"单步跳过","category":"开发","body":"<path d='M3 13a8 8 0 0 1 16 0m-4-4 4 4 3-4M4 20h4m4 0h8'/>"},
+  {"name":"git-merge","label":"合并","category":"开发","body":"<circle cx='6' cy='4' r='2'/><circle cx='18' cy='4' r='2'/><circle cx='6' cy='20' r='2'/><path d='M6 6v12m12-12v2c0 5-12 4-12 9'/>"},
+  {"name":"network","label":"依赖关系","category":"开发","body":"<rect x='9' y='2' width='6' height='5' rx='1'/><rect x='2' y='17' width='6' height='5' rx='1'/><rect x='16' y='17' width='6' height='5' rx='1'/><path d='M12 7v5M5 17v-5h14v5'/>"},
+  {"name":"list-checks","label":"检查结果","category":"开发","body":"<path d='m3 6 2 2 4-4m-6 12 2 2 4-4M13 6h8m-8 10h8'/>"},
+  {"name":"braces","label":"代码块","category":"开发","body":"<path d='M8 3H6v7l-3 2 3 2v7h2m8-18h2v7l3 2-3 2v7h-2'/>"}
 ]
