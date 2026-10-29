@@ -194,11 +194,11 @@ summary { font-size: .875rem; color: var(--xu-muted); cursor: pointer; min-heigh
 .inspector-actions .xu-button { padding-inline: 12px; }
 .inspector-note { font-size: .75rem; color: var(--xu-muted); line-height: 1.8; margin-top: 16px; }
 .inspector-code { margin-top: 24px; }
-.empty { text-align: center; padding: 48px 24px; border: 1px dashed var(--xu-control-border); border-radius: 8px; }
-.empty .xu-icon { width: 40px; height: 40px; color: var(--xu-muted); margin-bottom: 16px; }
-.empty h3 { margin-bottom: 8px; }
-.empty p { color: var(--xu-muted); font-size: .875rem; }
-.empty .xu-button { margin-top: 12px; }
+.empty { display: grid; justify-items: center; text-align: center; padding: var(--xu-space-12) var(--xu-space-6); border: 1px solid var(--xu-border); border-radius: var(--xu-radius-lg); background: var(--xu-surface); }
+.empty > .xu-icon { display: block; width: 40px; height: 40px; color: var(--xu-muted); margin-bottom: var(--xu-space-4); }
+.empty > h3 { margin: 0 0 var(--xu-space-2); line-height: 1.5; }
+.empty > p { max-width: 48ch; margin: 0; color: var(--xu-muted); font-size: var(--xu-text-sm); text-wrap: balance; }
+.empty > .xu-button { margin-top: var(--xu-space-6); }
 .type-specimen { font-family: var(--xu-font-display); font-size: 2.5rem; padding: 8px 0 24px; line-height: 1.4; }
 .token-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; margin-top: 24px; }
 .token-button { display: flex; align-items: center; justify-content: space-between; text-align: left; gap: 12px; background: transparent; border: 0; border-bottom: 1px solid var(--xu-border); color: var(--xu-text); padding: 16px 0; min-width: 0; cursor: pointer; }

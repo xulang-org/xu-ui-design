@@ -26,7 +26,7 @@ for (const [mode, theme] of Object.entries(tokens.themes)) {
     for (const foreground of ['text','muted','brand','success','warning','danger','info']) pairs.push([foreground,background,4.5]);
     pairs.push(['control-border',background,3], ['focus',background,3]);
   }
-  pairs.push(['on-brand','brand',4.5], ['on-brand','brand-hover',4.5], ['brand','brand-soft',4.5]);
+  pairs.push(['on-brand','brand',4.5], ['on-brand','brand-hover',4.5], ['on-brand','brand-pressed',4.5], ['text','control-pressed',4.5], ['control-border','control-pressed',3], ['brand','brand-soft',4.5]);
   for (const status of ['success','warning','danger','info']) pairs.push([status,`${status}-soft`,4.5]);
   for (const [fg,bg,min] of pairs) {
     const ratio = contrast(theme[fg], theme[bg]);

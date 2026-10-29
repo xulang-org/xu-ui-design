@@ -2,7 +2,7 @@
 
 XU 生态的 UI 设计标准库：**标准文档、设计 Token、SVG 图标、可操作的效果展厅**。
 
-当前开发版本为 `0.1.1-dev.1`，正式基线为 `0.1.0`。浏览器提供组件契约与交互实现；原生适配针对 SDK 0.10.11 的 Editor，其他原生组件须按实际 SDK 验证。
+当前开发版本为 `0.1.1-dev.2`，正式基线为 `0.1.0`。浏览器提供组件契约与交互实现；原生适配针对 SDK 0.10.11 的 Editor，其他原生组件须按实际 SDK 验证。
 
 ## 运行效果展示
 
@@ -55,11 +55,11 @@ npm run build
 - `standards/*.md`、`components/*.md`：标准与组件契约。
 - `assets/interactions.js`：可卸载的菜单、页签、表格、树和分栏行为。
 - `xu/xuui_tokens/mod.xu`：SDK 0.10.11 原生 Editor 样式与颜色函数。
-- `downloads/xu-ui-resources-0.1.1-dev.1.tar.gz`、`SHA256SUMS` 和 `manifest.json`：版本资源包与来源、校验信息。
+- `downloads/xu-ui-resources-0.1.1-dev.2.tar.gz`、`SHA256SUMS` 和 `manifest.json`：版本资源包与来源、校验信息。
 
 接入与回退见 [MIGRATIONS.md](MIGRATIONS.md)，版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
-实际消费者见 [原生 Writing Desk 接入 PR](https://github.com/xulang-org/examples/pull/21)：SDK 0.10.11 下使用同一份生成资源，亮暗切换保留编辑内容。该接入仍待 dev 审查合并。
+实际消费者见 [原生 Writing Desk 接入 PR](https://github.com/xulang-org/examples/pull/21)：SDK 0.10.11 下使用同一份生成资源，亮暗切换保留编辑内容。该接入已合入 examples 的 dev；固定版本和来源随适配器记录。
 
 ```html
 <link rel="stylesheet" href="./assets/tokens.css">

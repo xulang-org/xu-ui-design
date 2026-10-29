@@ -27,7 +27,7 @@
 
 ## Token 与尺寸
 
-使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
+使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。按钮的边框计入尺寸，sm／md／lg 的图标为 16／20／24 px，间距 8 px，颜色跟随文字；容器插画不能改变内部按钮图标。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
 
 ## 原生映射
 

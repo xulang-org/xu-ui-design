@@ -12,6 +12,8 @@
 | --xu-text | 主文本 | 标题、正文、输入值 |
 | --xu-muted | 辅助文本 | 说明和元数据，仍须可读 |
 | --xu-brand | 品牌和主要操作 | 不兼作错误提示 |
+| --xu-brand-pressed | 主要操作按下 | 与 on-brand 配对，深于悬停背景 |
+| --xu-control-pressed | 次要操作按下 | 与 text 配对，保持边界可见 |
 | --xu-on-brand | 品牌色上的文字 | 必须与 brand 成对使用 |
 | --xu-control-border | 可交互边界 | 输入框和未选中的控件 |
 | --xu-border | 装饰分隔 | 不承担唯一的控件识别 |
