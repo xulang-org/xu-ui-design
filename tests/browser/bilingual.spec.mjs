@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 test('language switch retains a document section and theme, then persists',async({page})=>{
   await page.goto('/?lang=zh-CN#/standards/05-icons#section-2');
+  await expect(page.locator('#section-2')).toBeFocused();
   const skip=page.getByRole('link',{name:'跳到正文',exact:true});
   await skip.focus();await skip.press('Enter');
   await expect(page.locator('main')).toBeFocused();
