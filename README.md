@@ -2,7 +2,7 @@
 
 XU 生态的 UI 设计标准库：**标准文档、设计 Token、SVG 图标、可操作的效果展厅**。
 
-当前版本为 `0.1.0-dev.2`。这是一套浏览器参考实现，可供其他技术栈按契约实现；不代表 XU 原生 UI 已提供相同组件。
+当前版本为 `0.1.0`。这是一套浏览器参考实现，可供其他技术栈按契约实现；不代表 XU 原生 UI 已提供相同组件。
 
 ## 运行效果展示
 
@@ -11,12 +11,11 @@ XU 生态的 UI 设计标准库：**标准文档、设计 Token、SVG 图标、�
 ```sh
 git clone https://github.com/xulang-org/xu-ui-design.git
 cd xu-ui-design
-git switch dev
 npm run check
 npm run dev
 ```
 
-开发内容通过 PR 合入 `dev` 后，上述命令可直接使用。首次初始化 PR 审查期间，切换到 `feat/design-system-foundation` 查看本批内容。
+默认 `main` 为已验收的正式基线；参与开发时从最新 `origin/dev` 建立任务分支。
 
 打开 [本地效果展厅](http://127.0.0.1:4173)。如端口冲突，运行 `PORT=4174 npm run dev`。修改源文件后重新执行构建并刷新；预览服务不提供自动热更新。
 
