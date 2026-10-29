@@ -1,0 +1,15 @@
+{
+  "sourceRevision": "8d79ae32b892ec603cf8c212cab3e3d46816dc7f",
+  "generationRun": "https://github.com/xulang-org/xu-ui-design/actions/runs/40902081648",
+  "container": "mcr.microsoft.com/playwright:v1.64.1-noble",
+  "browser": "Chromium (Playwright 1.64.1)",
+  "locale": "zh-CN",
+  "reducedMotion": "reduce",
+  "review": "Full desktop icon inventory in both themes; mobile tabs in both themes. Reviewed before committing candidates. Initial run fails intentionally because baselines were absent.",
+  "sha256": {
+    "icons-desktop-dark.png": "dcd527368984f6b13b5c99c964eb156ccc00f7fb1d3635291cc4f96f8478b573",
+    "icons-desktop-light.png": "e2cb736ced68f53123c8094501a74ad1d032bb886db51d449994711abfca0a2f",
+    "tabs-mobile-dark.png": "14718a87660e5396edac95cea8ac1b03f51998316a27bbcc8daeeff08e63fcda",
+    "tabs-mobile-light.png": "05adc22eb28e6f98846c48d08d6c1622749c80443074bfb5ba4448a880dc9ba2"
+  }
+}

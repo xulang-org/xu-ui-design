@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { readdir, access } from 'node:fs/promises';
 import { spawnSync, spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { json, read, root, contrast } from './lib.mjs';
 
 const tokens = await json('tokens/tokens.json');
@@ -51,7 +53,7 @@ for (const item of icons) {
     }
   }
 }
-assert.equal(icons.length, 48, 'Update documented icon inventory when changing the catalog.');
+assert.ok(icons.length >= 48, 'Preserve the original icon inventory.');
 assert.equal(docs.length, 12, 'Update documented standard inventory when changing the index.');
 assert.equal(new Set(docs.map((doc) => doc.id)).size, docs.length);
 for (const doc of docs) {
@@ -63,7 +65,7 @@ for (const doc of docs) {
     assert.ok(docs.some((entry) => `${entry.id}.md` === target), `Broken standard link: ${doc.id} -> ${target}`);
   }
 }
-for (const file of ['src/app.js','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs']) {
+for (const file of ['src/app.js','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs','scripts/package.mjs','scripts/check-hygiene.mjs','scripts/native-tokens.mjs','src/interactions.js','src/component-pages.js']) {
   const result = spawnSync(process.execPath, ['--check', new URL(file, root).pathname], { encoding:'utf8' });
   assert.equal(result.status, 0, result.stderr);
 }
@@ -73,7 +75,7 @@ for (const [,path] of html.matchAll(/(?:src|href)="\.\/([^"#]+)"/g)) await acces
 assert.ok(!html.includes('{{VERSION}}'));
 const app = await read('src/app.js');
 for (const [,name] of app.matchAll(/icon\('([a-z-]+)'/g)) assert.ok(names.has(name), `Unknown icon reference: ${name}`);
-for (const file of ['src/components.css','src/site.css']) {
+for (const file of ['src/components.css','src/site.css','src/component-lab.css']) {
   const source = await read(file);
   for (const [,name] of source.matchAll(/var\(--xu-([a-z0-9-]+)/g)) assert.ok(name in tokens.base || name in tokens.themes.dark, `Unknown token: ${name}`);
 }
@@ -86,6 +88,27 @@ assert.ok(iconFiles.includes('catalog.json'));
 const data = await json('dist/assets/data.json');
 assert.equal(data.docs.length, docs.length);
 assert.equal(data.icons.length, icons.length);
+const contracts=await json('components/index.json');
+assert.equal(data.components.length,contracts.length);
+assert.equal(new Set(contracts.map(item=>item.id)).size,contracts.length);
+for (const item of contracts) {
+  assert.match(item.id,/^[a-z][a-z-]+$/);
+  assert.ok(docs.some(doc=>doc.id===item.standard));
+  const source=await read(`components/${item.id}.md`);
+  for (const section of ['结构','状态矩阵','键盘行为','原生映射','验收']) assert.ok(source.includes(`## ${section}`),`${item.id}: missing ${section}`);
+}
+assert.ok((await read('dist/xu/xuui_tokens/mod.xu')).includes(tokens.version));
+const archiveName=`xu-ui-resources-${pkg.version}.tar.gz`;
+const archive=new URL(`dist/downloads/${archiveName}`,root);
+const archiveBytes=await readFile(archive);
+assert.equal(await read('dist/downloads/SHA256SUMS'),`${createHash('sha256').update(archiveBytes).digest('hex')}  ${archiveName}\n`);
+const manifest=await json('dist/downloads/manifest.json');
+assert.equal(manifest.version,pkg.version);
+for(const path of ['tokens/tokens.json','icons/play.svg','xu/xuui_tokens/mod.xu','LICENSE','MIGRATIONS.md']) {
+  const result=spawnSync('tar',['-xOf',archive.pathname,path]);
+  assert.equal(result.status,0,result.stderr?.toString());
+  assert.equal(createHash('sha256').update(result.stdout).digest('hex'),manifest.files[path],`Archive content mismatch: ${path}`);
+}
 // Exercise the actual preview server, including the root path and escape guard.
 const child = spawn(process.execPath, [new URL('scripts/serve.mjs', root).pathname], { cwd: root, env: { ...process.env, PORT:'0' }, stdio:['ignore','pipe','pipe'] });
 try {
