@@ -178,7 +178,7 @@ summary { font-size: .875rem; color: var(--xu-muted); cursor: pointer; min-heigh
 .icon-tile:hover { background: var(--xu-surface); border-color: var(--xu-border); }
 .icon-tile[aria-pressed="true"] { background: var(--xu-brand-soft); border-color: var(--xu-brand); color: var(--xu-brand); }
 .icon-tile[aria-pressed="true"] .icon-name { color: var(--xu-brand); }
-.icon-inspector { position: sticky; top: 104px; min-width: 0; border-left: 1px solid var(--xu-border); padding-left: 24px; }
+.icon-inspector { position: sticky; top: 104px; max-height: calc(100dvh - 128px); overflow-y: auto; scrollbar-gutter: stable; min-width: 0; border-left: 1px solid var(--xu-border); padding-left: 24px; }
 .inspector-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .icon-blueprint { width: 192px; height: 192px; position: relative; margin: 24px auto 40px; background-color: var(--xu-surface); background-image: linear-gradient(color-mix(in srgb,var(--xu-border) 45%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--xu-border) 45%,transparent) 1px,transparent 1px); background-size: 8px 8px; border: 1px solid var(--xu-border); }
 .icon-blueprint .xu-icon { width: 192px; height: 192px; color: var(--xu-text); }
