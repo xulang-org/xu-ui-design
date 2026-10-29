@@ -56,3 +56,17 @@ test('tree folder and file labels share a column',async({page})=>{
   });
   expect(columns[0]).toBeCloseTo(columns[1],1);
 });
+
+test('native selects share the input height and keep filtering behavior',async({page})=>{
+  await page.goto('/#/patterns');
+  const input=page.getByLabel('搜索项目',{exact:true}),select=page.getByLabel('状态',{exact:true});
+  await expect(select).toBeVisible();
+  expect((await select.boundingBox()).height).toBe((await input.boundingBox()).height);
+  const centerOffset=await select.evaluate(element=>{
+    const arrow=element.parentElement.querySelector('svg').getBoundingClientRect();
+    const box=element.getBoundingClientRect();
+    return Math.abs(arrow.y+arrow.height/2-box.y-box.height/2);
+  });
+  expect(centerOffset).toBeLessThan(.5);
+  await select.selectOption('draft');await expect(page.locator('#project-table tbody tr')).toHaveCount(1);
+});

@@ -32,6 +32,18 @@
 - 同组选项用 fieldset 和 legend；不要只靠位置表示分组。
 - 文本区允许纵向调整；密码和私密字段遵循业务安全要求，示例中不接收真实凭据。
 
+原生 select 使用 `xu-select-wrap` 包住控件与装饰箭头，统一 Safari、Chromium 和 Firefox 的控件外框；选项、键盘与系统弹出层仍由原生 select 提供。标签通过 for 指向 select，不让包装元素进入焦点顺序。
+
+```html
+<label for="platform">目标平台</label>
+<span class="xu-select-wrap">
+  <select id="platform" class="xu-select"><option>桌面应用</option></select>
+  <svg class="xu-icon" aria-hidden="true" focusable="false">
+    <use href="./assets/icons.svg#chevron-down"></use>
+  </svg>
+</span>
+```
+
 ## 参考演示边界
 
 组件展厅的项目表单仅在当前页面验证和显示反馈；页面模式的设置示例可保存到本地浏览器，并明确显示本地保存或存储失败。两者都不连接 XU 编译器和远端服务。

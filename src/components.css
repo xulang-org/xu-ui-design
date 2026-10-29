@@ -21,6 +21,10 @@
 .xu-button[aria-busy="true"] { cursor: wait; }
 :where(.xu-button,.xu-icon-button,.xu-input,.xu-select,.xu-textarea):focus-visible { outline: 2px solid var(--xu-focus); outline-offset: 3px; }
 .xu-input, .xu-select, .xu-textarea { box-sizing: border-box; width: 100%; min-height: var(--xu-control-md); border: 1px solid var(--xu-control-border); border-radius: var(--xu-radius-md); background: var(--xu-surface); color: var(--xu-text); padding: var(--xu-space-2) var(--xu-space-3); font: 400 var(--xu-text-sm)/1.5 var(--xu-font-sans); }
+.xu-select-wrap { position: relative; display: block; min-width: 0; color: var(--xu-text); }
+.xu-select-wrap > .xu-select { display: block; appearance: none; padding-inline-end: var(--xu-control-md); }
+.xu-select-wrap > .xu-icon { position: absolute; inset-inline-end: var(--xu-space-3); top: 50%; transform: translateY(-50%); width: var(--xu-icon-sm); height: var(--xu-icon-sm); margin: 0; color: inherit; pointer-events: none; }
+.xu-select-wrap:has(> .xu-select:disabled) > .xu-icon { opacity: .55; }
 .xu-textarea { resize: vertical; min-height: 96px; }
 .xu-input::placeholder, .xu-textarea::placeholder { color: var(--xu-muted); }
 .xu-input[aria-invalid="true"], .xu-textarea[aria-invalid="true"] { border-color: var(--xu-danger); }
