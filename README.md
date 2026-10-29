@@ -54,7 +54,7 @@ npm run build
 - `tokens/tokens.json`：项目自定义扁平 Token 数据，不宣称 DTCG 格式兼容。
 - `standards/*.md`、`components/*.md`：标准与组件契约。
 - `assets/interactions.js`：可卸载的菜单、页签、表格、树和分栏行为。
-- `xu/xuui_tokens/mod.xu`：SDK 0.10.11 原生 Theme／Editor 适配。
+- `xu/xuui_tokens/mod.xu`：SDK 0.10.11 原生 Editor 样式与颜色函数。
 - `downloads/xu-ui-resources-0.1.1-dev.1.tar.gz`、`SHA256SUMS` 和 `manifest.json`：版本资源包与来源、校验信息。
 
 接入与回退见 [MIGRATIONS.md](MIGRATIONS.md)，版本变更见 [CHANGELOG.md](CHANGELOG.md)。

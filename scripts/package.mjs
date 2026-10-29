@@ -34,7 +34,7 @@ export async function packageResources(pkg) {
   const status=spawnSync('git',['status','--porcelain'],{cwd:root,encoding:'utf8'});
   const manifest={name:pkg.name,version:pkg.version,sourceRevision:revision.status===0?revision.stdout.trim():null,
     workingTreeDirty:status.status===0?!!status.stdout.trim():null,
-    nativeAdapter:{sdk:'0.10.11',scope:'Editor appearance and Theme; other widgets retain SDK defaults'},
+    nativeAdapter:{sdk:'0.10.11',scope:'Editor appearance and semantic colors; other widgets retain SDK defaults'},
     files:Object.fromEntries([...files].sort(([a],[b])=>a.localeCompare(b,'en')).map(([name,bytes])=>[name,sha256(bytes)]))};
   files.set('MANIFEST.json',Buffer.from(JSON.stringify(manifest,null,2)+'\n'));
   const tar=Buffer.concat([...files].sort(([a],[b])=>a.localeCompare(b,'en')).map(([name,bytes])=>tarEntry(name,bytes)).concat([Buffer.alloc(1024)]));

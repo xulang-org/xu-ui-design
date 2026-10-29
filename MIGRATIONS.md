@@ -13,7 +13,7 @@
 
 ## 原生 XU Editor
 
-将包内 `xu/xuui_tokens/` 复制到应用模块，使用 `tokens #xuui_tokens`。调用 `tokens.editor_styles(dark)` 后，Editor 通过 `paint_styled` 绘制；画布使用 `tokens.canvas(dark)`。主题变化需更新 Styles、背景并标记相关节点重绘。该适配以 SDK 0.10.11 为依据，仅映射 Editor 的颜色、边框、焦点、选择色、16 px 文字与 8 px 圆角；其他控件仍使用 SDK 默认样式。Theme 导出供旧接口接入。
+将包内 `xu/xuui_tokens/` 复制到应用模块，使用 `tokens #xuui_tokens`。调用 `tokens.editor_styles(dark)` 后，Editor 通过 `paint_styled` 绘制；画布使用 `tokens.canvas(dark)`。主题变化需更新 Styles、背景并标记相关节点重绘。该适配以 SDK 0.10.11 为依据，仅映射 Editor 的颜色、边框、焦点、选择色、16 px 文字与 8 px 圆角；其他控件仍使用 SDK 默认样式。不导出简化 Theme：旧 Editor.paint 的选择区文字复用普通前景色，无法独立保证品牌选择色上的文字对比度。原生 Editor 必须使用完整 Styles 映射。
 
 SDK 自定义绘制控件的语义暴露和屏幕阅读器支持须在原生产品逐项验收。本库不能通过 CSS 或 Token 为 SDK 补出可访问性树。当前实机验证范围为 macOS arm64；Windows、Linux 与屏幕阅读器均不宣称已通过。
 
