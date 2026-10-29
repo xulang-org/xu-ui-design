@@ -41,7 +41,7 @@ for (const item of icons) {
   assert.match(item.name, /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/);
   assert.ok(!names.has(item.name), `Duplicate icon: ${item.name}`);
   names.add(item.name);
-  assert.ok(item.label && item.category, `Missing icon metadata: ${item.name}`);
+  assert.ok(item.label && item.category && item.labelEn && item.categoryEn, `Missing bilingual icon metadata: ${item.name}`);
   const elements = [...item.body.matchAll(/<([a-z]+)((?:\s+[a-z0-9]+='[^']*')*)\s*\/>/g)];
   assert.equal(elements.map((m) => m[0]).join(''), item.body, `Malformed SVG: ${item.name}`);
   assert.ok(elements.length > 0);
@@ -58,14 +58,18 @@ assert.equal(docs.length, 12, 'Update documented standard inventory when changin
 assert.equal(new Set(docs.map((doc) => doc.id)).size, docs.length);
 for (const doc of docs) {
   assert.match(doc.id, /^\d{2}-[a-z-]+$/);
-  const source = await read(`standards/${doc.id}.md`);
-  assert.equal((source.match(/^# /gm) || []).length, 1, `One h1 required: ${doc.id}`);
-  for (const [,target] of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
-    if (target.startsWith('https://')) continue;
-    assert.ok(docs.some((entry) => `${entry.id}.md` === target), `Broken standard link: ${doc.id} -> ${target}`);
+  for (const [locale,suffix] of [['en',''],['zh-CN','.zh-CN']]) {
+    for (const key of ['title','group','summary']) assert.ok(doc[key][locale],`${doc.id}: missing ${locale} ${key}`);
+    const source = await read(`standards/${doc.id}${suffix}.md`);
+    assert.equal((source.match(/^# /gm) || []).length, 1, `One h1 required: ${doc.id} ${locale}`);
+    if (locale === 'en') assert.ok(!/[\u3400-\u9fff]/u.test(source),`${doc.id}: untranslated English document`);
+    for (const [,target] of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
+      if (target.startsWith('https://')) continue;
+      assert.ok(docs.some((entry) => `${entry.id}${suffix}.md` === target), `Broken standard link: ${doc.id} -> ${target}`);
+    }
   }
 }
-for (const file of ['src/app.js','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs','scripts/package.mjs','scripts/check-hygiene.mjs','scripts/native-tokens.mjs','src/interactions.js','src/component-pages.js']) {
+for (const file of ['src/app.js','src/boot.js','scripts/localize.mjs','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs','scripts/package.mjs','scripts/check-hygiene.mjs','scripts/native-tokens.mjs','src/interactions.js','src/component-pages.js']) {
   const result = spawnSync(process.execPath, ['--check', new URL(file, root).pathname], { encoding:'utf8' });
   assert.equal(result.status, 0, result.stderr);
 }
@@ -91,11 +95,31 @@ assert.equal(data.icons.length, icons.length);
 const contracts=await json('components/index.json');
 assert.equal(data.components.length,contracts.length);
 assert.equal(new Set(contracts.map(item=>item.id)).size,contracts.length);
+for (const locale of ['en','zh-CN']) {
+  const localized = await json(`dist/assets/data.${locale}.json`);
+  assert.equal(localized.locale,locale);
+  assert.equal(localized.docs.length,12);
+  assert.equal(localized.components.length,8);
+  for (const file of ['app.js','component-pages.js','interactions.js']) {
+    const path=`dist/assets/${locale}/${file}`;
+    const syntax=spawnSync(process.execPath,['--check',new URL(path,root).pathname],{encoding:'utf8'});
+    assert.equal(syntax.status,0,syntax.stderr);
+    if (locale === 'en') assert.ok(!/[\u3400-\u9fff]/u.test(await read(path)),`Untranslated client: ${path}`);
+  }
+  for (const item of [...localized.docs,...localized.components]) {
+    assert.equal(typeof item.title,'string');
+    await access(new URL(`dist/${item.source}`,root));
+    if (locale === 'en') assert.ok(!/[\u3400-\u9fff]/u.test(item.html),`Untranslated content: ${item.id}`);
+  }
+}
 for (const item of contracts) {
   assert.match(item.id,/^[a-z][a-z-]+$/);
   assert.ok(docs.some(doc=>doc.id===item.standard));
-  const source=await read(`components/${item.id}.md`);
-  for (const section of ['结构','状态矩阵','键盘行为','原生映射','验收']) assert.ok(source.includes(`## ${section}`),`${item.id}: missing ${section}`);
+  for (const [locale,suffix,sections] of [['en','',['Structure','State matrix','Keyboard behavior','Native mapping','Acceptance']],['zh-CN','.zh-CN',['结构','状态矩阵','键盘行为','原生映射','验收']]]) {
+    for (const key of ['title','group','summary','native']) assert.ok(item[key][locale],`${item.id}: missing ${locale} ${key}`);
+    const source=await read(`components/${item.id}${suffix}.md`);
+    for (const section of sections) assert.ok(source.includes(`## ${section}`),`${item.id}: missing ${section}`);
+  }
 }
 assert.ok((await read('dist/xu/xuui_tokens/mod.xu')).includes(tokens.version));
 const archiveName=`xu-ui-resources-${pkg.version}.tar.gz`;
@@ -104,7 +128,7 @@ const archiveBytes=await readFile(archive);
 assert.equal(await read('dist/downloads/SHA256SUMS'),`${createHash('sha256').update(archiveBytes).digest('hex')}  ${archiveName}\n`);
 const manifest=await json('dist/downloads/manifest.json');
 assert.equal(manifest.version,pkg.version);
-for(const path of ['tokens/tokens.json','icons/play.svg','xu/xuui_tokens/mod.xu','LICENSE','MIGRATIONS.md']) {
+for(const path of ['tokens/tokens.json','icons/play.svg','xu/xuui_tokens/mod.xu','LICENSE','MIGRATIONS.md','MIGRATIONS.zh-CN.md','standards/05-icons.md','standards/05-icons.zh-CN.md','components/button.md','components/button.zh-CN.md','assets/en/interactions.js']) {
   const result=spawnSync('tar',['-xOf',archive.pathname,path]);
   assert.equal(result.status,0,result.stderr?.toString());
   assert.equal(createHash('sha256').update(result.stdout).digest('hex'),manifest.files[path],`Archive content mismatch: ${path}`);

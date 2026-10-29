@@ -1,32 +1,32 @@
-# 可访问性与动效
+# Accessibility and motion
 
-以 WCAG 2.2 AA 为设计目标，并把 44 × 44 px 作为独立图标及触摸目标的项目标准；44 px 高于 WCAG 2.2 AA 的部分最低目标尺寸要求，不能将两者混为一谈。
+WCAG 2.2 AA is the design target, and 44 × 44 px is the project standard for standalone icon and touch targets. 44 px is above the minimum target size required by some WCAG 2.2 AA criteria, and the two must not be conflated.
 
-## 键盘与语义
+## Keyboard and semantics
 
-- 原生 button、a、input、select、details、dialog 优先于自造交互。
-- 所有操作支持键盘，焦点顺序跟随阅读顺序。
-- 不使用正数 tabindex；内容切换后将焦点移动至主标题。
-- 每个仅图标按钮有可访问名称；装饰图标对辅助技术隐藏。
-- 输入错误通过 aria-invalid 和 aria-describedby 与字段关联。
-- 非关键结果用 role="status"；阻断错误保留文字并聚焦问题。
+- Native button, a, input, select, details and dialog take precedence over custom interactions.
+- All actions support the keyboard, and focus order follows reading order.
+- Do not use positive tabindex. After content changes, move focus to the main heading.
+- Every icon-only button has an accessible name. Decorative icons are hidden from assistive technology.
+- Input errors are associated with fields through aria-invalid and aria-describedby.
+- Use role="status" for non-critical results. Blocking errors keep their text and focus the problem.
 
-## 视觉
+## Visual
 
-正文对比至少 4.5:1，大字至少 3:1，必要的非文本边界至少 3:1。状态不能只用颜色表达；200% 放大和 320 px 视口下不能损失主要内容。焦点轮廓不可被 sticky 区域或 overflow 裁切。
+Body text contrast is at least 4.5:1, large text at least 3:1, and essential non-text boundaries at least 3:1. Status must not be expressed by color alone. At 200% zoom and a 320 px viewport, no primary content may be lost. Focus outlines must not be clipped by sticky areas or overflow.
 
-## 动效
+## Motion
 
-快速反馈 120 ms，一般切换 200 ms，使用 ease-out。仅对 opacity 和 transform 添加过渡；避免大幅位移、循环装饰和闪烁。prefers-reduced-motion: reduce 时关闭非必要动效，loader 保留文字等待反馈。
+Quick feedback takes 120 ms and general transitions take 200 ms, using ease-out. Only add transitions to opacity and transform. Avoid large displacement, looping decoration and flashing. Under prefers-reduced-motion: reduce, turn off non-essential motion, and loaders keep text feedback for waiting.
 
-## 验收步骤
+## Acceptance steps
 
-- 用 Tab、Shift+Tab、Enter、Space 和 Escape 走完导航、表单、对话框和图标详情。
-- 检查关闭对话框后的焦点、筛选空结果、复制失败和存储失败。
-- 双主题检查正文、状态文字、输入边界和焦点。
-- 检查 320 px、768 px、1440 px 和 200% 缩放。
-- 用至少一种屏幕阅读器检查标题、标签、错误关联和 live region；自动检查不能替代该项。
+- Use Tab, Shift+Tab, Enter, Space and Escape to go through navigation, forms, dialogs and icon details.
+- Check focus after closing a dialog, empty filter results, copy failure and storage failure.
+- In both themes, check body text, status text, input boundaries and focus.
+- Check 320 px, 768 px, 1440 px and 200% zoom.
+- Use at least one screen reader to check headings, labels, error associations and live regions. Automated checks cannot replace this item.
 
-首版不宣称已经通过屏幕阅读器全面认证。维护者按产品实际支持的系统组合补齐人工验收。
+The first release does not claim full screen reader certification. Maintainers complete manual acceptance for the system combinations the product actually supports.
 
-参考：[WCAG 2.2 快速参考](https://www.w3.org/WAI/WCAG22/quickref/)。
+Reference: [WCAG 2.2 Quick Reference](https://www.w3.org/WAI/WCAG22/quickref/).

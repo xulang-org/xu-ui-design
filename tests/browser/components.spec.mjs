@@ -36,12 +36,12 @@ test('table pagination has boundaries and filtering resets the page',async({page
   await visit(page,'table');
   await expect(page.getByRole('button',{name:'上一页',exact:true})).toBeDisabled();
   await page.getByRole('button',{name:'下一页',exact:true}).click();
-  await expect(page.locator('.pagination [role="status"]')).toContainText('第 2 / 3 页');
+  await expect(page.locator('.pagination [role="status"]')).toContainText('页码 2 / 3');
   await page.getByRole('button',{name:'下一页',exact:true}).click();
   await expect(page.getByRole('button',{name:'下一页',exact:true})).toBeDisabled();
   await page.getByLabel('筛选演示项目',{exact:true}).fill('not-present');
   await expect(page.locator('[data-paged-table] tbody')).toContainText('没有匹配的项目');
-  await expect(page.locator('.pagination [role="status"]')).toContainText('第 1 / 1 页');
+  await expect(page.locator('.pagination [role="status"]')).toContainText('页码 1 / 1');
   await page.getByRole('button',{name:'清空筛选',exact:true}).click();
   await expect(page.locator('[data-paged-table] tbody tr')).toHaveCount(4);
 });

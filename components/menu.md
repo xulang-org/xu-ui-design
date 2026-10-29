@@ -1,42 +1,42 @@
-# 操作菜单
+# Action menu
 
-展开、方向键、禁用项与退出。以下是组件的设计与交互契约，Web 参考实现与原生能力边界分别说明。
+Expansion, arrow keys, disabled items and exit. The following is the component's design and interaction contract; the Web reference implementation and native capability boundaries are described separately.
 
-## 结构
+## Structure
 
-- 触发按钮
-- 菜单容器
-- 可操作项
-- 禁用项
+- Trigger button
+- Menu container
+- Actionable items
+- Disabled items
 
-## 状态矩阵
+## State matrix
 
-| 状态 | 必须满足 |
+| State | Must satisfy |
 | --- | --- |
-| 关闭 | aria-expanded=false，菜单不进入 Tab 顺序 |
-| 展开 | aria-expanded=true，焦点进入首项 |
-| 聚焦项 | 仅一个可用项处于 Tab 停靠点 |
-| 禁用项 | aria-disabled=true，不执行动作 |
-| 已选择 | 菜单关闭，播报动作结果 |
-| 退出 | Escape 关闭并恢复触发器焦点 |
+| Closed | aria-expanded=false; the menu is not in the Tab order |
+| Expanded | aria-expanded=true; focus moves to the first item |
+| Focused item | Only one available item is a Tab stop |
+| Disabled item | aria-disabled=true; no action is performed |
+| Selected | The menu closes and the action result is announced |
+| Exit | Escape closes the menu and restores focus to the trigger |
 
-## 键盘行为
+## Keyboard behavior
 
-- 触发器上 ArrowDown 展开，ArrowUp 展开并聚焦末项。
-- 菜单内 ArrowUp / ArrowDown 循环；Home / End 到首尾。
-- Escape 返回触发器；Tab 关闭菜单并保持正常焦点顺序。
+- On the trigger, ArrowDown expands; ArrowUp expands and focuses the last item.
+- Inside the menu, ArrowUp / ArrowDown cycle; Home / End go to the first and last items.
+- Escape returns to the trigger; Tab closes the menu and keeps the normal focus order.
 
-## Token 与尺寸
+## Tokens and sizing
 
-使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
+Use --xu-text, --xu-muted, --xu-brand, --xu-focus and --xu-control-border. The default control height is 40 px; touch targets are at least 44 px. Components must support dark and light themes and respect the user's root font size and reduced motion preference.
 
-## 原生映射
+## Native mapping
 
-原生 widgets.Menu 与 ui.MenuEntry 均有菜单能力；层级、快捷键和宿主菜单栏需要单独适配。
+Native widgets.Menu and ui.MenuEntry both provide menu capabilities; hierarchy, shortcuts and the host menu bar need separate adaptation.
 
-## 验收
+## Acceptance
 
-- 默认、聚焦、禁用和主要状态均可在对应效果中操作或对照。
-- 320 px 下没有页面级横向溢出，长名称和空数据保留含义。
-- 使用原生语义或完整 ARIA 关系；错误能恢复且不丢失用户输入。
-- 浏览器回归覆盖成功路径和至少一种边界状态；屏幕阅读器人工结果另行记录，不以自动扫描代替。
+- Default, focused, disabled and primary states can all be operated or compared in the corresponding demo.
+- At 320 px there is no page-level horizontal overflow; long names and empty data keep their meaning.
+- Use native semantics or complete ARIA relationships; errors are recoverable without losing user input.
+- Browser regression tests cover the success path and at least one edge state; manual screen reader results are recorded separately and are not replaced by automated scans.

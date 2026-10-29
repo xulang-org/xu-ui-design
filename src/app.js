@@ -13,6 +13,14 @@ let toastTimer;
 let opener;
 let pageCleanup;
 
+// The English client is compiled from this controller and the shared copy catalog.
+$('.skip-link').textContent = '跳到正文';
+$('.wordmark').setAttribute('aria-label','XUUI 设计系统首页');
+$('.wordmark-note').textContent = '设计标准与资源';
+$('#sidebar').setAttribute('aria-label','设计系统导航');
+$('a[href="https://github.com/xulang-org/xu-ui-design"]').setAttribute('aria-label','查看 GitHub 仓库');
+$('meta[name="description"]').content = 'XUUI 设计系统：设计标准、语义 Token、SVG 图标与可操作的组件和页面参考。';
+
 function notify(message) {
   clearTimeout(toastTimer);
   const toast = $('#toast');
@@ -41,6 +49,8 @@ function updateThemeButton() {
 
 function setTheme(theme) {
   document.documentElement.dataset.theme = theme;
+  const url = new URL(location.href);
+  if (url.searchParams.has('theme')) { url.searchParams.set('theme',theme); history.replaceState(null,'',url); }
   try { localStorage.setItem('xu-ui-theme', theme); } catch { /* Theme still works without persistence. */ }
   updateThemeButton();
   if (activeRoute === 'foundations') { render(); $('#theme-toggle').focus(); }
@@ -103,15 +113,15 @@ function overview() {
 }
 
 function standards() {
-  return `${breadcrumbs('标准文档')}${heading('DOCUMENTATION / 12 STANDARDS','设计标准','从视觉基础到交付验收，每篇标准都关联对应效果。选择一篇开始阅读，或通过关键词查找。')}<div class="toolbar"><div class="xu-field"><label for="doc-search">查找标准</label><input class="xu-input" type="search" id="doc-search" placeholder="例如：图标、表单、主题"></div></div><p class="result-count" id="doc-count" role="status">${data.docs.length} 篇标准</p><div class="docs-grid" id="doc-results"></div>`;
+  return `${breadcrumbs('标准文档')}${heading('DOCUMENTATION / 12 STANDARDS','设计标准','从视觉基础到交付验收，每篇标准都关联对应效果。选择一篇开始阅读，或通过关键词查找。')}<div class="toolbar"><div class="xu-field"><label for="doc-search">查找标准</label><input class="xu-input" type="search" id="doc-search" placeholder="例如：图标、表单、主题"></div></div><p class="result-count" id="doc-count" role="status">标准数量：${data.docs.length}</p><div class="docs-grid" id="doc-results"></div>`;
 }
 
 function updateDocs() {
   const query = $('#doc-search').value.trim().toLowerCase();
-  const docs = data.docs.filter((doc) => `${doc.title} ${doc.summary} ${doc.group}`.toLowerCase().includes(query));
-  $('#doc-count').textContent = `${docs.length} 篇标准`;
+  const docs = data.docs.filter((doc) => doc.search.toLowerCase().includes(query));
+  $('#doc-count').textContent = `标准数量：${docs.length}`;
   const groups = [...new Set(docs.map((doc) => doc.group))];
-  $('#doc-results').innerHTML = docs.length ? groups.map((group) => `<section class="doc-group"><h2>${group}<span>${docs.filter((doc) => doc.group === group).length} 篇</span></h2><div>${docs.filter((doc) => doc.group === group).map((doc) => `<a href="#/standards/${doc.id}" class="doc-card"><span class="num">${doc.id.slice(0, 2)}</span><div><h3>${doc.title}</h3><p>${doc.summary}</p></div>${icon('arrow-right')}</a>`).join('')}</div></section>`).join('') : `<div class="empty"><h3>没有找到对应标准</h3><p>试试“基础”“组件”，或清空关键词。</p>${button('清空搜索', 'id="clear-doc-search"')}</div>`;
+  $('#doc-results').innerHTML = docs.length ? groups.map((group) => `<section class="doc-group"><h2>${group}<span>${docs.filter((doc) => doc.group === group).length}</span></h2><div>${docs.filter((doc) => doc.group === group).map((doc) => `<a href="#/standards/${doc.id}" class="doc-card"><span class="num">${doc.id.slice(0, 2)}</span><div><h3>${doc.title}</h3><p>${doc.summary}</p></div>${icon('arrow-right')}</a>`).join('')}</div></section>`).join('') : `<div class="empty"><h3>没有找到对应标准</h3><p>试试“基础”“组件”，或清空关键词。</p>${button('清空搜索', 'id="clear-doc-search"')}</div>`;
   $('#clear-doc-search')?.addEventListener('click', () => { $('#doc-search').value = ''; updateDocs(); $('#doc-search').focus(); });
 }
 
@@ -127,7 +137,7 @@ function documentView(id) {
   });
   const next = data.docs[index + 1];
   return `${breadcrumbs(`设计标准 / ${doc.title}`)}<div class="reading-layout"><aside class="doc-outline" aria-label="本篇目录"><details ${window.matchMedia('(min-width: 1280px)').matches ? 'open' : ''}><summary>本篇目录</summary>${sections.map(({anchor,title}) => `<a href="#/standards/${id}#${anchor}">${title}</a>`).join('')}</details></aside><div class="document">
-    <div class="document-actions"><a class="small muted" href="#/standards">${icon('arrow-left')} 全部标准</a><a class="text-action" href="./standards/${id}.md" download>${icon('download')} Markdown</a></div>
+    <div class="document-actions"><a class="small muted" href="#/standards">${icon('arrow-left')} 全部标准</a><a class="text-action" href="./${doc.source}" download>${icon('download')} Markdown</a></div>
     <article>${html}</article>
     <div class="document-next"><div><span class="small muted">将标准用到界面中</span><p>查看这篇规范对应的实际效果。</p></div>${link(`查看对应效果 ${icon('arrow-right')}`, doc.demo, 'primary')}</div>
     ${next ? `<a class="next-standard" href="#/standards/${next.id}"><span>继续阅读</span><strong>${next.title}</strong>${icon('arrow-right')}</a>` : ''}
@@ -177,7 +187,7 @@ function updateInspector() {
 function updateIcons() {
   const query = $('#icon-search').value.trim().toLowerCase();
   const category = $('#icon-category').value;
-  const results = data.icons.filter((item) => `${item.name} ${item.label} ${item.category}`.toLowerCase().includes(query) && (category === 'all' || item.category === category));
+  const results = data.icons.filter((item) => item.search.toLowerCase().includes(query) && (category === 'all' || item.category === category));
   $('#icon-count').textContent = `${results.length} / ${data.icons.length} 枚图标`;
   const container = $('#icon-results');
   container.style.setProperty('--preview-icon-size', `${$('#icon-size').value}px`);
@@ -357,10 +367,10 @@ dialog.addEventListener('close', () => { if (opener?.isConnected) opener.focus()
 window.addEventListener('hashchange', () => { if (location.hash !== '#main') { closeMenu(); render(true); } });
 
 try {
-  const response = await fetch('./assets/data.json');
+  const response = await fetch(`./assets/data.${document.documentElement.lang}.json`);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   data = await response.json();
   render();
 } catch (error) {
-  main.innerHTML = `${heading('LOAD ERROR','标准暂时无法载入。','请确认通过本地 HTTP 服务访问，重新运行 npm run dev 后刷新。')}<p class="small muted">${esc(error.message)}</p><a class="xu-button" href="https://github.com/xulang-org/xu-ui-design/tree/feat/design-system-foundation/standards">阅读仓库中的标准源文件</a>`;
+  main.innerHTML = `${heading('LOAD ERROR','标准暂时无法载入。','请确认通过本地 HTTP 服务访问，重新运行 npm run dev 后刷新。')}<p class="small muted">${esc(error.message)}</p><a class="xu-button" href="https://github.com/xulang-org/xu-ui-design/tree/dev/standards">阅读仓库中的标准源文件</a>`;
 }

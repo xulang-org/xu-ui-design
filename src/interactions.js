@@ -90,7 +90,7 @@ export function mountPagedTable(root, records) {
     });
     if (!rows.length) { const row = document.createElement('tr'), cell = document.createElement('td'); cell.colSpan = 3; cell.textContent = '没有匹配的项目，请清空筛选。'; row.append(cell); body.append(row); }
     previous.disabled = page === 1; next.disabled = page === pages;
-    status.textContent = `${rows.length} 条记录 · 第 ${page} / ${pages} 页`;
+    status.textContent = `记录数：${rows.length} · 页码 ${page} / ${pages}`;
     sort.closest('th').setAttribute('aria-sort', ascending ? 'ascending' : 'descending');
     clear.hidden = !query;
   };

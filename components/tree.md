@@ -1,43 +1,43 @@
-# 文件树
+# File tree
 
-展开层级、选中项目与可见项导航。以下是组件的设计与交互契约，Web 参考实现与原生能力边界分别说明。
+Expandable hierarchy, selected item and visible-item navigation. The following is the component's design and interaction contract; the Web reference implementation and native capability boundaries are described separately.
 
-## 结构
+## Structure
 
-- tree 容器
+- tree container
 - treeitem
-- 层级 group
-- 展开标记
-- 选中标记
+- Hierarchy group
+- Expansion indicator
+- Selection indicator
 
-## 状态矩阵
+## State matrix
 
-| 状态 | 必须满足 |
+| State | Must satisfy |
 | --- | --- |
-| 折叠 | aria-expanded=false，隐藏后代退出导航 |
-| 展开 | aria-expanded=true，后代按层级显示 |
-| 选中 | aria-selected=true，与焦点区别 |
-| 聚焦 | 可见项中仅一个 tabindex=0 |
-| 叶项 | 不设置 aria-expanded |
-| 定位 | 选择文件后显示完整路径 |
+| Collapsed | aria-expanded=false; hidden descendants leave navigation |
+| Expanded | aria-expanded=true; descendants are shown by level |
+| Selected | aria-selected=true, distinct from focus |
+| Focused | Only one visible item has tabindex=0 |
+| Leaf item | aria-expanded is not set |
+| Location | The full path is shown after a file is selected |
 
-## 键盘行为
+## Keyboard behavior
 
-- ArrowUp / ArrowDown 移动可见项；Home / End 到首尾。
-- ArrowRight 展开或进入首个子项；ArrowLeft 折叠或到父项。
-- Enter / Space 选择，不自动改变内容编辑焦点。
+- ArrowUp / ArrowDown move between visible items; Home / End go to the first and last items.
+- ArrowRight expands or moves to the first child; ArrowLeft collapses or moves to the parent.
+- Enter / Space select without automatically changing the content editing focus.
 
-## Token 与尺寸
+## Tokens and sizing
 
-使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
+Use --xu-text, --xu-muted, --xu-brand, --xu-focus and --xu-control-border. The default control height is 40 px; touch targets are at least 44 px. Components must support dark and light themes and respect the user's root font size and reduced motion preference.
 
-## 原生映射
+## Native mapping
 
-原生 Tree 能力需要对照实际 SDK 接口验证；此 Web 树使用 WAI-ARIA tree 模型。
+Native Tree capabilities must be verified against the actual SDK interface; this Web tree uses the WAI-ARIA tree model.
 
-## 验收
+## Acceptance
 
-- 默认、聚焦、禁用和主要状态均可在对应效果中操作或对照。
-- 320 px 下没有页面级横向溢出，长名称和空数据保留含义。
-- 使用原生语义或完整 ARIA 关系；错误能恢复且不丢失用户输入。
-- 浏览器回归覆盖成功路径和至少一种边界状态；屏幕阅读器人工结果另行记录，不以自动扫描代替。
+- Default, focused, disabled and primary states can all be operated or compared in the corresponding demo.
+- At 320 px there is no page-level horizontal overflow; long names and empty data keep their meaning.
+- Use native semantics or complete ARIA relationships; errors are recoverable without losing user input.
+- Browser regression tests cover the success path and at least one edge state; manual screen reader results are recorded separately and are not replaced by automated scans.

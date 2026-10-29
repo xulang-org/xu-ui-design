@@ -1,40 +1,40 @@
-# 反馈与确认
+# Feedback and confirmation
 
-状态文字、通知、等待与确认。以下是组件的设计与交互契约，Web 参考实现与原生能力边界分别说明。
+Status text, notifications, waiting and confirmation. The following is the component's design and interaction contract; the Web reference implementation and native capability boundaries are described separately.
 
-## 结构
+## Structure
 
-- 状态图标
-- 标题与说明
-- 可选恢复操作
+- Status icon
+- Title and description
+- Optional recovery action
 
-## 状态矩阵
+## State matrix
 
-| 状态 | 必须满足 |
+| State | Must satisfy |
 | --- | --- |
-| 信息 | info 图标、文字和语义底色 |
-| 成功 | success 与明确结果 |
-| 警告 | 保留继续或返回路径 |
-| 错误 | 持久说明与恢复操作 |
-| 等待 | 真实已知进度或未知等待文字 |
-| 确认 | 原生 dialog，背景隔离与焦点恢复 |
+| Info | info icon, text and semantic background color |
+| Success | success with a clear result |
+| Warning | A path to continue or go back is kept |
+| Error | Persistent description and a recovery action |
+| Waiting | Actual known progress, or text for an indeterminate wait |
+| Confirmation | Native dialog, background isolation and focus restoration |
 
-## 键盘行为
+## Keyboard behavior
 
-- 对话框内 Tab 循环；Escape 关闭。
-- 危险确认默认聚焦取消，关闭后回到触发器。
+- Tab cycles within the dialog; Escape closes it.
+- Destructive confirmations focus Cancel by default; after closing, focus returns to the trigger.
 
-## Token 与尺寸
+## Tokens and sizing
 
-使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
+Use --xu-text, --xu-muted, --xu-brand, --xu-focus and --xu-control-border. The default control height is 40 px; touch targets are at least 44 px. Components must support dark and light themes and respect the user's root font size and reduced motion preference.
 
-## 原生映射
+## Native mapping
 
-跨宿主交互原则；此库的浏览器 dialog 不等于原生宿主已经提供同名 API。
+Cross-host interaction principles; this library's browser dialog does not mean that native hosts already provide an API of the same name.
 
-## 验收
+## Acceptance
 
-- 默认、聚焦、禁用和主要状态均可在对应效果中操作或对照。
-- 320 px 下没有页面级横向溢出，长名称和空数据保留含义。
-- 使用原生语义或完整 ARIA 关系；错误能恢复且不丢失用户输入。
-- 浏览器回归覆盖成功路径和至少一种边界状态；屏幕阅读器人工结果另行记录，不以自动扫描代替。
+- Default, focused, disabled and primary states can all be operated or compared in the corresponding demo.
+- At 320 px there is no page-level horizontal overflow; long names and empty data keep their meaning.
+- Use native semantics or complete ARIA relationships; errors are recoverable without losing user input.
+- Browser regression tests cover the success path and at least one edge state; manual screen reader results are recorded separately and are not replaced by automated scans.

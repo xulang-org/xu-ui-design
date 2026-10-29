@@ -1,41 +1,41 @@
-# 按钮
+# Button
 
-动作层级、尺寸、加载与重复提交。以下是组件的设计与交互契约，Web 参考实现与原生能力边界分别说明。
+Action hierarchy, sizes, loading and duplicate submission. The following is the component's design and interaction contract; the Web reference implementation and native capability boundaries are described separately.
 
-## 结构
+## Structure
 
-- 容器
-- 可选前置图标
-- 动作文字
-- 可选加载指示
+- Container
+- Optional leading icon
+- Action label
+- Optional loading indicator
 
-## 状态矩阵
+## State matrix
 
-| 状态 | 必须满足 |
+| State | Must satisfy |
 | --- | --- |
-| 默认 | 动作名称明确，主要动作使用 brand / on-brand |
-| 悬停／按下 | 背景反馈，保持布局尺寸 |
-| 焦点 | 2 px focus 外轮廓 |
-| 禁用 | 原生 disabled，并给出前置条件 |
-| 加载 | aria-busy=true，阻止重复提交 |
-| 完成／失败 | 可读结果；失败保留恢复路径 |
+| Default | Clear action name; primary actions use brand / on-brand |
+| Hover / pressed | Background feedback; layout size is preserved |
+| Focus | 2 px focus outline |
+| Disabled | Native disabled, with the precondition stated |
+| Loading | aria-busy=true; duplicate submission is blocked |
+| Done / failed | Readable result; failure keeps a recovery path |
 
-## 键盘行为
+## Keyboard behavior
 
-- Tab 聚焦；Enter 或 Space 激活。
-- 加载后恢复可操作状态，不丢失上下文。
+- Tab focuses; Enter or Space activates.
+- After loading, the button returns to an operable state without losing context.
 
-## Token 与尺寸
+## Tokens and sizing
 
-使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。按钮的边框计入尺寸，sm／md／lg 的图标为 16／20／24 px，间距 8 px，颜色跟随文字；容器插画不能改变内部按钮图标。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
+Use --xu-text, --xu-muted, --xu-brand, --xu-focus and --xu-control-border. Control heights are 32/40/48 px for sm/md/lg, measured including borders; touch targets are at least 44 px. Icons use 16/20/24 px, inherit the label color, sit 8 px from the text and have no outer margins. Components must support dark and light themes and respect the user's root font size and reduced motion preference.
 
-## 原生映射
+## Native mapping
 
-widgets.Button / widgets.button；基础动作契约可对应，宿主事件使用 widgets.Action。
+widgets.Button / widgets.button; the basic action contract can be mapped, and host events use widgets.Action.
 
-## 验收
+## Acceptance
 
-- 默认、聚焦、禁用和主要状态均可在对应效果中操作或对照。
-- 320 px 下没有页面级横向溢出，长名称和空数据保留含义。
-- 使用原生语义或完整 ARIA 关系；错误能恢复且不丢失用户输入。
-- 浏览器回归覆盖成功路径和至少一种边界状态；屏幕阅读器人工结果另行记录，不以自动扫描代替。
+- Default, focused, disabled and primary states can all be operated or compared in the corresponding demo.
+- At 320 px there is no page-level horizontal overflow; long names and empty data keep their meaning.
+- Use native semantics or complete ARIA relationships; errors are recoverable without losing user input.
+- Browser regression tests cover the success path and at least one edge state; manual screen reader results are recorded separately and are not replaced by automated scans.

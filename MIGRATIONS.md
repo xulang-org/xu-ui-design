@@ -1,28 +1,40 @@
-# 资源接入与迁移
+# Resource adoption and migrations
+
+[English](MIGRATIONS.md) · [简体中文](MIGRATIONS.zh-CN.md)
+
+## 0.1.1-dev.2 → 0.1.1-dev.3
+
+Existing token names, CSS classes, icon identifiers and hash routes are preserved. English documents use `.md`; Chinese documents use `.zh-CN.md`. Update direct Markdown links if they need to stay Chinese. Online downloads automatically use the selected language. Resource archives contain both editions.
+
+Use `?lang=en` or `?lang=zh-CN` before the hash route for explicit language links. The header switch remembers the preference where browser storage permits it. Switching reloads the page, preserving the route and theme; save any form drafts first.
+
+Standalone controllers with English feedback are available at `assets/en/interactions.js`. The existing `assets/interactions.js` retains Chinese feedback. DOM contracts and exported function names are unchanged. Individually exported SVG titles now contain both names; geometry and identifiers are unchanged.
 
 ## 0.1.1-dev.1 → 0.1.1-dev.2
 
-新增 icon-sm／md／lg／xl、brand-pressed 与 control-pressed Token，既有名称保留。按钮的图标颜色跟随文字，sm／md／lg 对应 16／20／24 px；空状态插画样式仅作用于直属插画。按钮按边框盒计量，导出的组件样式独立使用时也遵守 32／40／48 px 最小高度。请将 tokens.css 与 components.css 一起更新，避免缺少新增变量。
+Add `icon-sm/md/lg/xl`, `brand-pressed` and `control-pressed` tokens without removing existing names. Button icons inherit the label color and use 16/20/24 px for sm/md/lg. Empty-state illustration styling applies only to the direct illustration. Border-box control heights are 32/40/48 px, including when component CSS is used alone. Update `tokens.css` and `components.css` together.
 
-select 可使用 `xu-select-wrap` 与装饰性的 chevron-down SVG，取得跨浏览器一致的高度、内边距和箭头；原生交互保持。完整结构见 `standards/07-forms.md`。既有未包装的 select 继续保留系统外观。
+Wrap native selects with `xu-select-wrap` and a decorative chevron-down SVG for consistent heights, padding and arrows. Native interactions are retained. See `standards/07-forms.md`. Unwrapped selects keep the system appearance.
 
 ## 0.1.0 → 0.1.1-dev.1
 
-现有 Token 名称、CSS 类名和 48 个图标名称保留；无需改名迁移。新增图标是可选资源。组件实验室中的菜单、页签、表格、树和分栏提供独立行为契约，不自动替换产品控件。
+Existing token names, CSS classes and the original 48 icon names are preserved. Additional icons are optional. New behavior contracts do not automatically replace product controls.
 
-1. 下载 `downloads/xu-ui-resources-0.1.1-dev.1.tar.gz` 和同目录 `SHA256SUMS`。
-2. 使用 `shasum -a 256 -c SHA256SUMS`（Linux 可用 `sha256sum -c SHA256SUMS`）核验，再解压到独立目录。
-3. 保留 `MANIFEST.json`；其中记录资源版本、源码提交、工作区是否有改动及逐文件 SHA-256。离线资源包含 MIT 许可。
-4. 将 `assets/tokens.css` 与 `assets/components.css` 一起更新，按需替换 Sprite 或独立 SVG；核对亮暗主题、业务状态与键盘。
+1. Download the versioned `downloads/xu-ui-resources-*.tar.gz` and `SHA256SUMS` from the same build.
+2. Run `shasum -a 256 -c SHA256SUMS` (or `sha256sum -c SHA256SUMS` on Linux), then extract into a separate directory.
+3. Retain `MANIFEST.json`: it records the resource version, source revision, dirty-tree status and per-file hashes. Offline resources include the MIT license.
+4. Update token and component CSS together, optionally replace the sprite or individual SVGs, and check both themes, application states and keyboard behavior.
 
-不将预发布版本解释为正式兼容性保证；升级前固定完整版本和校验值。回退时恢复整套旧资源，避免混用新旧 Token 与样式。
+Pin the complete prerelease version and checksum; a prerelease is not a stable compatibility promise. Roll back the entire previous resource set rather than mixing token and style versions.
 
-## 原生 XU Editor
+## Native XU Editor
 
-将包内 `xu/xuui_tokens/` 复制到应用模块，使用 `tokens #xuui_tokens`。调用 `tokens.editor_styles(dark)` 后，Editor 通过 `paint_styled` 绘制；画布使用 `tokens.canvas(dark)`。主题变化需更新 Styles、背景并标记相关节点重绘。该适配以 SDK 0.10.11 为依据，仅映射 Editor 的颜色、边框、焦点、选择色、16 px 文字与 8 px 圆角；其他控件仍使用 SDK 默认样式。不导出简化 Theme：旧 Editor.paint 的选择区文字复用普通前景色，无法独立保证品牌选择色上的文字对比度。原生 Editor 必须使用完整 Styles 映射。
+Copy `xu/xuui_tokens/` into the application module and import it as `tokens #xuui_tokens`. Use `tokens.editor_styles(dark)` and draw with `paint_styled`; use `tokens.canvas(dark)` for the canvas. Theme changes update Styles and background and request repainting.
 
-SDK 自定义绘制控件的语义暴露和屏幕阅读器支持须在原生产品逐项验收。本库不能通过 CSS 或 Token 为 SDK 补出可访问性树。当前实机验证范围为 macOS arm64；Windows、Linux 与屏幕阅读器均不宣称已通过。
+The adapter targets SDK 0.10.11 and maps Editor colors, border, focus, selection, 16 px text and 8 px radius. Other widgets retain SDK defaults. A simplified Theme is not exported: the older Editor.paint reuses the normal text foreground in selections, so it cannot independently guarantee contrast on the brand selection background. Use the complete Styles mapping.
 
-## 网页行为模块
+Custom-drawn native controls require their own accessibility-tree and screen-reader acceptance. CSS and tokens cannot supply missing SDK semantics. Actual device verification covers macOS arm64. Windows, Linux and native screen-reader support remain unverified.
 
-`assets/interactions.js` 导出 mountMenu、mountTabs、mountPagedTable、mountTree、mountSplitter；每个函数返回清理函数，卸载时调用，避免重复事件绑定。挂载点及必要的 data/ARIA 结构以仓库 `src/component-pages.js` 和对应 `components/*.md` 为准。这是参考实现，接入业务前须替换本地演示数据并处理产品实际状态。
+## Web behavior modules
+
+`assets/interactions.js` exports `mountMenu`, `mountTabs`, `mountPagedTable`, `mountTree` and `mountSplitter`; the English edition is `assets/en/interactions.js`. Each returns a cleanup function: call it on unmount to avoid duplicate listeners. See `src/component-pages.js` and the component contracts for required data/ARIA structure. Replace local demo records and handle real product states before production adoption.

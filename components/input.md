@@ -1,41 +1,41 @@
-# 文本输入
+# Text input
 
-标签、帮助、错误、只读与输入恢复。以下是组件的设计与交互契约，Web 参考实现与原生能力边界分别说明。
+Labels, help, errors, read-only and input recovery. The following is the component's design and interaction contract; the Web reference implementation and native capability boundaries are described separately.
 
-## 结构
+## Structure
 
-- 可见标签
-- 输入值
-- 帮助说明
-- 错误说明
+- Visible label
+- Input value
+- Help text
+- Error message
 
-## 状态矩阵
+## State matrix
 
-| 状态 | 必须满足 |
+| State | Must satisfy |
 | --- | --- |
-| 默认 | 持久标签与说明关联 |
-| 焦点 | 光标可见，外轮廓清楚 |
-| 错误 | aria-invalid=true，保留输入 |
-| 禁用 | 原生 disabled 和原因说明 |
-| 只读 | readonly，允许复制 |
-| 完成 | 不清空用户已提交的值 |
+| Default | Persistent label associated with its description |
+| Focus | Visible caret and a clear outline |
+| Error | aria-invalid=true; input is preserved |
+| Disabled | Native disabled, with the reason stated |
+| Read-only | readonly; copying is allowed |
+| Done | Values the user has submitted are not cleared |
 
-## 键盘行为
+## Keyboard behavior
 
-- Tab / Shift+Tab 移动焦点。
-- 按原生文本编辑与 IME 行为处理，不拦截组合输入。
+- Tab / Shift+Tab move focus.
+- Follow native text editing and IME behavior; do not intercept composition input.
 
-## Token 与尺寸
+## Tokens and sizing
 
-使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
+Use --xu-text, --xu-muted, --xu-brand, --xu-focus and --xu-control-border. The default control height is 40 px; touch targets are at least 44 px. Components must support dark and light themes and respect the user's root font size and reduced motion preference.
 
-## 原生映射
+## Native mapping
 
-widgets.Editor / widgets.input / widgets.text_area；原生 IME、选区与剪贴板由宿主处理。
+widgets.Editor / widgets.input / widgets.text_area; native IME, selection and clipboard are handled by the host.
 
-## 验收
+## Acceptance
 
-- 默认、聚焦、禁用和主要状态均可在对应效果中操作或对照。
-- 320 px 下没有页面级横向溢出，长名称和空数据保留含义。
-- 使用原生语义或完整 ARIA 关系；错误能恢复且不丢失用户输入。
-- 浏览器回归覆盖成功路径和至少一种边界状态；屏幕阅读器人工结果另行记录，不以自动扫描代替。
+- Default, focused, disabled and primary states can all be operated or compared in the corresponding demo.
+- At 320 px there is no page-level horizontal overflow; long names and empty data keep their meaning.
+- Use native semantics or complete ARIA relationships; errors are recoverable without losing user input.
+- Browser regression tests cover the success path and at least one edge state; manual screen reader results are recorded separately and are not replaced by automated scans.

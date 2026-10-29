@@ -1,40 +1,40 @@
-# 字体与排版
+# Typography
 
-字体强调阅读层级。内容界面使用清晰无衬线体，展示标题可使用宋体形成金石质感；代码保持等宽。所有字体都提供本地回退，不依赖外部字体服务。字号 Token 使用 rem；表中 px 数值以浏览器根字号 16 px 为例，跟随用户设置放大。
+Type emphasizes reading hierarchy. Content interfaces use a clear sans-serif. Display headings may use a Song (serif) typeface for a bronze-and-stone texture. Code stays monospaced. All fonts have local fallbacks and do not depend on external font services. Font size tokens use rem; px values in the table assume a browser root font size of 16 px and scale with user settings.
 
-## 字体角色
+## Font roles
 
-| Token | 字体栈首选 | 用途 |
+| Token | Preferred font stack | Purpose |
 | --- | --- | --- |
-| --xu-font-sans | Avenir Next / Noto Sans CJK SC | 界面和正文 |
-| --xu-font-display | Iowan Old Style / Songti SC | 展示标题，避免密集控件 |
-| --xu-font-mono | JetBrains Mono / SFMono-Regular | Token、代码、技术编号 |
+| --xu-font-sans | Avenir Next / Noto Sans CJK SC | Interface and body text |
+| --xu-font-display | Iowan Old Style / Songti SC | Display headings; avoid in dense controls |
+| --xu-font-mono | JetBrains Mono / SFMono-Regular | Tokens, code, technical identifiers |
 
-字体缺失时由操作系统选择后备字体，因此截图并非跨系统逐像素基准。应用不得将字体固定宽度作为文本容器宽度。
+When a font is missing, the operating system chooses a fallback font, so screenshots are not a pixel-exact baseline across systems. Applications must not use a font's fixed width as the width of a text container.
 
-## 字号与行距
+## Font size and line height
 
-| 层级 | Token | 行距 | 用途 |
+| Level | Token | Line height | Purpose |
 | --- | --- | --- | --- |
-| 辅助 | text-xs / 12 px | 1.65 | 短元数据，不承载长文 |
-| 控件 | text-sm / 14 px | 1.65 | 按钮和导航 |
-| 正文 | text-md / 16 px | 1.65 | 标准正文和表单说明 |
-| 小标题 | text-lg / 20 px | 1.3 | 内容分组 |
-| 章节 | text-xl / 28 px | 1.15 | 页面章节 |
-| 页标题 | text-2xl / 40 px | 1.15 | 页面主标题 |
+| Caption | text-xs / 12 px | 1.65 | Short metadata; not for long text |
+| Control | text-sm / 14 px | 1.65 | Buttons and navigation |
+| Body | text-md / 16 px | 1.65 | Standard body text and form descriptions |
+| Subheading | text-lg / 20 px | 1.3 | Content groups |
+| Section | text-xl / 28 px | 1.15 | Page sections |
+| Page title | text-2xl / 40 px | 1.15 | Main page title |
 
-展厅封面允许流式展示字号；窄屏必须缩小。中文长文行宽控制在约 38–44 个汉字，避免铺满超宽屏。
+The showcase cover may use fluid display sizes; they must shrink on narrow screens. Keep long Chinese text to about 38–44 Chinese characters per line, and avoid spanning ultra-wide screens.
 
-## 混排与代码
+## Mixed text and code
 
-- 中文与英文、数字间保留空格，例如“使用 24 px 图标”。
-- 中文语句使用全角标点；路径、命令和标识保留原样。
-- 代码块可横向滚动，正文可换行；不以截断代替错误说明。
-- 数字比较优先使用等宽数字，表格数量右对齐。
-- XU 的 # 导入前缀不能作为注释着色；本库代码示例使用 HTML 和 CSS，不声称提供完整 XU 语法高亮器。
+- Keep a space between Chinese and English text or numbers, as illustrated in the Chinese edition of this standard.
+- Chinese sentences use full-width punctuation. Paths, commands and identifiers stay as-is.
+- Code blocks may scroll horizontally, and body text may wrap. Do not use truncation in place of an error description.
+- Prefer tabular (monospaced) digits for number comparisons, and right-align quantities in tables.
+- XU's # import prefix must not be colored as a comment. Code examples in this library use HTML and CSS and do not claim to provide a complete XU syntax highlighter.
 
-## 验收
+## Acceptance
 
-浏览器放大 200% 后，标题、标签和按钮不遮挡；自定义行距后正文可读；字体加载失败时主要操作仍可见。不要把说明文字画进图片。
+With browser zoom at 200%, headings, labels and buttons do not overlap or obscure each other. Body text stays readable with custom line height. Primary actions remain visible when fonts fail to load. Do not draw descriptive text into images.
 
-工具与资源页面以明确的资源名作为标题，避免重复的宣传标语和眉题。组件控件使用无衬线体；等宽体仅用于代码、资源标识与实际参数。
+Tool and resource pages use an explicit resource name as the title, and avoid repeated marketing slogans and eyebrow headings. Component controls use the sans-serif font. The monospaced font is only for code, resource identifiers and actual parameters.

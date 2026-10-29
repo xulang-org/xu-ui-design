@@ -1,25 +1,25 @@
-# 页面模式
+# Page patterns
 
-页面模式组合基础组件，展示完整任务。所有项目名、记录和状态都是可辨认的演示数据，不连接真实仓库。
+Page patterns combine basic components to show complete tasks. All project names, records and statuses are recognizable demo data and do not connect to real repositories.
 
-## 设置页面
+## Settings page
 
-按“基础信息 → 行为偏好 → 保存结果”排列，字段标签在上，帮助文字跟随字段。更改设置先保留草稿；保存成功后显示明确结果，存储失败保留输入并允许重试。示例本地存储键为 xu-ui-demo-settings；不使用后端 API。
+Order the page as "Basic information → Behavior preferences → Save result". Field labels sit above fields, and help text follows the field. Setting changes are first kept as a draft. After a successful save, show a clear result. If storage fails, keep the input and allow retry. The example's local storage key is xu-ui-demo-settings. No backend API is used.
 
-验收：刷新后读取已保存内容；不合法名称阻止保存；禁用存储时显示失败，不伪装成功。示例不保存个人信息或凭据。
+Acceptance: saved content is read after refresh. Invalid names block saving. When storage is disabled, show the failure and do not pretend it succeeded. The example does not save personal information or credentials.
 
-## 数据列表
+## Data list
 
-顺序为“标题和创建入口 → 搜索 → 状态筛选 → 数据表 → 结果数量”。列名说明含义；文本左对齐，数字右对齐；行内操作说明目标。优先 table 保留语义，窄屏让表格容器单独滚动。
+The order is "Title and create entry → Search → Status filter → Data table → Result count". Column names explain their meaning. Text is left-aligned and numbers are right-aligned. Row actions state their target. Prefer table to keep semantics. On narrow screens, let the table container scroll on its own.
 
-验收：关键词和状态共同过滤；无结果显示清空筛选；详情按钮显示对应演示项目；排序按钮带 aria-sort 的列标题。状态文字不能被图标代替。
+Acceptance: keyword and status filter together. No results shows a clear-filters action. The details button shows the corresponding demo project. Sort buttons sit in column headers that carry aria-sort. Status text must not be replaced by icons.
 
-## 空状态
+## Empty states
 
-说明当前情况、导致它的原因和可以做的下一步。初始空状态提供创建入口；筛选空状态提供清空筛选。不能把“无权限”“网络错误”和“尚无数据”都写作“暂无数据”。
+Explain the current situation, what caused it and the next step available. An initial empty state provides a create entry. A filtered empty state provides clear filters. Do not write "No permission", "Network error" and "No data yet" all as "No data".
 
-## 适配原则
+## Adaptation principles
 
-移动端保留主要动作和错误说明；表单变单列；可横向滚动的数据仍有可见标题。不把桌面画布按比例缩小为不可读的截图。示例中的移动预览是真实 DOM 容器，浏览器整体窄屏也必须检查。
+On mobile, keep primary actions and error messages. Forms become a single column. Horizontally scrollable data still has visible headings. Do not scale the desktop canvas down proportionally into an unreadable screenshot. The mobile preview in the examples is a real DOM container, and the whole browser at narrow width must also be checked.
 
-继续阅读：[布局与间距](04-layout.md)、[表单与输入](07-forms.md)。
+Continue reading: [Layout and spacing](04-layout.md), [Forms and input](07-forms.md).

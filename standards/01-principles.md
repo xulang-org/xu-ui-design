@@ -1,33 +1,33 @@
-# 设计原则
+# Design principles
 
-XUUI 是 XU 生态界面的共同设计语言。本库将规范、可消费的资源和浏览器参考实现放在一起，帮助设计和开发核对同一种结果。
+XUUI is the shared design language for XU ecosystem interfaces. This library keeps the standards, consumable resources and a browser reference implementation together, so design and development can check against the same result.
 
-## 适用范围
+## Scope
 
-面向 XU 生态的设计师和开发者，用于开发工具、项目管理、包管理、文档平台及设置界面。首版参考实现使用 HTML、CSS 和 JavaScript；不代表 XU 原生 UI 框架已经实现这些组件。
+It is for designers and developers in the XU ecosystem, for developer tools, project management, package management, documentation platforms and settings interfaces. The first reference implementation uses HTML, CSS and JavaScript. This does not mean the XU native UI framework has implemented these components.
 
-## 四项判断原则
+## Four guiding principles
 
-- 精确：每种颜色、间距、状态和图标都有明确用途与来源。
-- 克制：朱砂红用于关键动作与品牌识别，避免大面积强调和装饰性发光。
-- 可操作：界面必须支持真实输入、反馈与恢复，展示页也遵守此规则。
-- 同源：标准说明引用 Token；展厅和导出资源由相同源文件生成。
+- Precise: every color, spacing value, state and icon has a clear purpose and source.
+- Restrained: cinnabar red is for key actions and brand recognition. Avoid large areas of emphasis and decorative glow.
+- Operable: interfaces must support real input, feedback and recovery. Showcase pages follow this rule too.
+- Single source: standards reference tokens. The showcase and exported resources are generated from the same source files.
 
-## 品牌边界
+## Brand boundaries
 
-品牌展示使用全大写 XU、XUUI、XUFLOW、XUPKG 和 XUDOCS；代码标识、仓库名和 CLI 按实际大小写书写。品牌标志是专用资产，不能从通用图标重画。图腾保留原始几何与比例，不拉伸、不旋转、不加图形附件。
+Brand display uses all-caps XU, XUUI, XUFLOW, XUPKG and XUDOCS. Code identifiers, repository names and CLIs use their actual casing. The brand mark is a dedicated asset and must not be redrawn from generic icons. The totem keeps its original geometry and proportions: no stretching, no rotation, no added graphic attachments.
 
-展厅的品牌资产来自官网仓库提交 8d36bb410511f12429a12c8596d672e5e0b5a29f 的 brand/xu_classic.svg。品牌手册作为背景依据；本库针对 UI 语义色重新测量，不沿用旧手册中未注明背景的对比度结论。
+The brand assets in the showcase come from brand/xu_classic.svg at commit 8d36bb410511f12429a12c8596d672e5e0b5a29f of the website repository. The brand manual serves as background reference. This library re-measures contrast for UI semantic colors and does not carry over contrast conclusions from the old manual that do not state their background.
 
-## 决策顺序
+## Decision order
 
-先确认任务与内容，再选择页面模式和组件，最后使用语义 Token 完成视觉。相同任务优先复用同一模式；不能为了填满版面而增加无用指标或卡片。
+First confirm the task and content, then choose the page pattern and components, and finally complete the visuals with semantic tokens. Prefer reusing the same pattern for the same task. Do not add useless metrics or cards just to fill the layout.
 
-## 验收
+## Acceptance
 
-- 每个主要动作能描述清楚结果，失败时能恢复。
-- 标准在暗色与亮色中表达相同的语义。
-- 窄屏、键盘和放大后仍能完成主要任务。
-- 示例数据明确标注，不能伪装成生产状态或性能证据。
+- Each primary action can clearly describe its result and can recover from failure.
+- The standards express the same semantics in dark and light themes.
+- Primary tasks can still be completed on narrow screens, with the keyboard and when zoomed in.
+- Sample data is clearly labeled and must not pose as production status or performance evidence.
 
-继续阅读：[色彩与主题](02-color.md)、[开发交付与治理](12-delivery.md)。
+Continue reading: [Color and themes](02-color.md), [Delivery and governance](12-delivery.md).
