@@ -1,6 +1,6 @@
 {
-  "sourceRevision": "ba0e70b18d18d35587365b73a1d9e5d08f3284b3",
-  "generationRun": "https://github.com/xulang-org/xu-ui-design/actions/runs/40981442203",
+  "sourceRevision": "8e0b22ac8300323e3b500be09ba0fdcda702e76d",
+  "generationRun": "https://github.com/xulang-org/xu-ui-design/actions/runs/41043178433",
   "container": "mcr.microsoft.com/playwright:v1.64.1-noble",
   "browser": "Chromium (Playwright 1.64.1)",
   "browserLocale": "zh-CN",
@@ -37,22 +37,22 @@
     "button-proportions-mobile-dark.png": "75d00732a347b6ca1692a0a3cf55814279da8cf4ae472fdc36a2474ebc66cbec",
     "button-proportions-mobile-light-en.png": "f4b90872a60134b1a391f698aaa2050839f271dcf639762b94e745a49f498b70",
     "button-proportions-mobile-light.png": "52c8bc98b8c22bc3c62a0de4faa2ae8d2dca493a58fb5154d1bcfd545e692516",
-    "empty-state-desktop-dark-en.png": "b1e08647aa8cdd52c99083324f4ab937b6f3086a037bf15c23a6f08b82466733",
-    "empty-state-desktop-dark.png": "4a46af8e72b203102a192012e27847d83caca109a2b2bb23cafdce8af3ae41ff",
-    "empty-state-desktop-light-en.png": "0bc52a045102fd7cc285c5c1792451f2cfb961bb75756b48d4b96f1a4d7ec31d",
-    "empty-state-desktop-light.png": "6c9dd4f67482751357e3f3a00c83f42def65b3d63486aa34e4d3cd6127015d3f",
-    "empty-state-mobile-dark-en.png": "5e18326161fdf38a8610ea08cb19df9cfd99de78fd7ecd71cab5e38140eb10b1",
-    "empty-state-mobile-dark.png": "efb1315e823a89a4520018401e4e568ea862605255f444138dc7572d7a5a319a",
-    "empty-state-mobile-light-en.png": "612a506783f64244b20e8544812c8d45e0dec519ae556e66d16fd23224f40f83",
-    "empty-state-mobile-light.png": "3f2df2c0fa996754c44e7bd9d4b0be88747eb97e2d05a851d1d448b7d5cda57f",
-    "icons-desktop-dark-en.png": "bf11e294dc6de5281e166fe53b2ccd138d32b3d3cf3b56f9accf32630b5823ac",
-    "icons-desktop-dark.png": "878b498ac327a13c53a7b00f0b311c425b068310961e2f7e769f854c21512896",
-    "icons-desktop-light-en.png": "e7c4131d0977210fc1b4f16ba143165b4b9ce7e957d12099b6f1ac804be562b7",
-    "icons-desktop-light.png": "1b879119c6739ce0e5ba13c5bf7cc1d4725cdd55462b6118ed59e6dcaa6f646e",
-    "motion-desktop-dark-en.png": "d94606c1fad6cfd55382328a003bd6e4fc8609ac55817032615e9ccf6ca8d245",
-    "motion-desktop-dark.png": "db6765cd5db028f2afa48448e94eb7849cab0238863ce93c2cad3ef251cbb801",
-    "motion-desktop-light-en.png": "811ae9f7632bbe21d5093a785c91fbfd68688404edc30bf67c4ac4a41d093bfc",
-    "motion-desktop-light.png": "96be885ada202ef4c8d3fdecb0450a0bb91421fe60be9685207e339b4c1835f3",
+    "empty-state-desktop-dark-en.png": "b9e79adfdb4c21971080fc441ecddccf88a36bf70bea465b0da3302d05c281af",
+    "empty-state-desktop-dark.png": "f4d9ece44821aae92ccdc83e0d8371c443982d56216d7c989dbf8559fd75771e",
+    "empty-state-desktop-light-en.png": "7809751b8d12943857e92c02bc716c5425d9b568d1399f1ef855b12f812e079a",
+    "empty-state-desktop-light.png": "c016862c29d8e655b9ac629d00a862f3496ec40431639babab928dc7f44d8611",
+    "empty-state-mobile-dark-en.png": "53a84dfda2ddab2374b4b84842b8ccf12382ca1e18c36cb1bf575152630bcf5f",
+    "empty-state-mobile-dark.png": "6b8fb4c0884943eac93740ff7f98952340ee1a458ca1850e4a5e7b78f30fea09",
+    "empty-state-mobile-light-en.png": "592251532f71918fa0b414a0e2db1512259eda32676cf12e60d863318d243a70",
+    "empty-state-mobile-light.png": "edd02dc9bbd6704e6330ec2108867001a2ba871bd8b8c6556c9e50ab3792a09d",
+    "icons-desktop-dark-en.png": "497de08fdc519fa792ca72bdc6fdd48f7688ba975e36faea3bba6d6195dddd87",
+    "icons-desktop-dark.png": "33b0fc6bbcc1057ab6c2d628e291bfe99c0da0507e2a69e61b53007401438bfd",
+    "icons-desktop-light-en.png": "5c9df87e41484a4bf1dda1f9b109c828ce25fa56c8cf44579735beb2a3a708c5",
+    "icons-desktop-light.png": "09f9000e75f6fd6774e49ef1732e20d29a226eb8ca5093d258f34bbfb56808ba",
+    "motion-desktop-dark-en.png": "cf2e85bf7e6846430fa1f738f0999a58cd7ceb7cd6f5600bcad88424d237a9e7",
+    "motion-desktop-dark.png": "02dd577af389ece7203ed72c3cd39f2a57b9e9947a688e4cfa1e44928e67257a",
+    "motion-desktop-light-en.png": "ffda57c4b9c92176c0ff896a2ec0cbc742463de4841f6ff57bfb11e05f39d6cf",
+    "motion-desktop-light.png": "fc8ef341631acbda62257c902f6ffb8502305b471917693c902ffbcfb6eca108",
     "motion-mobile-dark-en.png": "015dfb50e697de90eaa2590cd82cb73d2c868661dd5c0a80228c46924b954c69",
     "motion-mobile-dark.png": "368e27898b3ac7e4e6c69cd4788fab2ececa45cb85ea98ead9b88e4a2b1b0a2a",
     "motion-mobile-light-en.png": "84c98b075283d4b185adb4ab3c9266f3ae37e58f955318e83eb6c7bf850d1a45",
@@ -105,7 +105,7 @@
     ],
     "empty-state-desktop-dark.png": [
       1124,
-      274
+      275
     ],
     "empty-state-desktop-light-en.png": [
       1124,
@@ -113,23 +113,23 @@
     ],
     "empty-state-desktop-light.png": [
       1124,
-      274
+      275
     ],
     "empty-state-mobile-dark-en.png": [
       358,
-      302
+      301
     ],
     "empty-state-mobile-dark.png": [
       358,
-      302
+      301
     ],
     "empty-state-mobile-light-en.png": [
       358,
-      302
+      301
     ],
     "empty-state-mobile-light.png": [
       358,
-      302
+      301
     ],
     "icons-desktop-dark-en.png": [
       1440,
