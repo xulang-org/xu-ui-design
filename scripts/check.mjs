@@ -24,6 +24,7 @@ for (const [mode, theme] of Object.entries(tokens.themes)) {
   const pairs = [];
   for (const background of ['canvas','surface','elevated']) {
     for (const foreground of ['text','muted','brand','success','warning','danger','info']) pairs.push([foreground,background,4.5]);
+    for (let i = 1; i <= 8; i++) pairs.push([`chart-${i}`,background,3]);
     pairs.push(['control-border',background,3], ['focus',background,3]);
   }
   pairs.push(['on-brand','brand',4.5], ['on-brand','brand-hover',4.5], ['on-brand','brand-pressed',4.5], ['text','control-pressed',4.5], ['control-border','control-pressed',3], ['brand','brand-soft',4.5]);
@@ -54,7 +55,7 @@ for (const item of icons) {
   }
 }
 assert.ok(icons.length >= 48, 'Preserve the original icon inventory.');
-assert.equal(docs.length, 12, 'Update documented standard inventory when changing the index.');
+assert.equal(docs.length, 13, 'Update documented standard inventory when changing the index.');
 assert.equal(new Set(docs.map((doc) => doc.id)).size, docs.length);
 for (const doc of docs) {
   assert.match(doc.id, /^\d{2}-[a-z-]+$/);
@@ -101,8 +102,8 @@ assert.equal(new Set(contracts.map(item=>item.id)).size,contracts.length);
 for (const locale of ['en','zh-CN']) {
   const localized = await json(`dist/assets/data.${locale}.json`);
   assert.equal(localized.locale,locale);
-  assert.equal(localized.docs.length,12);
-  assert.equal(localized.components.length,8);
+  assert.equal(localized.docs.length,13);
+  assert.equal(localized.components.length,9);
   for (const file of ['app.js','component-pages.js','interactions.js','motion.js','motion-page.js']) {
     const path=`dist/assets/${locale}/${file}`;
     const syntax=spawnSync(process.execPath,['--check',new URL(path,root).pathname],{encoding:'utf8'});
@@ -131,7 +132,7 @@ const archiveBytes=await readFile(archive);
 assert.equal(await read('dist/downloads/SHA256SUMS'),`${createHash('sha256').update(archiveBytes).digest('hex')}  ${archiveName}\n`);
 const manifest=await json('dist/downloads/manifest.json');
 assert.equal(manifest.version,pkg.version);
-for(const path of ['tokens/tokens.json','icons/play.svg','xu/xuui_tokens/mod.xu','LICENSE','MIGRATIONS.md','MIGRATIONS.zh-CN.md','standards/05-icons.md','standards/05-icons.zh-CN.md','components/button.md','components/button.zh-CN.md','assets/en/interactions.js']) {
+for(const path of ['tokens/tokens.json','icons/play.svg','xu/xuui_tokens/mod.xu','LICENSE','MIGRATIONS.md','MIGRATIONS.zh-CN.md','standards/05-icons.md','standards/05-icons.zh-CN.md','standards/13-drawing.md','standards/13-drawing.zh-CN.md','components/button.md','components/button.zh-CN.md','components/chart.md','components/chart.zh-CN.md','assets/en/interactions.js']) {
   const result=spawnSync('tar',['-xOf',archive.pathname,path]);
   assert.equal(result.status,0,result.stderr?.toString());
   assert.equal(createHash('sha256').update(result.stdout).digest('hex'),manifest.files[path],`Archive content mismatch: ${path}`);

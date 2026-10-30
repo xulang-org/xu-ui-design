@@ -158,5 +158,25 @@
       "en": "Native split layouts are adapted to host size constraints; Web pointer capture and the DOM separator must not be treated directly as a native implementation.",
       "zh-CN": "原生分割布局按宿主尺寸约束适配；Web 指针捕获与 DOM separator 不能直接当作原生实现。"
     }
+  },
+  {
+    "id": "chart",
+    "title": {
+      "en": "Canvas and chart",
+      "zh-CN": "画布与图表"
+    },
+    "group": {
+      "en": "Drawing",
+      "zh-CN": "绘图"
+    },
+    "summary": {
+      "en": "2D canvas primitives, series toggling, keyboard point inspection and chart types",
+      "zh-CN": "2D 画布图元、序列显隐、键盘数据点检视与图表类型切换"
+    },
+    "standard": "13-drawing",
+    "native": {
+      "en": "draw.Frame / draw.Path / draw.Surface / widgets.Chart; native XDF1 frames and CTM/layer stacks are verified by the host.",
+      "zh-CN": "draw.Frame / draw.Path / draw.Surface / widgets.Chart；原生 XDF1 帧记录与 CTM／图层栈由宿主校验执行。"
+    }
   }
 ]

@@ -34,6 +34,19 @@ sm = 32 px、md = 40 px、lg = 48 px。默认 md 用于桌面；独立图标按�
 
 radius-sm = 4 px 用于小标签，radius-md = 8 px 用于控件，radius-lg = 12 px 用于面板。浮层优先使用边界和遮罩建立层次。z-sticky、z-menu、z-toast 负责普通层级；原生 dialog 使用浏览器顶层，不能以无限增大 z-index 代替焦点隔离。
 
+## 组件组合与排版矩阵
+
+当多个基础控件组合为完整界面时，必须遵循预先确定的容器结构、字号层级与间距契约（Web 导出于 `assets/components.css`，原生对应 `#ui/layout` 与 `#ui/widgets`）：
+
+| 组合模式 | 适用容器与原生映射 | 排版层级（字号 / 字重 / 行高） | 间距与对齐契约 |
+| --- | --- | --- | --- |
+| 操作簇与按钮组 | `.xu-cluster`、`.xu-button-group` / `widgets.ButtonGroup` | 按钮文案 `14 px`（`text-sm`）/ `600` / `1.2` | 独立按钮间距 `8 px`（`space-2`）；顺序固定为「主操作 → 次要 → 轻量 → 危险」；分段单选组（`joined`）共享外框与 `4 px` 内置间距 |
+| 检索与筛选工具栏 | `.xu-toolbar` / `layout.row(..., CROSS_END)` | 字段标签 `14 px` / `600`；输入与下拉 `14 px` / `400` / `1.5` | 搜索框 `flex: 1 1 200px`，紧凑筛选器 `144 px`，交叉轴底边对齐（`align-items: flex-end`），确保带标签输入框与尾部操作按钮共享同一 `40 px` 控件基线，横向间距 `16 px`（`space-4`） |
+| 表单栈与双栏网格 | `.xu-stack`、`.xu-form-grid` / `widgets.Field` | 标签 `14 px` / `600`；控件 `14 px` / `400`；辅助与错误 `14 px` / `400` / `1.5` | 字段内标签与输入框间距 `8 px`（`space-2`），字段间垂直间距 `20 px`（`space-5`）；桌面双栏网格列间距 `32 px`（`space-8`），`< 720 px` 自动折叠为单列 |
+| 三段式卡片面板 | `.xu-card`（`header` / `body` / `footer`）/ `widgets.CardRegions` | 标题 `16 px`（`text-md`）/ `600` / `1.4`；副标题 `12 px`（`text-xs`）`muted`；底栏元数据 `12 px` `mono` | 外框内边距 `24 px`（`space-6`，窄屏 `16 px`）；头、体、底三段间隔 `16 px`（`space-4`），底栏左侧放状态回执或元数据、右侧放操作簇 |
+| 结构化列表行 | `.xu-list`、`.xu-list-row` / `widgets.ListRow` | 主标题 `14 px` / `500` `text`；次级描述 `12 px` / `400` `muted`；尾部详情 `12 px` `mono` | 三列栅格「前导图标 `20 px` → 主副文案堆叠（间距 `2 px`）→ 右对齐详情／状态徽标／轻量操作」，行内水平间距 `12 px`（`space-3`），最小行高 `48 px` |
+| 键值规格行与主从分栏 | `.xu-kv`、`.xu-split-panels` / `widgets.SplitView` | 键名 `14 px` `text`；键值或代码 `12–14 px` `mono` `muted` | 键值行两端对齐，上下内边距 `12 px`（`space-3`）并以 `1 px` 顶部分隔线串联；主从分栏左轨 `25%–35%`、右主区 `65%–75%`，禁止超过两层同向嵌套滚动 |
+
 ## 验收
 
 320 px 视口没有页面级横向溢出；长标题、长路径和中文说明不截断关键含义；表格保留标题与数据关系，滚动区具备键盘入口。

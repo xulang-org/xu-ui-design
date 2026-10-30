@@ -24,9 +24,9 @@ npm run dev
 | 展示区域 | 可验证的效果 |
 | --- | --- |
 | 总览 | XU 品牌、工作区预览、亮／暗主题切换 |
-| 标准文档 | 12 篇标准、分组检索、篇内目录、在线阅读、Markdown 下载 |
+| 标准文档 | 13 篇标准、分组检索、篇内目录、在线阅读、Markdown 下载 |
 | 基础与 Token | 双主题色值、复制 CSS 变量、对比度、排版、间距 |
-| 组件实验室 | 八份独立契约：按钮、输入、反馈、菜单、页签、分页表格、树和分栏 |
+| 组件实验室 | 九份独立契约：按钮、输入、反馈、菜单、页签、分页表格、树、分栏与画布图表 |
 | ICON | 60 个 SVG、语义分组、双语名称、检视区、四档尺寸、复制和下载 |
 | 动效与反馈 | XU 落印回执、连续页签、按需展开，跟随系统减少动态效果 |
 | 页面模式 | 本地设置保存、项目检索与状态筛选、排序、详情、原位创建与新增行定位、空状态 |
@@ -43,7 +43,7 @@ npm run dev
 | [色彩与主题](standards/02-color.zh-CN.md) | [表单与输入](standards/07-forms.zh-CN.md) | [可访问性与动效](standards/11-accessibility.zh-CN.md) |
 | [字体与排版](standards/03-typography.zh-CN.md) | [导航与信息层级](standards/08-navigation.zh-CN.md) | [开发交付与治理](standards/12-delivery.zh-CN.md) |
 | [布局与间距](standards/04-layout.zh-CN.md) | [反馈与浮层](standards/09-feedback.zh-CN.md) | |
-| [ICON 图标](standards/05-icons.zh-CN.md) | | |
+| [ICON 图标](standards/05-icons.zh-CN.md) | [绘图与数据可视化](standards/13-drawing.zh-CN.md) | |
 
 ## 消费设计资源
 

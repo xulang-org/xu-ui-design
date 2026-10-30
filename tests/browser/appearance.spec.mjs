@@ -76,3 +76,19 @@ test('native selects share the input height and keep filtering behavior',async({
   expect(centerOffset).toBeLessThan(.5);
   await select.selectOption('draft');await expect(page.locator('#project-table tbody tr')).toHaveCount(1);
 });
+
+test('composition blueprints enforce card sections, segmented group and responsive form grid',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto('/#/patterns');
+  const cards=page.locator('.xu-form-grid > .xu-card');
+  await expect(cards).toHaveCount(2);
+  const desktop=await cards.evaluateAll(items=>items.map(el=>el.getBoundingClientRect().top));
+  expect(desktop[0]).toBe(desktop[1]);
+  const modeCompact=page.locator('[data-comp-mode="compact"]');
+  await modeCompact.click();
+  await expect(modeCompact).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('[data-comp-mode="standard"]')).toHaveAttribute('aria-pressed','false');
+  await page.setViewportSize({width:390,height:900});
+  const mobile=await cards.evaluateAll(items=>items.map(el=>el.getBoundingClientRect().top));
+  expect(mobile[1]).toBeGreaterThan(mobile[0]);
+});

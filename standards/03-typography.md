@@ -31,7 +31,7 @@ The showcase cover may use fluid display sizes; they must shrink on narrow scree
 - Chinese sentences use full-width punctuation. Paths, commands and identifiers stay as-is.
 - Code blocks may scroll horizontally, and body text may wrap. Do not use truncation in place of an error description.
 - Prefer tabular (monospaced) digits for number comparisons, and right-align quantities in tables.
-- XU's # import prefix must not be colored as a comment. Code examples in this library use HTML and CSS and do not claim to provide a complete XU syntax highlighter.
+- XU's # import prefix must not be colored as a comment, and mutable markers ($name and $&) attach directly to their identifiers without spaces. Code examples in this library use HTML and CSS and do not claim to provide a complete XU syntax highlighter.
 
 ## Acceptance
 
