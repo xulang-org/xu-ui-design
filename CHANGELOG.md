@@ -1,16 +1,38 @@
-# 变更记录
+# Changelog
+
+[English](CHANGELOG.md) · [简体中文](CHANGELOG.zh-CN.md)
+
+## 0.1.1-dev.4
+
+- Add XU press/stamp/settle motion, in-place copy/save receipts, continuous tab indicators and an interactive motion standard.
+- Create local demo projects without leaving the patterns page; validate names, clear conflicting filters and focus the new record.
+- Preserve meaningful feedback with reduced motion, cancel in-flight effects on preference/route changes and clear saved receipts when editing.
+- Add real-browser motion, geometry, error and keyboard checks, dual-language visual coverage and a CI interaction recording.
+
+## 0.1.1-dev.3
+
+- Add English and Simplified Chinese navigation, standards, component contracts, icon metadata, examples, errors and accessible names.
+- Add a persistent language preference, explicit language URLs, bilingual resource search and downloads in the selected language.
+- Include both document editions in versioned resource archives and validate translation completeness, language switching and narrow-screen layouts.
+
+## 0.1.1-dev.2
+
+- Isolate empty-state illustration styling from action icons; align icon size, inherited color, vertical position and button box sizing.
+- Refine pressed/disabled controls, form states, tree alignment/focus and splitter feedback.
+- Normalize select appearance and arrows across browsers while retaining native select behavior.
+- Add icon-size and pressed-state tokens and focused visual acceptance. Actual screen-reader speech acceptance remains deferred at the user's request.
 
 ## 0.1.1-dev.1
 
-- 新增按钮、输入、反馈、菜单、页签、分页表格、树和分栏的八份组件契约及独立交互展示，明确状态、键盘、Token 和原生映射边界。
-- 图标由 48 枚增加至 60 枚，补齐运行、暂停、停止、调试、构建、断点、单步、合并、网络、任务和代码语义。
-- 从同一份 Token 生成 XU SDK 0.10.11 的 Editor 样式与语义色函数适配；Writing Desk 接入 PR 单独审查。
-- 增加三浏览器行为、双主题 axe 和固定环境视觉回归，以及主分支 Pages 部署工作流。
-- 构建生成版本化资源包、逐文件 SHA-256 清单和压缩包校验值；新增迁移与接入说明。
+- Add eight component contracts and interactive demos for buttons, input, feedback, menus, tabs, tables, trees and split panels.
+- Expand the original icon inventory from 48 to 60, adding development actions and status semantics.
+- Generate SDK 0.10.11 Editor styles and semantic colors from the same tokens; review native consumer adoption separately.
+- Add three-browser behavior tests, dual-theme axe scans, pinned visual comparisons and a gated Pages workflow for main.
+- Generate versioned resource archives, per-file SHA-256 manifests, archive checksums and migration guidance.
 
-此版本为开发预发布；合入 dev、发布 main 和正式版本分别审查。
+Development prereleases, integration into dev and release to main are reviewed separately.
 
 ## 0.1.0
 
-- 建立 12 篇设计标准、双主题 Token、48 枚 SVG 和浏览器效果展厅。
-- 提供标准检索、表单校验、通知、模态框、图标检索复制下载与页面模式。
+- Establish 12 design standards, dual-theme tokens, 48 SVG icons and the browser showcase.
+- Provide document search, validation, notifications, dialogs, icon search/copy/download and page patterns.

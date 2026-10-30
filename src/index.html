@@ -10,20 +10,27 @@
   <link rel="stylesheet" href="./assets/components.css">
   <link rel="stylesheet" href="./assets/site.css">
   <link rel="stylesheet" href="./assets/component-lab.css">
+  <link rel="stylesheet" href="./assets/motion.css">
   <script>
-    try { const saved = localStorage.getItem('xu-ui-theme'); if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved; } catch {}
+    {
+      const requested = new URL(location.href).searchParams.get('theme');
+      let saved;
+      try { saved = localStorage.getItem('xu-ui-theme'); } catch {}
+      const theme = ['light','dark'].includes(requested) ? requested : saved;
+      if (['light','dark'].includes(theme)) document.documentElement.dataset.theme = theme;
+    }
   </script>
-  <script type="module" src="./assets/app.js"></script>
+  <script type="module" src="./assets/boot.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到正文</a>
   <header class="topbar">
     <a class="wordmark" href="#/overview" aria-label="XUUI 设计系统首页"><img src="./assets/brand/xu-classic.svg" alt="" width="42" height="42"><strong>XU<span>UI</span></strong><span class="wordmark-note">设计标准与资源</span></a>
-    <div class="top-actions"><span class="version">{{VERSION}}</span><button type="button" class="xu-icon-button" id="theme-toggle" aria-label="切换至亮色主题"></button><a class="xu-icon-button" href="https://github.com/xulang-org/xu-ui-design" aria-label="查看 GitHub 仓库"><svg class="xu-icon" aria-hidden="true"><use href="./assets/icons.svg#code"></use></svg></a><button type="button" class="xu-icon-button mobile-menu" id="menu-toggle" aria-label="展开导航" aria-expanded="false" aria-controls="sidebar"><svg class="xu-icon" aria-hidden="true"><use href="./assets/icons.svg#menu"></use></svg></button></div>
+    <div class="top-actions"><span class="version">{{VERSION}}</span><button type="button" class="xu-button ghost language-toggle" id="language-toggle" lang="en" aria-label="Switch to English">English</button><button type="button" class="xu-icon-button" id="theme-toggle" aria-label="切换至亮色主题"></button><a class="xu-icon-button" href="https://github.com/xulang-org/xu-ui-design" aria-label="查看 GitHub 仓库"><svg class="xu-icon" aria-hidden="true"><use href="./assets/icons.svg#code"></use></svg></a><button type="button" class="xu-icon-button mobile-menu" id="menu-toggle" aria-label="展开导航" aria-expanded="false" aria-controls="sidebar"><svg class="xu-icon" aria-hidden="true"><use href="./assets/icons.svg#menu"></use></svg></button></div>
   </header>
-  <div class="shell"><aside class="sidebar" id="sidebar" aria-label="设计系统导航"></aside><main id="main" tabindex="-1"><div class="loading"><p>正在载入设计标准…</p></div></main></div>
+  <div class="shell"><aside class="sidebar" id="sidebar" aria-label="设计系统导航"></aside><main id="main" tabindex="-1"><div class="loading"><p>正在载入设计标准…</p><p class="small"><a href="./standards/01-principles.zh-CN.md" lang="zh-CN">中文规范</a> · <a href="./standards/01-principles.md" lang="en">English standards</a></p></div></main></div>
   <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
   <dialog id="detail-dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div></dialog>
-  <noscript><p class="noscript">交互式展厅需要 JavaScript。可直接阅读 <a href="./standards/01-principles.md">设计原则源文档</a> 或访问 GitHub 仓库中的 standards 目录。</p></noscript>
+  <noscript><p class="noscript" lang="zh-CN">交互式展厅需要 JavaScript。<a href="./standards/01-principles.zh-CN.md">中文设计原则</a></p><p class="noscript" lang="en">This showcase needs JavaScript. <a href="./standards/01-principles.md">Design principles in English</a>.</p></noscript>
 </body>
 </html>

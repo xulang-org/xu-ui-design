@@ -1,34 +1,34 @@
-# 反馈与浮层
+# Feedback and overlays
 
-反馈靠近发生位置。关键错误和用户必须阅读的信息保留在页面中；短暂通知只承载可恢复、非关键结果。
+Feedback stays close to where something happened. Critical errors and information users must read stay on the page. Transient notifications only carry recoverable, non-critical results.
 
-## 选择反馈
+## Choosing feedback
 
-| 情况 | 方式 | 生命周期 |
+| Situation | Method | Lifetime |
 | --- | --- | --- |
-| 输入错误 | 字段下方错误 | 修正后清除 |
-| 页面提示 | 带图标和标题的状态条 | 按任务需要保留 |
-| 复制成功 | role="status" 短通知 | 约 4 秒，非关键 |
-| 保存失败 | 表单内状态说明 | 保留并提供重试路径 |
-| 需确认后果 | 原生 dialog | 明确选择或 Escape 关闭 |
-| 尚无内容 | 空状态 | 保留主要下一步 |
+| Input error | Error below the field | Cleared after correction |
+| Page notice | Status bar with icon and title | Kept as long as the task needs |
+| Copy succeeded | Short role="status" notification | About 4 seconds, non-critical |
+| Save failed | Status message within the form | Kept, with a retry path |
+| Consequence needs confirmation | Native dialog | Closed by an explicit choice or Escape |
+| No content yet | Empty state | Keep the primary next step |
 
-## 对话框
+## Dialogs
 
-使用 dialog.showModal() 进入浏览器顶层。通过 aria-labelledby 关联标题，必要时由 aria-describedby 关联简短后果。打开时焦点进入框内；Tab 不能逃到背景；Escape 关闭后返回触发器。危险操作默认聚焦取消。不能在弹窗里再嵌套确认弹窗。
+Use dialog.showModal() to enter the browser's top layer. Link the title through aria-labelledby and, when needed, a short description of the consequence through aria-describedby. When the dialog opens, focus moves inside it. Tab must not escape to the background. Escape closes it and returns focus to the trigger. For dangerous actions, focus Cancel by default. Do not nest another confirmation dialog inside a dialog.
 
-组件展厅的确认示例明确写明“演示”，确认只更新示例状态，不删除任何真实资源。
+The confirmation example in the component showcase is clearly marked "Demo". Confirming only updates the example state and does not delete any real resource.
 
-## 状态和进度
+## Status and progress
 
-状态使用“图标 + 文字 + 颜色”。已知进度用 progress；未知等待使用 loading 文本和 aria-busy，不编造百分比。完成后给出结果和下一步。错误不能只消失在短通知中。
+Status uses "icon + text + color". Use progress for known progress. For indeterminate waits, use loading text and aria-busy, and do not invent percentages. On completion, give the result and the next step. Errors must not just disappear in a short notification.
 
-## 通知的交互
+## Notification interaction
 
-通知不抢焦点；连续操作更新同一状态区，避免铺满屏幕。复制失败时提供可选中的源代码，不能仍声称已复制。
+Notifications do not steal focus. Consecutive actions update the same status region instead of filling the screen. When copying fails, provide selectable source code, and do not still claim it was copied.
 
-参考：[WAI-ARIA 模态对话框模式](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)。
+Reference: [WAI-ARIA Modal Dialog Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/).
 
-## 验收
+## Acceptance
 
-对话框可用关闭按钮、取消和 Escape 退出；关闭后焦点回到原按钮；背景不能交互。通知不遮住键盘焦点，错误在用户修正前保持可见。
+Dialogs can be exited with the close button, Cancel and Escape. After closing, focus returns to the original button. The background cannot be interacted with. Notifications do not cover keyboard focus, and errors stay visible until the user corrects them.

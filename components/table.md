@@ -1,42 +1,42 @@
-# 表格与分页
+# Table and pagination
 
-排序、分页、空结果和操作名称。以下是组件的设计与交互契约，Web 参考实现与原生能力边界分别说明。
+Sorting, pagination, empty results and action names. The following is the component's design and interaction contract; the Web reference implementation and native capability boundaries are described separately.
 
-## 结构
+## Structure
 
-- 语义表头
-- 数据行
-- 排序按钮
-- 结果数量
-- 分页导航
+- Semantic header
+- Data rows
+- Sort buttons
+- Result count
+- Pagination navigation
 
-## 状态矩阵
+## State matrix
 
-| 状态 | 必须满足 |
+| State | Must satisfy |
 | --- | --- |
-| 有数据 | 表头与单元格关系完整 |
-| 排序 | aria-sort 表达当前顺序 |
-| 首／末页 | 上一页／下一页原生禁用 |
-| 空结果 | 保留筛选条件，提供清空入口 |
-| 更新 | 结果数量在 role=status 区域播报 |
-| 窄屏 | 表格容器可横向滚动，页面不溢出 |
+| With data | Complete header-to-cell relationships |
+| Sorted | aria-sort expresses the current order |
+| First / last page | Previous / Next are natively disabled |
+| Empty result | Filter conditions are kept; a way to clear them is provided |
+| Updated | The result count is announced in a role=status region |
+| Narrow screens | The table container scrolls horizontally; the page does not overflow |
 
-## 键盘行为
+## Keyboard behavior
 
-- Tab 访问排序和分页按钮；Enter / Space 执行动作。
-- 不把普通 table 伪装成需要二维键盘导航的 grid。
+- Tab reaches the sort and pagination buttons; Enter / Space perform the action.
+- Do not disguise an ordinary table as a grid that requires two-dimensional keyboard navigation.
 
-## Token 与尺寸
+## Tokens and sizing
 
-使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
+Use --xu-text, --xu-muted, --xu-brand, --xu-focus and --xu-control-border. The default control height is 40 px; touch targets are at least 44 px. Components must support dark and light themes and respect the user's root font size and reduced motion preference.
 
-## 原生映射
+## Native mapping
 
-widgets.Table 支持原生表格与排序；分页属于应用数据模型，不声称由宿主自动提供。
+widgets.Table supports native tables and sorting; pagination belongs to the application data model and is not claimed to be provided automatically by the host.
 
-## 验收
+## Acceptance
 
-- 默认、聚焦、禁用和主要状态均可在对应效果中操作或对照。
-- 320 px 下没有页面级横向溢出，长名称和空数据保留含义。
-- 使用原生语义或完整 ARIA 关系；错误能恢复且不丢失用户输入。
-- 浏览器回归覆盖成功路径和至少一种边界状态；屏幕阅读器人工结果另行记录，不以自动扫描代替。
+- Default, focused, disabled and primary states can all be operated or compared in the corresponding demo.
+- At 320 px there is no page-level horizontal overflow; long names and empty data keep their meaning.
+- Use native semantics or complete ARIA relationships; errors are recoverable without losing user input.
+- Browser regression tests cover the success path and at least one edge state; manual screen reader results are recorded separately and are not replaced by automated scans.

@@ -1,41 +1,43 @@
-# 色彩与主题
+# Color and themes
 
-颜色描述语义，不描述组件位置。业务代码使用 --xu-brand、--xu-text 等语义变量，不直接复制十六进制颜色。
+Colors describe semantics, not component positions. Product code uses semantic variables such as --xu-brand and --xu-text and does not copy hex colors directly.
 
-## 语义角色
+## Semantic roles
 
-| Token | 用途 | 使用限制 |
+| Token | Purpose | Usage limits |
 | --- | --- | --- |
-| --xu-canvas | 页面基底 | 大面积背景 |
-| --xu-surface | 内容表面 | 表单、面板、对话框 |
-| --xu-elevated | 次级层 | 控件底色与表头 |
-| --xu-text | 主文本 | 标题、正文、输入值 |
-| --xu-muted | 辅助文本 | 说明和元数据，仍须可读 |
-| --xu-brand | 品牌和主要操作 | 不兼作错误提示 |
-| --xu-on-brand | 品牌色上的文字 | 必须与 brand 成对使用 |
-| --xu-control-border | 可交互边界 | 输入框和未选中的控件 |
-| --xu-border | 装饰分隔 | 不承担唯一的控件识别 |
-| --xu-focus | 键盘焦点 | 2 px 外轮廓，间隔 3 px |
+| --xu-canvas | Page base | Large background areas |
+| --xu-surface | Content surface | Forms, panels, dialogs |
+| --xu-elevated | Secondary layer | Control fills and table headers |
+| --xu-text | Primary text | Headings, body text, input values |
+| --xu-muted | Secondary text | Descriptions and metadata; must still be readable |
+| --xu-brand | Brand and primary actions | Not also used for error messages |
+| --xu-on-brand | Text on brand color | Must be paired with brand |
+| --xu-control-border | Interactive boundaries | Inputs and unselected controls |
+| --xu-border | Decorative dividers | Not the sole means of identifying a control |
+| --xu-focus | Keyboard focus | 2 px outline, 3 px offset |
 
-## 双主题
+## Two themes
 
-默认暗色曜石，允许用户切换至亮色宣纸。主题设置存于本地浏览器；存储不可用时继续正常工作。根元素使用 data-theme="dark" 或 data-theme="light"；导出的 tokens.css 默认暗色。
+The default is dark Obsidian, and users may switch to light Xuan Paper. The theme setting is stored in the local browser; when storage is unavailable, the interface keeps working normally. The root element uses data-theme="dark" or data-theme="light". The exported tokens.css defaults to dark.
 
-朱砂主色在亮色使用 #be123c；暗色使用 #ff5274，以提高小面积操作的可读性。#ff5274 是 UI 光学校正色，不替代品牌标志原始用色。暗色主按钮使用深色文字；不能强行让两个主题都使用白字。
+The primary cinnabar color is #be123c in light and #ff5274 in dark, to improve readability of small action areas. #ff5274 is an optically corrected UI color and does not replace the original color of the brand mark. Primary buttons in dark use dark text. Do not force white text in both themes.
 
-## 状态配对
+## Status pairs
 
-success / success-soft、warning / warning-soft、danger / danger-soft、info / info-soft 是文本与浅底配对。每项状态同时带文字和图形；不能只凭红绿区分。错误说明指向具体输入，警告保留继续或返回的路径。
+success / success-soft, warning / warning-soft, danger / danger-soft and info / info-soft are text and soft-background pairs. Each status carries both text and a graphic. Do not distinguish by red and green alone. Error messages point to the specific input, and warnings keep a path to continue or go back.
 
-## 对比度与验证
+## Contrast ratio and verification
 
-常规文字至少 4.5:1；大字号文字至少 3:1；承担识别的控件边界和焦点至少 3:1。本库 check 命令测量文本与 canvas、surface、elevated，以及按钮、状态、控件边界和焦点的已定义组合；结果在基础展厅显示。透明叠层、禁用状态和任意业务配色须单独验证。
+Regular text is at least 4.5:1, large text at least 3:1, and control boundaries and focus that carry identification at least 3:1. This library's check command measures text against canvas, surface and elevated, as well as the defined combinations for buttons, statuses, control boundaries and focus. The results are shown in the basics showcase. Transparent overlays, disabled states and arbitrary product color schemes must be verified separately.
 
-参考：[WCAG 2.2 快速参考](https://www.w3.org/WAI/WCAG22/quickref/)。这些门槛是项目验收要求，自动颜色检查不等于整站获得认证。
+Reference: [WCAG 2.2 Quick Reference](https://www.w3.org/WAI/WCAG22/quickref/). These thresholds are project acceptance requirements. Automated color checks do not mean the whole site is certified.
 
-## 禁用方式
+## Prohibited practices
 
-- 不在业务组件中反转图片来模拟主题。
-- 不用淡化透明度隐藏重要说明。
-- 不把 --xu-border 用作输入框唯一边界。
-- 不把品牌红同时用于普通链接、危险提示和全部图标。
+- Do not invert images in product components to simulate a theme.
+- Do not hide important descriptions with faded opacity.
+- Do not use --xu-border as the only boundary of an input.
+- Do not use brand red for regular links, danger messages and all icons at the same time.
+
+Use brand-pressed for a pressed primary action and control-pressed for neutral controls. Keep the same boundary and label contrast requirements.

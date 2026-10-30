@@ -1,20 +1,20 @@
-# 开发交付与治理
+# Delivery and governance
 
-设计标准是本仓库的产品内容，放在 standards/；本机计划、日志、截图和审计放在忽略目录。不要复制编译器仓库的本机 docs/ 作为公开设计文档。
+Design standards are product content of this repository and live in standards/. Local plans, logs, screenshots and audits go in ignored directories. Do not copy the compiler repository's local docs/ as public design documentation.
 
-## 单一来源
+## Single source
 
-| 来源 | 生成或消费结果 |
+| Source | Generated or consumed output |
 | --- | --- |
-| tokens/tokens.json | assets/tokens.css、原生 Editor 适配、基础展厅、对比度检查 |
-| icons/catalog.json | SVG sprite、独立 SVG、检索展厅 |
-| standards/index.json 与 Markdown | 文档导航、在线阅读和源码下载 |
-| src/components.css | 可复用的参考组件样式 |
-| components/index.json 与 Markdown | 独立组件契约、状态矩阵与验收 |
-| src/interactions.js | 可卸载的行为控制器 |
-| src/app.js | 展厅交互与页面模式 |
+| tokens/tokens.json | assets/tokens.css, native Editor adaptation, basic showcase, contrast ratio checks |
+| icons/catalog.json | SVG sprite, standalone SVGs, searchable showcase |
+| standards/index.json and Markdown | Documentation navigation, online reading and source download |
+| src/components.css | Reusable reference component styles |
+| components/index.json and Markdown | Standalone component contracts, state matrices and acceptance |
+| src/interactions.js | Unmountable behavior controllers |
+| src/app.js | Showcase interactions and page patterns |
 
-## 构建与使用
+## Build and use
 
 ```sh
 npm run check
@@ -22,24 +22,24 @@ npm run build
 npm run dev
 ```
 
-需要 Node.js 22 或以上，无外部运行依赖。dev 命令会先构建，默认 http://127.0.0.1:4173；端口可通过 PORT 指定。源码变化后重新构建并刷新。dist/ 可部署在静态主机根路径或子目录；内部资源使用相对路径，路由使用 hash。
+Requires Node.js 22 or later, with no external runtime dependencies. The dev command builds first and defaults to http://127.0.0.1:4173. The port can be set through PORT. After source changes, rebuild and refresh. dist/ can be deployed at the root or a subdirectory of a static host. Internal resources use relative paths, and routes use hash.
 
-接入应用时复制 dist/assets/tokens.css 和 components.css，并按需引入 dist/assets/icons.svg；组件样式并不自带对话框、表单或路由行为，需使用原生语义并实现产品状态。dist/tokens/tokens.json 可供设计工具转换，当前为本项目自定义扁平结构，不宣称兼容 DTCG 文件格式。
+To integrate into an application, copy dist/assets/tokens.css and components.css, and include dist/assets/icons.svg as needed. The component styles do not include dialog, form or routing behavior. Use native semantics and implement product state yourself. dist/tokens/tokens.json can be converted by design tools. It currently uses this project's own flat structure and does not claim compatibility with the DTCG file format.
 
-## 版本和兼容
+## Versioning and compatibility
 
-本库独立版本由 package.json 管理，当前正式基线为 0.1.0。后续开发批次使用预发布版本，验收发布后再移除开发后缀。Token 删除、改名、语义变化和图标删除需迁移说明；新增保持现有契约。标准、资源和展厅在同一个 PR 更新，不能只更新截图。不得因此改动 XU 编译器版本。
+This library's independent version is managed by package.json, and the current release baseline is 0.1.0. Later development batches use pre-release versions, and the development suffix is removed after acceptance and release. Token removal, renaming, semantic changes and icon removal require migration notes. Additions keep existing contracts. Standards, resources and the showcase are updated in the same PR, not just screenshots. The XU compiler version must not be changed because of this.
 
-## 协作
+## Collaboration
 
-从最新 origin/dev 建立任务分支，验证后提交明确路径，推送并通过 PR 合入 dev。main 仅在获得发布授权并完成 dev 集成验证后推进。发布前核对目标分支、完整提交与验证结果；长期分支之间使用保留共同祖先的合并提交。CI 配置存在不代表分支保护已启用。
+Create a task branch from the latest origin/dev, commit explicit paths after validation, push, and merge into dev through a PR. main advances only after release authorization is obtained and dev integration is validated. Before release, verify the target branch, the full commit and validation results. Merges between long-lived branches use merge commits that preserve the common ancestor. The presence of CI configuration does not mean branch protection is enabled.
 
-## 发布和回滚
+## Release and rollback
 
-CI 为 PR、dev 和 main 构建并验收；Pages 仅在 main 通过资源检查、浏览器行为和视觉回归后部署，PR 不具有 Pages 写权限。正式发布必须先取得授权并完成 dev 集成。部署入口是否可用以实际工作流成功和在线访问结果为准。失败通过修复 PR 或 revert PR 恢复并重新部署，不强推长期分支，不移动已发布标签。
+CI builds and verifies PRs, dev and main. Pages deploys only after main passes resource checks, browser behavior and visual regression, and PRs do not have Pages write permission. A formal release must first obtain authorization and complete dev integration. Whether the deployment entry is available is determined by actual workflow success and online access results. Failures are recovered through a fix PR or revert PR followed by redeployment. Do not force-push long-lived branches, and do not move published tags.
 
-每次构建同时输出 downloads/ 下的版本资源包、SHA256SUMS 和逐文件 manifest；资源包附许可、变更与迁移说明。消费者固定完整版本、来源提交及校验值，升级时核验并整套替换，保留旧包用于回退。
+Each build also outputs versioned resource packages, SHA256SUMS and a per-file manifest under downloads/. Resource packages include the license, changes and migration notes. Consumers pin the full version, source commit and checksums, verify them on upgrade, replace the whole set, and keep the old package for rollback.
 
-## 交付门槛
+## Delivery gates
 
-check 验证 Token 结构、定义配色组合、SVG 白名单、文档链接和构建资源。Playwright 在 Chromium、Firefox、WebKit 检查行为；axe 覆盖八组件双主题窄屏，固定 Linux Chromium 基线检查视觉。人工另检导航、主题、屏幕阅读器与实际任务。记录实际检查范围，不以自动颜色检查替代完整可访问性验收。
+check validates token structure, defined color combinations, the SVG allowlist, documentation links and build resources. Playwright checks behavior in Chromium, Firefox and WebKit. axe covers eight components in both themes on narrow screens, and a fixed Linux Chromium baseline checks visuals. Navigation, themes, screen readers and real tasks are checked manually in addition. Record the actual scope of checks, and do not use automated color checks in place of full accessibility acceptance.

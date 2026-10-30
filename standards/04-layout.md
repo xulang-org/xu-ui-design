@@ -1,41 +1,54 @@
-# 布局与间距
+# Layout and spacing
 
-布局从内容关系出发。采用 4 px 基础单位，使用语义分组和留白建立秩序，不把每段内容包进独立卡片。
+Layout starts from content relationships. It uses a 4 px base unit and builds order with semantic grouping and white space, instead of wrapping every piece of content in its own card.
 
-## 空间刻度
+## Spacing scale
 
-| Token | 数值 | 典型用途 |
+| Token | Value | Typical use |
 | --- | --- | --- |
-| space-1 | 4 px | 图标内部视觉间隔 |
-| space-2 | 8 px | 图标与文字、同组控件 |
-| space-3 | 12 px | 表单标签与说明 |
-| space-4 | 16 px | 控件组、面板内间隔 |
-| space-6 | 24 px | 组间距、窄屏页面边距 |
-| space-8 | 32 px | 内容模块间距 |
-| space-12 | 48 px | 大章节间距 |
-| space-16 | 64 px | 桌面主区留白 |
+| space-1 | 4 px | Visual spacing inside icons |
+| space-2 | 8 px | Icon and text, controls in the same group |
+| space-3 | 12 px | Form labels and descriptions |
+| space-4 | 16 px | Control groups, spacing inside panels |
+| space-6 | 24 px | Spacing between groups, page margins on narrow screens |
+| space-8 | 32 px | Spacing between content modules |
+| space-12 | 48 px | Spacing between major sections |
+| space-16 | 64 px | White space in the desktop main area |
 
-## 响应式契约
+## Responsive contract
 
-| 宽度 | 导航 | 主内容 | 行为 |
+| Width | Navigation | Main content | Behavior |
 | --- | --- | --- | --- |
-| 320–599 px | 顶部菜单展开 | 单列，16 px 边距 | 控件换行；图标详情进入对话框 |
-| 600–999 px | 顶部菜单展开 | 32 px 边距，按内容分栏 | 840 px 起保留图标检视区 |
-| 1000–1279 px | 216 px 侧栏 | 内容主区与资源检视区 | 文档目录在正文上方折叠 |
-| 1280 px 及以上 | 216 px 侧栏 | 封面与预览并排 | 正文与篇内目录分栏 |
+| 320–599 px | Top menu expanded | Single column, 16 px margins | Controls wrap; icon details open in a dialog |
+| 600–999 px | Top menu expanded | 32 px margins, columns by content | Icon inspector kept from 840 px |
+| 1000–1279 px | 216 px sidebar | Main content area and resource inspector | Document table of contents collapses above body text |
+| 1280 px and above | 216 px sidebar | Cover and preview side by side | Body text and in-page table of contents in columns |
 
-断点是参考实现的内容边界，不是设备型号。单个组件也应在容器变窄时换行。不得用隐藏整个主要功能来通过移动端验收。
+Breakpoints are content boundaries of the reference implementation, not device models. Individual components should also wrap when their container narrows. Do not hide an entire primary feature to pass mobile acceptance.
 
-## 控件密度
+## Control density
 
-sm = 32 px、md = 40 px、lg = 48 px。默认 md 用于桌面；独立图标按钮至少 44 × 44 px。触摸和窄屏模式将普通控件最小高度提升到 44 px。视觉尺寸和交互目标分开评估。
+sm = 32 px, md = 40 px, lg = 48 px. The default md is for desktop. Standalone icon buttons are at least 44 × 44 px. Touch and narrow-screen modes raise the minimum height of regular controls to 44 px. Visual size and interaction target are evaluated separately.
 
-## 圆角、层与遮罩
+## Radius, layers and scrims
 
-radius-sm = 4 px 用于小标签，radius-md = 8 px 用于控件，radius-lg = 12 px 用于面板。浮层优先使用边界和遮罩建立层次。z-sticky、z-menu、z-toast 负责普通层级；原生 dialog 使用浏览器顶层，不能以无限增大 z-index 代替焦点隔离。
+radius-sm = 4 px is for small tags, radius-md = 8 px for controls, and radius-lg = 12 px for panels. Overlays prefer borders and scrims to establish hierarchy. z-sticky, z-menu and z-toast handle regular layering. The native dialog uses the browser top layer. Do not substitute an ever-increasing z-index for focus isolation.
 
-## 验收
+## Component composition and typography matrix
 
-320 px 视口没有页面级横向溢出；长标题、长路径和中文说明不截断关键含义；表格保留标题与数据关系，滚动区具备键盘入口。
+When atomic controls are combined into complete interfaces, follow the predefined container structures, typographic hierarchy and spacing contracts (exported in Web `assets/components.css`, and mapped to `#ui/layout` and `#ui/widgets` natively):
 
-ICON 图标库属于资源检索界面，分类之间用标题与间隔分组；只有悬停或选中时突出单个图标。检视区的网格承载真实 SVG 坐标测量，不作为全页装饰背景。较矮窗口中的检视区使用内部滚动，展开源码后仍能访问完整内容与导出操作。
+| Composition pattern | Container and native mapping | Typography hierarchy (size / weight / line-height) | Spacing and alignment contract |
+| --- | --- | --- | --- |
+| Action cluster and button group | `.xu-cluster`, `.xu-button-group` / `widgets.ButtonGroup` | Button label `14 px` (`text-sm`) / `600` / `1.2` | Standalone buttons use `8 px` (`space-2`) gap in fixed order: Primary → Secondary → Ghost → Danger; segmented single-select groups (`joined`) share an outer frame with `4 px` inset padding |
+| Search and filter toolbar | `.xu-toolbar` / `layout.row(..., CROSS_END)` | Field label `14 px` / `600`; input and select `14 px` / `400` / `1.5` | Search field `flex: 1 1 200px`, compact filter `144 px`, bottom-aligned (`align-items: flex-end`) so labeled inputs and trailing action buttons share the same `40 px` control baseline with `16 px` (`space-4`) gap |
+| Form stack and two-column grid | `.xu-stack`, `.xu-form-grid` / `widgets.Field` | Label `14 px` / `600`; control `14 px` / `400`; helper and error `14 px` / `400` / `1.5` | `8 px` (`space-2`) inside each field (label → control → helper/error), `20 px` (`space-5`) vertically between fields; `32 px` (`space-8`) column gap in desktop 2-column grids, collapsing to 1 column below `720 px` |
+| Three-section card panel | `.xu-card` (`header` / `body` / `footer`) / `widgets.CardRegions` | Title `16 px` (`text-md`) / `600` / `1.4`; subtitle `12 px` (`text-xs`) `muted`; footer meta `12 px` `mono` | `24 px` (`space-6`, `16 px` on narrow screens) outer padding; `16 px` (`space-4`) between header, body and footer; footer places status/metadata on the start side and action cluster on the end side |
+| Structured list row | `.xu-list`, `.xu-list-row` / `widgets.ListRow` | Title `14 px` / `500` `text`; secondary description `12 px` / `400` `muted`; trailing detail `12 px` `mono` | Three-column grid: `20 px` leading icon → stacked title and description (`2 px` gap) → right-aligned mono detail, badge or `sm` ghost action, with `12 px` (`space-3`) horizontal gap and `48 px` minimum row height |
+| Key-value spec row and split workbench | `.xu-kv`, `.xu-split-panels` / `widgets.SplitView` | Key label `14 px` `text`; value or code `12–14 px` `mono` `muted` | Key-value rows justify space-between with `12 px` (`space-3`) vertical padding and `1 px` top borders; split workbenches pair a `25%–35%` navigation rail with a `65%–75%` main pane without nested same-axis scrollbars |
+
+## Acceptance
+
+A 320 px viewport has no page-level horizontal overflow. Long titles, long paths and Chinese descriptions are not truncated in ways that lose key meaning. Tables keep the relationship between headers and data, and scroll regions have a keyboard entry point.
+
+The ICON library is a resource search interface. Categories are grouped with headings and spacing; a single icon is highlighted only on hover or selection. The grid in the inspector carries real SVG coordinate measurement and is not a full-page decorative background. In shorter windows, the inspector uses internal scrolling, so the full content and export actions remain accessible after expanding the source code.

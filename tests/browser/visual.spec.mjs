@@ -1,19 +1,52 @@
 import { test, expect } from '@playwright/test';
-for(const theme of ['dark','light']) {
-  test(`@visual icons desktop ${theme}`,async({page,browserName})=>{
-    test.skip(browserName!=='chromium');
+const compare = async (target,name,options={})=>{
+  try { await expect(target).toHaveScreenshot(name,options); }
+  finally { await target.screenshot({...options,path:test.info().outputPath(`review-${name}`),animations:'disabled',caret:'hide'}); }
+};
+for(const locale of ['zh-CN','en']) for(const theme of ['dark','light']) {
+  const suffix=locale==='en'?'-en':'';
+  for(const [device,width] of [['desktop',1440],['mobile',390]]) {
+    test(`@visual ${locale} empty state ${device} ${theme}`,async({page})=>{
+      await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
+      await page.setViewportSize({width,height:900});await page.goto(`/?lang=${locale}#/patterns`);
+      const empty=page.locator('.empty');await expect(empty).toBeVisible();
+      await page.mouse.move(0,0);await compare(empty,`empty-state-${device}-${theme}${suffix}.png`);
+    });
+    test(`@visual ${locale} button proportions ${device} ${theme}`,async({page})=>{
+      await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
+      await page.setViewportSize({width,height:900});await page.goto(`/?lang=${locale}#/components/button`);
+      const demo=page.locator('#contract-demo');await expect(demo).toBeVisible();
+      await page.mouse.move(0,0);await compare(demo,`button-proportions-${device}-${theme}${suffix}.png`);
+    });
+  }
+  for(const [device,width] of [['desktop',1440],['mobile',390]]) {
+    test(`@visual ${locale} motion ${device} ${theme}`,async({page})=>{
+      await page.setViewportSize({width,height:900});
+      await page.goto(`/?lang=${locale}&theme=${theme}#/motion`);
+      await expect(page.locator('#motion-copy')).toBeVisible();
+      await page.mouse.move(0,0);await compare(page,`motion-${device}-${theme}${suffix}.png`,{fullPage:true});
+    });
+  }
+  test(`@visual ${locale} tree focus ${theme}`,async({page})=>{
     await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
-    await page.setViewportSize({width:1440,height:900});await page.goto('/#/icons');
-    await expect(page.getByRole('heading',{name:'ICON 图标库',exact:true})).toBeVisible();
-    await page.mouse.move(0,0);
-    await expect(page).toHaveScreenshot(`icons-desktop-${theme}.png`,{fullPage:true});
+    await page.setViewportSize({width:1440,height:900});await page.goto(`/?lang=${locale}#/components/tree`);
+    await page.getByRole('treeitem',{name:'workspace',exact:true}).press('Home');
+    await page.mouse.move(0,0);await compare(page.locator('.xu-tree'),`tree-focus-${theme}${suffix}.png`);
   });
-  test(`@visual tabs mobile ${theme}`,async({page,browserName})=>{
+  test(`@visual ${locale} icons desktop ${theme}`,async({page,browserName})=>{
     test.skip(browserName!=='chromium');
     await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
-    await page.setViewportSize({width:390,height:844});await page.goto('/#/components/tabs');
-    await expect(page.getByRole('heading',{name:'页签',exact:true})).toBeVisible();
+    await page.setViewportSize({width:1440,height:900});await page.goto(`/?lang=${locale}#/icons`);
+    await expect(page.getByRole('heading',{name:locale==='en'?'Icon library':'ICON 图标库',exact:true})).toBeVisible();
     await page.mouse.move(0,0);
-    await expect(page).toHaveScreenshot(`tabs-mobile-${theme}.png`);
+    await compare(page,`icons-desktop-${theme}${suffix}.png`,{fullPage:true});
+  });
+  test(`@visual ${locale} tabs mobile ${theme}`,async({page,browserName})=>{
+    test.skip(browserName!=='chromium');
+    await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
+    await page.setViewportSize({width:390,height:844});await page.goto(`/?lang=${locale}#/components/tabs`);
+    await expect(page.getByRole('heading',{name:locale==='en'?'Tabs':'页签',exact:true})).toBeVisible();
+    await page.mouse.move(0,0);
+    await compare(page,`tabs-mobile-${theme}${suffix}.png`);
   });
 }

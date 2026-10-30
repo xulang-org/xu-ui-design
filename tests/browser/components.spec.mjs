@@ -36,12 +36,12 @@ test('table pagination has boundaries and filtering resets the page',async({page
   await visit(page,'table');
   await expect(page.getByRole('button',{name:'上一页',exact:true})).toBeDisabled();
   await page.getByRole('button',{name:'下一页',exact:true}).click();
-  await expect(page.locator('.pagination [role="status"]')).toContainText('第 2 / 3 页');
+  await expect(page.locator('.pagination [role="status"]')).toContainText('页码 2 / 3');
   await page.getByRole('button',{name:'下一页',exact:true}).click();
   await expect(page.getByRole('button',{name:'下一页',exact:true})).toBeDisabled();
   await page.getByLabel('筛选演示项目',{exact:true}).fill('not-present');
   await expect(page.locator('[data-paged-table] tbody')).toContainText('没有匹配的项目');
-  await expect(page.locator('.pagination [role="status"]')).toContainText('第 1 / 1 页');
+  await expect(page.locator('.pagination [role="status"]')).toContainText('页码 1 / 1');
   await page.getByRole('button',{name:'清空筛选',exact:true}).click();
   await expect(page.locator('[data-paged-table] tbody tr')).toHaveCount(4);
 });
@@ -114,8 +114,24 @@ test('modal Escape returns focus to its invoker',async({page})=>{
   await page.keyboard.press('Escape');await expect(trigger).toBeFocused();
 });
 
+test('chart switches modes, inspects slots with arrows and recovers from hidden series',async({page})=>{
+  await visit(page,'chart');
+  await page.getByRole('button',{name:'柱状图',exact:true}).click();
+  await expect(page.getByRole('button',{name:'柱状图',exact:true})).toHaveAttribute('aria-pressed','true');
+  const firstPoint=page.locator('[data-chart-point="0"]');
+  await firstPoint.focus();
+  await firstPoint.press('ArrowRight');
+  await expect(page.locator('[data-chart-point="1"]')).toBeFocused();
+  await expect(page.locator('[data-chart-status]')).toContainText('Q2');
+  for(const key of ['fps','throughput']) await page.locator(`[data-chart-series="${key}"]`).click();
+  await expect(page.locator('[data-chart-empty]')).toBeVisible();
+  await page.locator('[data-chart-restore]').click();
+  await expect(page.locator('[data-chart-empty]')).toBeHidden();
+  await expect(page.locator('[data-chart-series="fps"]')).toHaveAttribute('aria-pressed','true');
+});
+
 for(const theme of ['dark','light']) {
-  for(const id of ['menu','tabs','table','tree','splitter','input','button','feedback']) {
+  for(const id of ['menu','tabs','table','tree','splitter','input','button','feedback','chart']) {
     test(`axe and narrow reflow: ${id} / ${theme}`,async({page})=>{
       await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
       await page.setViewportSize({width:320,height:800});await visit(page,id);

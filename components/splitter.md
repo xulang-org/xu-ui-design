@@ -1,40 +1,40 @@
-# 分割面板
+# Split panes
 
-受约束的面板尺寸与键盘调整。以下是组件的设计与交互契约，Web 参考实现与原生能力边界分别说明。
+Constrained pane sizes and keyboard resizing. The following is the component's design and interaction contract; the Web reference implementation and native capability boundaries are described separately.
 
-## 结构
+## Structure
 
-- 前侧面板
-- 可聚焦 separator
-- 后侧面板
+- Leading pane
+- Focusable separator
+- Trailing pane
 
-## 状态矩阵
+## State matrix
 
-| 状态 | 必须满足 |
+| State | Must satisfy |
 | --- | --- |
-| 默认 | 面板比例 50%，separator 有可访问名称 |
-| 调整 | aria-valuenow 同步比例 |
-| 下限／上限 | 限制在 25%–75% |
-| 指针 | 捕获拖动，结束后释放 |
-| 键盘 | 方向键以 5% 步进 |
-| 窄屏 | 面板可收缩，长内容可滚动 |
+| Default | Pane ratio 50%; the separator has an accessible name |
+| Resizing | aria-valuenow tracks the ratio |
+| Minimum / maximum | Limited to 25%–75% |
+| Pointer | Drag is captured and released when it ends |
+| Keyboard | Arrow keys step by 5% |
+| Narrow screens | Panes can shrink; long content can scroll |
 
-## 键盘行为
+## Keyboard behavior
 
-- 垂直分隔条使用 ArrowLeft / ArrowRight 调整。
-- Home / End 到下限和上限；每次调整更新可读比例。
+- A vertical separator is resized with ArrowLeft / ArrowRight.
+- Home / End go to the minimum and maximum; each adjustment updates the readable ratio.
 
-## Token 与尺寸
+## Tokens and sizing
 
-使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
+Use --xu-text, --xu-muted, --xu-brand, --xu-focus and --xu-control-border. The default control height is 40 px; touch targets are at least 44 px. Components must support dark and light themes and respect the user's root font size and reduced motion preference.
 
-## 原生映射
+## Native mapping
 
-原生分割布局按宿主尺寸约束适配；Web 指针捕获与 DOM separator 不能直接当作原生实现。
+Native split layouts are adapted to host size constraints; Web pointer capture and the DOM separator must not be treated directly as a native implementation.
 
-## 验收
+## Acceptance
 
-- 默认、聚焦、禁用和主要状态均可在对应效果中操作或对照。
-- 320 px 下没有页面级横向溢出，长名称和空数据保留含义。
-- 使用原生语义或完整 ARIA 关系；错误能恢复且不丢失用户输入。
-- 浏览器回归覆盖成功路径和至少一种边界状态；屏幕阅读器人工结果另行记录，不以自动扫描代替。
+- Default, focused, disabled and primary states can all be operated or compared in the corresponding demo.
+- At 320 px there is no page-level horizontal overflow; long names and empty data keep their meaning.
+- Use native semantics or complete ARIA relationships; errors are recoverable without losing user input.
+- Browser regression tests cover the success path and at least one edge state; manual screen reader results are recorded separately and are not replaced by automated scans.

@@ -1,40 +1,40 @@
-# 页签
+# Tabs
 
-选中关系、方向键与关联面板。以下是组件的设计与交互契约，Web 参考实现与原生能力边界分别说明。
+Selection, arrow keys and associated panels. The following is the component's design and interaction contract; the Web reference implementation and native capability boundaries are described separately.
 
-## 结构
+## Structure
 
-- tablist 容器
-- tab 按钮
-- tabpanel 内容
+- tablist container
+- tab buttons
+- tabpanel content
 
-## 状态矩阵
+## State matrix
 
-| 状态 | 必须满足 |
+| State | Must satisfy |
 | --- | --- |
-| 默认 | 一个 tab 选中并可 Tab 聚焦 |
-| 未选中 | aria-selected=false，tabindex=-1 |
-| 选中 | aria-selected=true，关联面板可见 |
-| 禁用 | 原生 disabled，方向键跳过 |
-| 焦点 | 焦点轮廓与选中标记各自可见 |
-| 切换 | 自动激活，仅用于即时本地内容 |
+| Default | One tab is selected and reachable with Tab |
+| Unselected | aria-selected=false, tabindex=-1 |
+| Selected | aria-selected=true; the associated panel is visible |
+| Disabled | Native disabled; skipped by arrow keys |
+| Focus | Focus outline and selection indicator are each visible |
+| Switching | Automatic activation, only for immediate local content |
 
-## 键盘行为
+## Keyboard behavior
 
-- ArrowLeft / ArrowRight 循环切换可用页签。
-- Home / End 到首尾；Tab 进入当前面板。
+- ArrowLeft / ArrowRight cycle through available tabs.
+- Home / End go to the first and last tabs; Tab moves into the current panel.
 
-## Token 与尺寸
+## Tokens and sizing
 
-使用 --xu-text、--xu-muted、--xu-brand、--xu-focus 和 --xu-control-border。默认控件高度 40 px；触摸目标至少 44 px。组件必须适配暗色和亮色，并尊重用户根字号与减少动效偏好。
+Use --xu-text, --xu-muted, --xu-brand, --xu-focus and --xu-control-border. The default control height is 40 px; touch targets are at least 44 px. Components must support dark and light themes and respect the user's root font size and reduced motion preference.
 
-## 原生映射
+## Native mapping
 
-有原生页签控件时按宿主焦点模型适配；本库只承诺此 Web 自动激活模式。
+Where a native tab control exists, adapt it to the host focus model; this library only commits to this Web automatic-activation pattern.
 
-## 验收
+## Acceptance
 
-- 默认、聚焦、禁用和主要状态均可在对应效果中操作或对照。
-- 320 px 下没有页面级横向溢出，长名称和空数据保留含义。
-- 使用原生语义或完整 ARIA 关系；错误能恢复且不丢失用户输入。
-- 浏览器回归覆盖成功路径和至少一种边界状态；屏幕阅读器人工结果另行记录，不以自动扫描代替。
+- Default, focused, disabled and primary states can all be operated or compared in the corresponding demo.
+- At 320 px there is no page-level horizontal overflow; long names and empty data keep their meaning.
+- Use native semantics or complete ARIA relationships; errors are recoverable without losing user input.
+- Browser regression tests cover the success path and at least one edge state; manual screen reader results are recorded separately and are not replaced by automated scans.

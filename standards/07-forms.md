@@ -1,41 +1,56 @@
-# 表单与输入
+# Forms and input
 
-表单先帮助用户输入正确，再在错误发生时帮助恢复。标签保持可见；placeholder 只提供例子，不能代替标签。
+Forms first help users enter correct input, then help them recover when errors occur. Labels stay visible. A placeholder only provides an example and must not replace the label.
 
-## 基本结构
+## Basic structure
 
 ```html
-<label for="project-name">项目名称 <span>必填</span></label>
+<label for="project-name">Project name <span>Required</span></label>
 <input class="xu-input" id="project-name" name="project-name"
   required maxlength="40" aria-describedby="name-help">
-<p id="name-help">使用 1–40 个字符。</p>
+<p id="name-help">Use 1–40 characters.</p>
 ```
 
-## 字段和状态
+## Fields and states
 
-| 状态 | 呈现 | 行为 |
+| State | Presentation | Behavior |
 | --- | --- | --- |
-| 默认 | 可见边界与持久标签 | 原生输入语义 |
-| 焦点 | focus 轮廓 | 不在输入中自动跳焦点 |
-| 错误 | danger 文本与具体说明 | aria-invalid，关联错误；聚焦首个错误 |
-| 禁用 | disabled，说明原因 | 不允许修改 |
-| 只读 | readonly | 可选中和复制 |
-| 提交中 | 表单 aria-busy | 阻止重复提交，保留值 |
-| 完成 | 文字反馈 | 不无故清空用户输入 |
+| Default | Visible boundary and persistent label | Native input semantics |
+| Focus | Focus outline | Do not auto-advance focus during input |
+| Error | Danger text with a specific explanation | aria-invalid, linked error; focus the first error |
+| Disabled | disabled, with the reason explained | Changes not allowed |
+| Read-only | readonly | Can be selected and copied |
+| Submitting | aria-busy on the form | Prevent duplicate submission, keep values |
+| Complete | Text feedback | Do not clear user input without reason |
 
-首次输入前不展示错误；提交时校验全部字段，有错误后随输入更新该字段错误。校验必须覆盖空白字符串和长度；原生 maxlength 不能替代业务校验。
+Do not show errors before the first input. On submit, validate all fields. After an error appears, update that field's error as the user types. Validation must cover whitespace-only strings and length. Native maxlength must not replace business validation.
 
-## 选择控件
+## Selection controls
 
-- 单选列表优先原生 select；多选选项用 checkbox。
-- 开关表示立即生效的二元状态；普通勾选表示表单待提交选项。
-- 同组选项用 fieldset 和 legend；不要只靠位置表示分组。
-- 文本区允许纵向调整；密码和私密字段遵循业务安全要求，示例中不接收真实凭据。
+Use a wrapper to normalize the native select height and arrow across browsers:
 
-## 参考演示边界
+```html
+<span class="xu-select-wrap">
+  <select class="xu-select" id="density" name="density">
+    <option value="comfortable">Comfortable</option>
+  </select>
+  <svg class="xu-icon" aria-hidden="true" focusable="false">
+    <use href="./assets/icons.svg#chevron-down"></use>
+  </svg>
+</span>
+```
 
-组件展厅的项目表单仅在当前页面验证和显示反馈；页面模式的设置示例可保存到本地浏览器，并明确显示本地保存或存储失败。两者都不连接 XU 编译器和远端服务。
+Associate a visible label with the select. The arrow ignores pointer events; the native popup and keyboard behavior remain available.
 
-## 验收
+- Prefer a native select for single-choice lists. Use checkboxes for multiple-choice options.
+- A switch represents a binary state that takes effect immediately. A regular checkbox represents a form option pending submission.
+- Use fieldset and legend for options in the same group. Do not rely on position alone to indicate grouping.
+- Text areas allow vertical resizing. Password and private fields follow business security requirements. Examples do not accept real credentials.
 
-只用键盘完成输入、选择与提交；错误被朗读且保留输入；中文输入不被键盘快捷键打断；禁用、只读和错误均有可见示例。
+## Reference demo boundaries
+
+The project form in the component showcase only validates and shows feedback on the current page. The settings example in page patterns may save to the local browser, and clearly shows local saving or storage failure. Neither connects to the XU compiler or remote services.
+
+## Acceptance
+
+Complete input, selection and submission using only the keyboard. Errors are announced and input is preserved. Chinese input is not interrupted by keyboard shortcuts. Disabled, read-only and error states each have a visible example.

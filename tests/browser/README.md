@@ -1,6 +1,8 @@
-# 浏览器验收
+# Browser acceptance
 
-用户于 2026-10-29 授权本库维护公开浏览器回归。此目录只包含效果展厅的测试源码与经视觉审查的正式基线，不复制编译器本机测试。报告、trace、失败截图和差异图保存在忽略的 `.local/`，CI 以 artifact 提供。
+[English](README.md) · [简体中文](README.zh-CN.md)
+
+Public browser regression sources were authorized on 2026-10-29. This directory contains showcase acceptance and visually reviewed baselines. Reports, traces, failures and diffs stay in ignored `.local/` directories and CI artifacts. Do not copy local compiler tests here.
 
 ```sh
 npm ci
@@ -8,20 +10,26 @@ npx playwright install --with-deps chromium firefox webkit
 npm run test:browser
 ```
 
-行为回归在 Chromium、Firefox、WebKit 执行；涵盖菜单禁用跳过、页签、分页边界、树键盘、分栏、表单恢复、模态框焦点、图标下载及剪贴板／存储失败。八个组件在双主题 320 px 下检查溢出与 axe WCAG A/AA 规则。axe 通过不等于人工屏幕阅读器验收或 WCAG 认证。
+Chromium, Firefox and WebKit cover disabled menu entries, tabs, pagination boundaries, tree navigation, splitters, form recovery, modal focus, icon downloads, clipboard failure and storage failure. Both languages are checked for switching, document completeness, translated interactions and responsive overflow. Eight components receive axe A/AA checks in both themes at 320 px. Automated checks are not manual screen-reader acceptance or WCAG certification.
 
-## 视觉基线
+Motion acceptance also checks in-place receipts without geometry changes, rapid tab switches, preference changes during animation, stale saved state, copy failure, safe local creation and focus on new records. The CI-only Chromium evidence test records real clipboard operations and creation at a watchable pace; video remains an artifact, not a baseline.
 
-正式基线必须来自 `mcr.microsoft.com/playwright:v1.64.1-noble`，与锁文件的 Playwright 版本一致。固定 Chromium、zh-CN、reducedMotion、桌面 1440×900／移动 390×844；不使用本机 macOS 截图更新 Linux 基线。
+## Visual baselines
+
+Use `mcr.microsoft.com/playwright:v1.64.1-noble`, matching the lockfile. Fix Chromium, zh-CN, reduced motion and desktop 1440×900 / mobile 390×844. Never use macOS screenshots to replace Linux baselines.
 
 ```sh
 docker run --rm --init --ipc=host -v "$PWD:/work" -w /work mcr.microsoft.com/playwright:v1.64.1-noble sh -c 'npm ci && npm run test:visual -- --update-snapshots'
 ```
 
-首次 CI 缺少基线会失败，并提供候选截图。维护者须查看双主题桌面图标页与移动页签页，再显式提交 `baselines/*.png`；后续差异同样审查。版本升级时同时更新容器、依赖、锁文件和基线，禁止无审查批量接受差异。
+Missing baselines deliberately fail CI and expose candidate images. Review every language/theme/layout candidate before explicitly committing `baselines/*.png`. Changes need the same review; never bulk-accept unreviewed diffs. Keep container, dependencies, lockfile and baselines aligned on browser upgrades.
 
-本批基线来源、生成工作流与 SHA-256 记录在 `baselines/source.json`。图标页采用完整页面截图，覆盖全部 60 枚图标；行为与视觉报告分开保存。
+`baselines/source.json` records the generation run, source revision and SHA-256 hashes. Full-page icon screenshots cover all 60 icons; focused empty-state/button screenshots cover desktop/mobile in both themes, and tree screenshots verify row focus. Behavior and visual reports are separate. Each visual run retains a current `review-*.png` render for explicit review.
 
-## 人工接受范围
+Appearance checks also verify composition: empty-state action icons match external buttons in size, color and centering; standalone component CSS needs no showcase reset; disabled items retain disabled feedback; folder and file labels align.
 
-发布前以键盘操作完成主要任务；用 VoiceOver/Safari 或 NVDA/Firefox 核对控件名称、状态、层级、错误播报和焦点恢复，并记录系统、浏览器、屏幕阅读器版本及结果。暂未执行的组合须写“未验收”。原生 Writing Desk 当前仅验证 macOS arm64 的实际编辑、菜单和主题；SDK 对自绘控件的辅助功能暴露需单独补齐，不宣称屏幕阅读器通过。
+## Manual acceptance
+
+Complete key tasks by keyboard. Manual VoiceOver/Safari or NVDA/Firefox acceptance records names, states, hierarchy, error speech and focus restoration, together with system/browser/reader versions. Mark untested combinations **unverified**. Actual speech acceptance is deferred at the user's request.
+
+Native Writing Desk verification currently covers macOS arm64 editing, menus and themes only. SDK accessibility exposure needs separate work; native screen-reader acceptance is not claimed.

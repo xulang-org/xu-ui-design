@@ -1,7 +1,7 @@
-// Generate the verified Editor style contract for XU SDK 0.10.11.
+// Generate the verified Editor, Chart and Frame token contract for XU SDK 0.10.11+.
 export function nativeTokens(tokens) {
   const rgb = hex => hex.slice(1).match(/../g).slice(0,3).map(part=>parseInt(part,16)).join(',');
-  const roles=['canvas','surface','elevated','subtle','text','muted','brand','focus','control-border','on-brand','danger','danger-soft'];
+  const roles=['canvas','surface','elevated','subtle','text','muted','brand','focus','control-border','on-brand','danger','danger-soft','chart-1','chart-2','chart-3','chart-4','chart-5','chart-6','chart-7','chart-8'];
   const functions=roles.map(role=>`pub fn ${role.replaceAll('-','_')}(dark bool) draw.Color {
     if dark { << draw.rgb(${rgb(tokens.themes.dark[role])}) }
     << draw.rgb(${rgb(tokens.themes.light[role])})
@@ -14,12 +14,28 @@ export function nativeTokens(tokens) {
 
 ${functions}
 
-// Editor appearance for XU SDK 0.10.11. Other controls retain SDK defaults.
+pub fn chart_palette(dark bool) []draw.Color {
+    << [chart_1(dark),chart_2(dark),chart_3(dark),chart_4(dark),chart_5(dark),chart_6(dark),chart_7(dark),chart_8(dark)]
+}
+
+pub fn chart_appearance(dark bool) widgets.ChartAppearance {
+    $appearance := widgets.chart_appearance()
+    appearance.palette = chart_palette(dark)
+    << appearance
+}
+
+pub fn prepare_frame(frame $&draw.Frame, dark bool) int {
+    frame.set_bg(canvas(dark)) or >>
+    frame.set_color(text(dark)) or >>
+    << 0
+}
+
+// Editor appearance for XU SDK 0.10.11+. Other controls retain SDK defaults.
 pub fn editor_styles(dark bool) widgets.Styles {
-    mut styles := widgets.light_styles()
+    $styles := widgets.light_styles()
     if dark { styles = widgets.dark_styles() }
     styles.background = canvas(dark)
-    mut input := styles.input.clone()
+    $input := styles.input.clone()
     input.radius = ${parseFloat(tokens.base['radius-md']).toFixed(1)}
     input.min_height = ${parseFloat(tokens.base['control-md']).toFixed(1)}
     input.padding.left = ${parseFloat(tokens.base['space-3']).toFixed(1)}
@@ -46,11 +62,11 @@ pub fn editor_styles(dark bool) widgets.Styles {
     input.palette.read_only = subtle(dark)
     input.palette.selection = brand(dark)
     input.palette.selection_text = on_brand(dark)
-    mut hover := widgets.state_paint(widgets.STATE_HOVERED)
+    $hover := widgets.state_paint(widgets.STATE_HOVERED)
     hover.unless = widgets.STATE_DISABLED | widgets.STATE_INVALID | widgets.STATE_READ_ONLY
     hover.fields = widgets.PAINT_BORDER
     hover.border = brand(dark)
-    mut focused := widgets.state_paint(widgets.STATE_FOCUSED)
+    $focused := widgets.state_paint(widgets.STATE_FOCUSED)
     focused.unless = widgets.STATE_DISABLED | widgets.STATE_INVALID
     focused.fields = widgets.PAINT_BORDER
     focused.border = focus(dark)

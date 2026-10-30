@@ -1,32 +1,70 @@
-# 可访问性与动效
+# Accessibility and motion
 
-以 WCAG 2.2 AA 为设计目标，并把 44 × 44 px 作为独立图标及触摸目标的项目标准；44 px 高于 WCAG 2.2 AA 的部分最低目标尺寸要求，不能将两者混为一谈。
+WCAG 2.2 AA is the design target, and 44 × 44 px is the project standard for standalone icon and touch targets. 44 px is above the minimum target size required by some WCAG 2.2 AA criteria, and the two must not be conflated.
 
-## 键盘与语义
+## Keyboard and semantics
 
-- 原生 button、a、input、select、details、dialog 优先于自造交互。
-- 所有操作支持键盘，焦点顺序跟随阅读顺序。
-- 不使用正数 tabindex；内容切换后将焦点移动至主标题。
-- 每个仅图标按钮有可访问名称；装饰图标对辅助技术隐藏。
-- 输入错误通过 aria-invalid 和 aria-describedby 与字段关联。
-- 非关键结果用 role="status"；阻断错误保留文字并聚焦问题。
+- Native button, a, input, select, details and dialog take precedence over custom interactions.
+- All actions support the keyboard, and focus order follows reading order.
+- Do not use positive tabindex. After content changes, move focus to the main heading.
+- Every icon-only button has an accessible name. Decorative icons are hidden from assistive technology.
+- Input errors are associated with fields through aria-invalid and aria-describedby.
+- Use role="status" for non-critical results. Blocking errors keep their text and focus the problem.
 
-## 视觉
+## Visual
 
-正文对比至少 4.5:1，大字至少 3:1，必要的非文本边界至少 3:1。状态不能只用颜色表达；200% 放大和 320 px 视口下不能损失主要内容。焦点轮廓不可被 sticky 区域或 overflow 裁切。
+Body text contrast is at least 4.5:1, large text at least 3:1, and essential non-text boundaries at least 3:1. Status must not be expressed by color alone. At 200% zoom and a 320 px viewport, no primary content may be lost. Focus outlines must not be clipped by sticky areas or overflow.
 
-## 动效
+## Motion
 
-快速反馈 120 ms，一般切换 200 ms，使用 ease-out。仅对 opacity 和 transform 添加过渡；避免大幅位移、循环装饰和闪烁。prefers-reduced-motion: reduce 时关闭非必要动效，loader 保留文字等待反馈。
+XU motion uses three related actions: press to acknowledge contact, stamp to confirm a completed action, and settle to preserve position during a change. Motion explains an actual state change; it does not create a waiting period.
 
-## 验收步骤
+| Purpose | Token / value | Contract |
+| --- | --- | --- |
+| Press / stamp | duration-fast / 120 ms | One short response at the action source |
+| Switch / settle | duration-normal / 200 ms | Move the selection indicator; content stays in its region |
+| Panel entrance | duration-enter / 220 ms | Dialog and panel entry; focus works immediately |
+| Entrance distance | motion-distance / 6 px | Small vertical movement; no large displacement |
+| Easing | ease-out | Decelerate into a precise resting position; no bounce |
 
-- 用 Tab、Shift+Tab、Enter、Space 和 Escape 走完导航、表单、对话框和图标详情。
-- 检查关闭对话框后的焦点、筛选空结果、复制失败和存储失败。
-- 双主题检查正文、状态文字、输入边界和焦点。
-- 检查 320 px、768 px、1440 px 和 200% 缩放。
-- 用至少一种屏幕阅读器检查标题、标签、错误关联和 live region；自动检查不能替代该项。
+Only opacity and transform animate. Never animate width, height, top or left. Tab indicators use measured final geometry and transform, not an animated width. Closing a menu or dialog is immediate so keyboard focus is never delayed. Avoid looping decoration, flashing and motion on every keystroke.
 
-首版不宣称已经通过屏幕阅读器全面认证。维护者按产品实际支持的系统组合补齐人工验收。
+### Feedback and the next step
 
-参考：[WCAG 2.2 快速参考](https://www.w3.org/WAI/WCAG22/quickref/)。
+- Copy and save confirmation appears in the original button, with a square check mark and no change in button size. The temporary receipt lasts 1.4 seconds; readable status text remains after it ends.
+- Commit success only after the operation completes. Failed copying exposes selectable source. Failed saving keeps input. New edits immediately clear a previous saved receipt.
+- The original accessible button name stays available; live status carries the result. Color and motion do not carry meaning alone.
+- Project creation keeps the user on the patterns page. Validate before inserting a record, clear conflicting filters, focus the new row name and settle the row into place. Tell users that refreshing resets these local demo records.
+
+### Reduced motion and cleanup
+
+Under prefers-reduced-motion: reduce, disable movement, scaling and transitions while keeping confirmation text, selection, errors and next steps. Changing the preference while motion is playing cancels it at the already committed final state. Controls remain operable during motion. Route changes and controller cleanup cancel owned animations and temporary receipts.
+
+### Web adoption
+
+Include tokens.css, components.css and motion.css. The standalone interactions.js now imports its sibling motion.js; copy them together. The English controller uses assets/en/motion.js. No external runtime library is required.
+
+```js
+import { acknowledge, showStatus } from './assets/motion.js';
+await navigator.clipboard.writeText(source);
+acknowledge(copyButton, 'Copied');
+showStatus(status, 'Copied. Paste into your project.');
+```
+
+The receipt uses the sprite at ./assets/icons.svg; keep that resource path aligned when adopting it. The interactive motion showcase demonstrates copy, continuous tabs and progressive disclosure. Native products follow their host animation APIs; this Web controller does not add native SDK animation capabilities.
+
+## Acceptance steps
+
+- Use Tab, Shift+Tab, Enter, Space and Escape to go through navigation, forms, dialogs and icon details.
+- Check focus after closing a dialog, empty filter results, copy failure and storage failure.
+- In both themes, check body text, status text, input boundaries and focus.
+- Check 320 px, 768 px, 1440 px and 200% zoom.
+- Use at least one screen reader to check headings, labels, error associations and live regions. Automated checks cannot replace this item.
+
+The first release does not claim full screen reader certification. Maintainers complete manual acceptance for the system combinations the product actually supports.
+
+Reference: [WCAG 2.2 Quick Reference](https://www.w3.org/WAI/WCAG22/quickref/).
+
+## Current acceptance status
+
+Actual screen-reader speech acceptance is deferred at the user’s request and remains unverified. Automated browser and axe results do not change that status. Native verification currently covers macOS arm64 editing and themes; other platforms and native screen-reader support remain unverified.
