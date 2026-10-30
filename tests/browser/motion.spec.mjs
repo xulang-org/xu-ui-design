@@ -109,6 +109,9 @@ for (const locale of ['zh-CN','en']) test(`create in place, recover errors and l
   await expect(row).toHaveCount(1);await expect(row).toHaveAttribute('data-created','');
   await expect(row).toContainText('2026-10-29');
   await expect(row.locator('th')).toBeFocused();
+  const located=await row.locator('th').boundingBox();
+  expect(located.y+located.height/2).toBeGreaterThan(200);
+  expect(located.y+located.height/2).toBeLessThan(700);
   await expect(page.locator('#project-search')).toHaveValue('');await expect(page.locator('#project-status')).toHaveValue('all');
   await expect(page.locator('#project-table tbody tr')).toHaveCount(5);
   await expect(row.locator('motion')).toHaveCount(0);
@@ -121,6 +124,16 @@ test('leaving the motion page clears transient feedback and modal Escape restore
   await expect(page.locator('.xu-action-receipt')).toHaveCount(0);
   await page.locator('#new-demo-project').click();await page.keyboard.press('Escape');
   await expect(page.locator('#new-demo-project')).toBeFocused();
+});
+
+test('filtering and reselecting an icon preserve its open source context',async({page})=>{
+  await visit(page,'icons');
+  await page.locator('.inspector-code summary').click();
+  const source=await page.locator('#inspector-source').inputValue();
+  await page.locator('#icon-search').fill('plus');
+  await page.locator('[data-icon="plus"]').click();
+  await expect(page.locator('.inspector-code')).toHaveAttribute('open','');
+  await expect(page.locator('#inspector-source')).toHaveValue(source);
 });
 
 for(const theme of ['dark','light']) test(`Chinese motion standard, narrow reflow and axe: ${theme}`,async({page})=>{

@@ -189,6 +189,8 @@ function svgSource(item) {
 function updateInspector(animate = false) {
   const item = data.icons.find((entry) => entry.name === selectedIcon);
   const source = svgSource(item);
+  disposeMotion($('#icon-inspector'));
+  $('#icon-inspector').dataset.inspectedIcon=selectedIcon;
   $('#icon-inspector').innerHTML = `<div class="inspector-heading"><span class="small muted">图标详情</span><span class="xu-badge">${item.category}</span></div><div class="icon-blueprint">${icon(item.name)}<span>24 × 24</span></div><h2>${item.label}</h2><p class="icon-identifier">${item.name}</p>
     <div class="icon-sizes" aria-label="不同尺寸对照">${[16,20,24,32].map((size) => `<div><span style="--sample-size:${size}px">${icon(item.name)}</span><small>${size} px</small></div>`).join('')}</div>
     <div class="inspector-actions">${button(`${icon('copy')}复制 SVG`,'id="inspector-copy"','primary')}<a class="xu-button" href="./icons/${item.name}.svg" download="${item.name}.svg">${icon('download')}下载</a></div>
@@ -214,7 +216,7 @@ function updateIcons() {
   container.style.setProperty('--preview-icon-size', `${$('#icon-size').value}px`);
   const groups = [...new Set(results.map((item) => item.category))];
   container.innerHTML = results.length ? groups.map((group) => `<section class="icon-group"><div class="icon-group-heading"><h2>${group}</h2><span>${results.filter((item) => item.category === group).length}</span></div><div class="icon-grid">${results.filter((item) => item.category === group).map((item) => `<button type="button" class="icon-tile" data-icon="${item.name}" aria-pressed="${item.name === selectedIcon}" aria-label="查看 ${item.label} ${item.name}"><span class="tile-art">${icon(item.name)}</span><span class="icon-label">${item.label}</span><span class="icon-name">${item.name}</span></button>`).join('')}</div></section>`).join('') : `<div class="empty">${icon('search')}<h3>没有找到匹配图标</h3><p>试试其他关键词，或恢复全部分类。</p>${button('清空筛选','id="clear-icon-search"')}</div>`;
-  updateInspector();
+  if ($('#icon-inspector').dataset.inspectedIcon!==selectedIcon) updateInspector();
   $('#clear-icon-search')?.addEventListener('click', () => { $('#icon-search').value = ''; $('#icon-category').value = 'all'; updateIcons(); $('#icon-search').focus(); });
 }
 
@@ -288,7 +290,8 @@ function createProject(trigger) {
     $('#project-search').value='';$('#project-status').value='all';
     const row=updateProjects(name);
     opener=row.querySelector('th');
-    dialog.close();opener.focus();settle(row);
+    dialog.close();opener.focus({preventScroll:true});
+    opener.scrollIntoView({block:'center',inline:'nearest'});settle(row);
     notify(`已创建演示项目：${name}。刷新页面会重置列表。`);
   });
 }
@@ -406,11 +409,12 @@ document.addEventListener('click', (event) => {
   if (target.matches('[data-confirm]')) confirmDemo(target);
   if (target.matches('[data-close-dialog]')) dialog.close();
   if (target.matches('[data-icon]')) {
+    const changed=selectedIcon!==target.dataset.icon;
     selectedIcon = target.dataset.icon;
     $$('[data-icon]').forEach((entry) => entry.setAttribute('aria-pressed', String(entry === target)));
-    stamp($('.tile-art',target));
-    if (window.matchMedia('(min-width: 840px)').matches) updateInspector(true);
-    else iconDetail(selectedIcon, target);
+    const wide=window.matchMedia('(min-width: 840px)').matches;
+    if (changed) {stamp($('.tile-art',target));updateInspector(wide);}
+    if (!wide) iconDetail(selectedIcon, target);
   }
   if (target.matches('[data-project]')) {
     const project = projects.find((item) => item.name === target.dataset.project);
