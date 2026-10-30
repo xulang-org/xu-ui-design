@@ -37,7 +37,7 @@ function notify(message) {
   toastTimer = setTimeout(() => toast.classList.remove('visible'), 4000);
 }
 
-async function copy(text, fallback, trigger) {
+async function copy(text, fallback, trigger, announce = true) {
   clearReceipt(trigger);
   try {
     if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
@@ -47,13 +47,13 @@ async function copy(text, fallback, trigger) {
       trigger.dataset.confirmed='true';stamp(trigger);
       setTimeout(()=>trigger.removeAttribute('data-confirmed'),1400);
     }
-    notify('已复制到剪贴板');
+    if (announce) notify('已复制到剪贴板');
     return true;
   } catch {
     clearReceipt(trigger);
     trigger?.removeAttribute('data-confirmed');
     if (fallback) { fallback.closest('details')?.setAttribute('open','');fallback.focus();fallback.select(); }
-    notify(fallback ? '复制未完成，请手动复制已选中的源码。' : '剪贴板不可用，请从 Token 下载文件中复制。');
+    if (announce) notify(fallback ? '复制未完成，请手动复制已选中的源码。' : '剪贴板不可用，请从 Token 下载文件中复制。');
     return false;
   }
 }
@@ -307,7 +307,10 @@ function iconDetail(name, trigger) {
 function missing() { return `${heading('404 / PAGE NOT FOUND','这个页面还不存在。','从设计系统总览重新开始，或使用侧栏查找标准。')}${link('返回总览','overview','primary')}`; }
 
 function bindPage() {
-  if (activeRoute === 'motion') {pageCleanup=mountMotionPage({copy,showStatus});return;}
+  if (activeRoute === 'motion') {
+    // This page owns a persistent live result; avoid announcing it twice.
+    pageCleanup=mountMotionPage({copy:(text,source,trigger)=>copy(text,source,trigger,false),showStatus});return;
+  }
   if (activeRoute.startsWith('components/')) {
     if ($('#contract-demo')) pageCleanup=mountComponent(activeRoute.slice(11),notify);
     return;

@@ -18,6 +18,7 @@ test('copy confirmation stays at the source, preserves geometry and uses composi
   await expect(button).toHaveAccessibleName('复制动效 Token');
   const after=await button.boundingBox();expect(after.width).toBe(before.width);expect(after.height).toBe(before.height);
   await expect(page.locator('#motion-copy-status')).toContainText('已复制');
+  await expect(page.locator('#toast')).toBeEmpty();
   expect(await page.evaluate(()=>window.copiedText)).toContain('--xu-duration-fast: 120ms');
   const calls=await page.evaluate(()=>window.motionCalls);
   expect(calls.length).toBeGreaterThan(0);
@@ -66,6 +67,7 @@ test('failed copy does not show a success stamp and selects recoverable source',
   await expect(page.locator('#motion-copy')).not.toHaveAttribute('data-receipt');
   await expect(page.locator('#motion-seal')).not.toHaveAttribute('data-confirmed');
   await expect(page.locator('#motion-copy-status')).toHaveAttribute('data-state','error');
+  await expect(page.locator('#toast')).toBeEmpty();
   await expect(page.locator('#motion-source')).toBeFocused();
   await expect(page.locator('.motion-code')).toHaveAttribute('open','');
   await expect.poll(()=>page.locator('#motion-source').evaluate(element=>element.scrollHeight-element.clientHeight)).toBe(0);
