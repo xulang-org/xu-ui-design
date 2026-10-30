@@ -1,26 +1,35 @@
-# 维护 XUUI
+# Maintaining XUUI
 
-遵守 [XU 仓库管理规范](https://github.com/xulang-org/xulang-org/blob/dev/.github/REPOSITORY_RULES.md)。所有开发从新获取的 `origin/dev` 建立任务分支，通过 PR 合入 `dev`；获得发布授权后再推进 `main`。初始化分支只提供最小基线，产品实现不直接推到长期分支。
+[English](CONTRIBUTING.md) · [简体中文](CONTRIBUTING.zh-CN.md)
 
-## 公开内容与本机资料
+Follow the [XU repository rules](https://github.com/xulang-org/xulang-org/blob/dev/.github/REPOSITORY_RULES.md). Fetch first, preserve local work and create a task branch from the latest `origin/dev`. Validate, commit explicit paths, push and open a PR to `dev`. Merging requires authorization. Release to `main` only after integration and validation in `dev` and release authorization.
 
-`standards/` 是本库正式产品文档，不是本机研发账本。源码、Token、图标目录、构建脚本和 CI 可以提交。本机 `docs/`、`tests/`、`reports/`、`.local/`、agent 配置、截图和生成 `dist/` 保持忽略。长期源码检查由 `scripts/check.mjs` 执行；不得复制编译器本机测试到 CI。
+## Public sources and local material
 
-## 变更与验证
+`standards/` is formal product documentation. Sources, tokens, icon metadata, build scripts and CI belong in the repository. Keep local development records, `docs/`, `reports/`, `.local/`, agent configuration, debug screenshots and generated `dist/` ignored. The user authorized public browser acceptance on 2026-10-29: source and reviewed visual baselines live in `tests/browser/`. Do not copy local compiler tests into CI.
 
-同时维护规范、资源与效果。Token 和图标保持单一来源；增加图标时同步数量声明与目录，不提交手工修改的派生文件。
+## Languages
+
+Maintain English `.md` and Simplified Chinese `.zh-CN.md` editions together, including README, changelog, migrations, contribution and browser guidance. Metadata in both document indexes uses `en` / `zh-CN` values. Icon metadata requires `label`, `labelEn`, `category` and `categoryEn`.
+
+Controllers in `src/` are shared across languages. `locales/en.json` translates authored Chinese interface copy at build time. `scripts/localize.mjs` compiles two clients with the same behavior and rejects untranslated Chinese copy in the English client. Translation applies to source copy only, never user input, rendered HTML or token/icon identifiers. Keep phrases contextual and prefer complete sentences; longer phrases take precedence in a single pass. Do not include JavaScript delimiters in translated values. Check the resulting English for grammar around interpolated values. This is a dependency-free build step, not a runtime DOM translation layer.
+
+The header language control preserves route and theme, persists a supported preference when storage is available, and reloads the page. URL `lang` overrides saved and browser preferences. Language changes do not auto-save form drafts.
+
+## Validation
 
 ```sh
+npm run check:hygiene
 npm run check
-npm run dev
+npm ci
+npm run test:browser
+npm run test:visual
 ```
 
-浏览器核对双主题、320 px／768 px／1440 px、键盘焦点、表单失败与成功、对话框 Escape 与焦点恢复、ICON 空结果、复制和下载、本地存储失败。修改静态展示不需要虚构后端；演示数据须明确标注。
+Check both languages and themes at 320 / 768 / 1440 px, focus, forms, dialog Escape and focus restoration, icon empty results, copying/downloads and unavailable browser storage. Demos stay clearly labeled as local; do not invent a backend.
 
-本库版本独立于 XU 编译器，权威源为 `package.json`，`tokens/tokens.json` 同步版本。同一开发版本的后续批次递增 `dev.N`。Token 删除、改名或语义变化附迁移说明；未经用户明确批准，不自动增加 minor 或发布正式版。
+The version in `package.json` is authoritative and matches `tokens/tokens.json`. It is independent of the compiler. Increment `dev.N` for subsequent prerelease batches. Token removals, renames or semantic changes require migration guidance. Do not add a minor or stable release without explicit approval.
 
-## 提交与 PR
+Review staged paths, file types and licensing. Use the authorized author/committer identity and do not append contributor credits automatically. PR descriptions explain the problem, resulting behavior, version, validation, compatibility and rollback.
 
-只暂存本次变更的明确路径，审查暂存差异、文件类型与许可。使用已授权的真实身份，不自动追加贡献者署名。PR 说明问题、结果、版本、验证范围、兼容性和回滚方式。
-
-合并必须获得授权。CI 与模板存在不等于分支保护已经配置；不声称自动批准、自动部署或已经进入 `dev`。
+Formal visual baselines come from the pinned Linux Playwright container. Review screenshots before explicitly committing them; runtime reports and diffs stay in CI artifacts. A workflow file does not prove branch protection or successful deployment. Never report changes in `dev` before the PR is merged.

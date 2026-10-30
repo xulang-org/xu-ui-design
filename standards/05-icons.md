@@ -1,52 +1,56 @@
-# ICON 图标
+# Icons
 
-图标是操作和状态的辅助语言。本库提供 48 个原创绘制 SVG，覆盖操作、方向、状态、通用与开发场景；唯一源文件为 icons/catalog.json。
+Icons are a supporting language for actions and states. This library provides 60 originally drawn SVGs covering action, direction, status, general and development scenarios. The single source file is icons/catalog.json.
 
-## 几何契约
+## Geometry contract
 
-| 项目 | 标准 |
+| Item | Standard |
 | --- | --- |
-| 坐标系 | viewBox="0 0 24 24" |
-| 主要安全区 | 2–22 单位，按形状光学校正 |
-| 母版线宽 | 1.5 单位 |
-| 端点和转角 | round / round |
-| 颜色 | stroke="currentColor"，fill="none" |
-| 常用尺寸 | 16 / 20 / 24 / 32 px |
-| 交互目标 | 独立图标按钮至少 44 × 44 px |
+| Coordinate system | viewBox="0 0 24 24" |
+| Primary safe area | 2–22 units, optically corrected by shape |
+| Master stroke width | 1.5 units |
+| Caps and joins | round / round |
+| Color | stroke="currentColor", fill="none" |
+| Common sizes | 16 / 20 / 24 / 32 px |
+| Interaction target | Standalone icon buttons at least 44 × 44 px |
 
-线宽随 viewBox 等比缩放：16 px 为 1 px，20 px 为 1.25 px，24 px 为 1.5 px，32 px 为 2 px。不设置 non-scaling-stroke；需特殊像素校正时另增经审查的尺寸变体。
+Stroke width scales proportionally with the viewBox: 1 px at 16 px, 1.25 px at 20 px, 1.5 px at 24 px and 2 px at 32 px. Do not set non-scaling-stroke. When special pixel correction is needed, add a separate, reviewed size variant.
 
-## 命名和分类
+## Naming and categories
 
-文件使用小写 kebab-case，按形状命名，如 arrow-right、alert-triangle。中文 label 服务检索；具体业务含义由所在按钮的文字或可访问名称提供。禁止用同一图形暗示互相冲突的操作。
+Files use lowercase kebab-case and are named by shape, such as arrow-right and alert-triangle. The Chinese label serves search. The specific product meaning comes from the text or accessible name of the containing button. Do not use the same graphic to suggest conflicting actions.
 
-## 使用方式
+## Usage
 
 ```html
 <button class="xu-button">
   <svg class="xu-icon" aria-hidden="true" focusable="false">
     <use href="./assets/icons.svg#plus"></use>
   </svg>
-  新建项目
+  New project
 </button>
 
-<button class="xu-icon-button" aria-label="关闭面板">
+<button class="xu-icon-button" aria-label="Close panel">
   <svg class="xu-icon" aria-hidden="true" focusable="false">
     <use href="./assets/icons.svg#x"></use>
   </svg>
 </button>
 ```
 
-上例路径适用于导出的展厅根目录；集成到其他应用时按实际部署位置调整。外部 sprite 必须同源通过 HTTP 提供；file:// 不作为支持的预览方式。独立 SVG 下载可用于设计工具；通过 img 引用时，颜色不能继承父元素的 currentColor，应改用内联 SVG 或 sprite。
+The paths above apply to the exported showcase root directory. When integrating into another application, adjust them to the actual deployment location. External sprites must be served same-origin over HTTP; file:// is not a supported preview method. Standalone SVG downloads can be used in design tools. When referenced through img, the color cannot inherit the parent element's currentColor; use inline SVG or the sprite instead.
 
-## 可访问性
+## Accessibility
 
-装饰图标设置 aria-hidden="true"。仅图标按钮在按钮上提供 aria-label；信息图标需要可读说明。独立 SVG 下载含 title 和 role="img"，复制按钮则输出适合内联装饰使用的 SVG。loader 只表示等待，旁边必须有“正在处理”等文本。
+Decorative icons set aria-hidden="true". Icon-only buttons provide aria-label on the button. Informational icons need a readable description. Standalone SVG downloads include title and role="img", while the copy button outputs SVG suited to inline decorative use. The loader only indicates waiting and must have text such as “Processing” next to it.
 
-## 扩充与验收
+## Extension and acceptance
 
-新增图标须填写唯一 name、中文 label、category 与安全 SVG body；不得含脚本、外部资源、事件处理器、嵌入图片和硬编码颜色。运行 npm run check 验证白名单、名称和导出。人工在四种尺寸、双主题以及按钮文本旁检查光学重量。品牌标志始终使用品牌资产。
+New icons must provide a unique name, Chinese label, category and a safe SVG body. They must not contain scripts, external resources, event handlers, embedded images or hard-coded colors. Run npm run check to verify the allowlist, names and exports. Manually check optical weight at the four sizes, in both themes and next to button text. The brand mark always uses the brand asset.
 
-## 资源展厅
+## Resource showcase
 
-图标以操作、方向、状态、开发和通用语义分组，显示中文名称与英文标识。840 px 及以上宽度提供持续可见的检视区，选择图标后同步显示坐标网格、四种尺寸、源码与导出操作；较窄空间使用带焦点管理的详情对话框。检视区只更新所选资源，不因复制或筛选打断任务。
+Icons are grouped by action, direction, status, development and general semantics, showing the Chinese name and English identifier. At widths of 840 px and above, a persistently visible inspector is provided. Selecting an icon updates the coordinate grid, four sizes, source code and export actions together. Narrower spaces use a details dialog with focus management. The inspector only updates the selected resource and does not interrupt the task on copy or filtering.
+
+## Icons in controls
+
+Use icon-sm/md/lg/xl tokens at 16/20/24/32 px. Button sm/md/lg icons are 16/20/24 px, inherit text color and have no outer margin. Scope illustration styles to a direct child so they cannot change nested action icons. Icon metadata includes both language labels and categories. Exported SVG titles include both names.

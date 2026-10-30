@@ -1,27 +1,27 @@
-# 导航与信息层级
+# Navigation and hierarchy
 
-导航反映内容结构。一级导航回答“我在什么区域”，二级导航回答“我正在看什么”，页面标题回答“本页完成什么任务”。
+Navigation reflects content structure. Primary navigation answers "Which area am I in?", secondary navigation answers "What am I looking at?", and the page title answers "What task does this page accomplish?"
 
-## 基本约定
+## Basic conventions
 
-- 页面跳转使用真实 hash 链接，支持刷新、前进和后退。
-- 当前位置使用 aria-current="page"，同时有形状或文字变化。
-- 导航组有可见标题，避免混合资源、动作和状态。主导航保留资源区域入口；12 篇规范目录通过原生 details 按需展开，阅读规范时默认展开。
-- 标题遵守 h1 → h2 → h3 层级；每页只有一个 h1。
-- 页内目录使用可直接访问的章节链接，如 #/standards/05-icons#section-2；定位后焦点进入章节标题，固定顶栏不能遮住标题。窄屏目录置于正文上方，使用原生 details 折叠。
+- Page navigation uses real hash links and supports refresh, forward and back.
+- The current location uses aria-current="page", together with a change in shape or text.
+- Navigation groups have visible headings and avoid mixing resources, actions and status. The main navigation keeps entries for resource areas. The directory of 12 standards expands on demand through a native details element and is expanded by default while reading a standard.
+- Headings follow the h1 → h2 → h3 hierarchy. Each page has only one h1.
+- The in-page table of contents uses directly accessible section links, such as #/standards/05-icons#section-2. After navigation, focus moves to the section heading, and the fixed top bar must not cover the heading. On narrow screens, the table of contents sits above the body text and collapses with a native details element.
 
-## 页签与筛选
+## Tabs and filters
 
-页签切换同一区域的内容；筛选缩小同一数据集合。不能把两者混用。本库组件展厅使用普通按钮和 aria-pressed 切换预览子集，不冒充 ARIA tablist。若产品使用真正的 tablist，则须补齐 tab、tabpanel、选中关系及方向键操作。
+Tabs switch content within the same area. Filters narrow the same data set. The two must not be mixed. This library's component showcase uses regular buttons with aria-pressed to switch preview subsets and does not pretend to be an ARIA tablist. If a product uses a real tablist, it must implement tab, tabpanel, the selection relationship and arrow-key operation.
 
-## 窄屏导航
+## Narrow-screen navigation
 
-1000 px 以下，侧栏改成顶部展开区。菜单按钮同步 aria-expanded 与 aria-controls；关闭时子项退出 Tab 顺序。点击目标后收起导航；Escape 收起并回到菜单触发器。因为这是页面内展开区，不使用模态语义。
+Below 1000 px, the sidebar becomes an expandable area at the top. The menu button keeps aria-expanded and aria-controls in sync. When closed, its child items leave the Tab order. Clicking a target collapses the navigation. Escape collapses it and returns to the menu trigger. Because this is an in-page expandable area, it does not use modal semantics.
 
-## 搜索和空结果
+## Search and empty results
 
-标准搜索匹配标题与摘要，ICON 搜索匹配英文名、中文名和分类。搜索字段有可见标签，结果数量通过安静的状态区域播报。空结果说明如何恢复，提供清空入口。
+Standards search matches titles and summaries. ICON search matches English names, Chinese names and categories. Search fields have visible labels, and the result count is announced through a polite status region. Empty results explain how to recover and provide a way to clear the search.
 
-## 验收
+## Acceptance
 
-直接打开文档深链接可定位目标；浏览器后退恢复前一页；跳到正文链接可用；移动菜单的隐藏内容不能获得键盘焦点；未知路由显示明确返回入口。
+Opening a document deep link directly locates the target. Browser back restores the previous page. The skip-to-content link works. Hidden content in the mobile menu must not receive keyboard focus. Unknown routes show a clear way back.

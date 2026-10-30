@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { readdir, access } from 'node:fs/promises';
 import { spawnSync, spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { json, read, root, contrast } from './lib.mjs';
 
 const tokens = await json('tokens/tokens.json');
@@ -22,9 +24,10 @@ for (const [mode, theme] of Object.entries(tokens.themes)) {
   const pairs = [];
   for (const background of ['canvas','surface','elevated']) {
     for (const foreground of ['text','muted','brand','success','warning','danger','info']) pairs.push([foreground,background,4.5]);
+    for (let i = 1; i <= 8; i++) pairs.push([`chart-${i}`,background,3]);
     pairs.push(['control-border',background,3], ['focus',background,3]);
   }
-  pairs.push(['on-brand','brand',4.5], ['on-brand','brand-hover',4.5], ['brand','brand-soft',4.5]);
+  pairs.push(['on-brand','brand',4.5], ['on-brand','brand-hover',4.5], ['on-brand','brand-pressed',4.5], ['text','control-pressed',4.5], ['control-border','control-pressed',3], ['brand','brand-soft',4.5]);
   for (const status of ['success','warning','danger','info']) pairs.push([status,`${status}-soft`,4.5]);
   for (const [fg,bg,min] of pairs) {
     const ratio = contrast(theme[fg], theme[bg]);
@@ -39,7 +42,7 @@ for (const item of icons) {
   assert.match(item.name, /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/);
   assert.ok(!names.has(item.name), `Duplicate icon: ${item.name}`);
   names.add(item.name);
-  assert.ok(item.label && item.category, `Missing icon metadata: ${item.name}`);
+  assert.ok(item.label && item.category && item.labelEn && item.categoryEn, `Missing bilingual icon metadata: ${item.name}`);
   const elements = [...item.body.matchAll(/<([a-z]+)((?:\s+[a-z0-9]+='[^']*')*)\s*\/>/g)];
   assert.equal(elements.map((m) => m[0]).join(''), item.body, `Malformed SVG: ${item.name}`);
   assert.ok(elements.length > 0);
@@ -51,19 +54,26 @@ for (const item of icons) {
     }
   }
 }
-assert.equal(icons.length, 48, 'Update documented icon inventory when changing the catalog.');
-assert.equal(docs.length, 12, 'Update documented standard inventory when changing the index.');
+assert.ok(icons.length >= 48, 'Preserve the original icon inventory.');
+assert.equal(docs.length, 13, 'Update documented standard inventory when changing the index.');
 assert.equal(new Set(docs.map((doc) => doc.id)).size, docs.length);
 for (const doc of docs) {
   assert.match(doc.id, /^\d{2}-[a-z-]+$/);
-  const source = await read(`standards/${doc.id}.md`);
-  assert.equal((source.match(/^# /gm) || []).length, 1, `One h1 required: ${doc.id}`);
-  for (const [,target] of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
-    if (target.startsWith('https://')) continue;
-    assert.ok(docs.some((entry) => `${entry.id}.md` === target), `Broken standard link: ${doc.id} -> ${target}`);
+  const outlines=[];
+  for (const [locale,suffix] of [['en',''],['zh-CN','.zh-CN']]) {
+    for (const key of ['title','group','summary']) assert.ok(doc[key][locale],`${doc.id}: missing ${locale} ${key}`);
+    const source = await read(`standards/${doc.id}${suffix}.md`);
+    outlines.push((source.match(/^## /gm)||[]).length);
+    assert.equal((source.match(/^# /gm) || []).length, 1, `One h1 required: ${doc.id} ${locale}`);
+    if (locale === 'en') assert.ok(!/[\u3400-\u9fff]/u.test(source),`${doc.id}: untranslated English document`);
+    for (const [,target] of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
+      if (target.startsWith('https://')) continue;
+      assert.ok(docs.some((entry) => `${entry.id}${suffix}.md` === target), `Broken standard link: ${doc.id} -> ${target}`);
+    }
   }
+  assert.equal(outlines[0],outlines[1],`${doc.id}: keep section deep links aligned across languages`);
 }
-for (const file of ['src/app.js','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs']) {
+for (const file of ['src/app.js','src/boot.js','scripts/localize.mjs','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs','scripts/package.mjs','scripts/check-hygiene.mjs','scripts/native-tokens.mjs','src/interactions.js','src/component-pages.js','src/motion.js','src/motion-page.js']) {
   const result = spawnSync(process.execPath, ['--check', new URL(file, root).pathname], { encoding:'utf8' });
   assert.equal(result.status, 0, result.stderr);
 }
@@ -73,7 +83,7 @@ for (const [,path] of html.matchAll(/(?:src|href)="\.\/([^"#]+)"/g)) await acces
 assert.ok(!html.includes('{{VERSION}}'));
 const app = await read('src/app.js');
 for (const [,name] of app.matchAll(/icon\('([a-z-]+)'/g)) assert.ok(names.has(name), `Unknown icon reference: ${name}`);
-for (const file of ['src/components.css','src/site.css']) {
+for (const file of ['src/components.css','src/site.css','src/component-lab.css','src/motion.css']) {
   const source = await read(file);
   for (const [,name] of source.matchAll(/var\(--xu-([a-z0-9-]+)/g)) assert.ok(name in tokens.base || name in tokens.themes.dark, `Unknown token: ${name}`);
 }
@@ -86,6 +96,47 @@ assert.ok(iconFiles.includes('catalog.json'));
 const data = await json('dist/assets/data.json');
 assert.equal(data.docs.length, docs.length);
 assert.equal(data.icons.length, icons.length);
+const contracts=await json('components/index.json');
+assert.equal(data.components.length,contracts.length);
+assert.equal(new Set(contracts.map(item=>item.id)).size,contracts.length);
+for (const locale of ['en','zh-CN']) {
+  const localized = await json(`dist/assets/data.${locale}.json`);
+  assert.equal(localized.locale,locale);
+  assert.equal(localized.docs.length,13);
+  assert.equal(localized.components.length,9);
+  for (const file of ['app.js','component-pages.js','interactions.js','motion.js','motion-page.js']) {
+    const path=`dist/assets/${locale}/${file}`;
+    const syntax=spawnSync(process.execPath,['--check',new URL(path,root).pathname],{encoding:'utf8'});
+    assert.equal(syntax.status,0,syntax.stderr);
+    if (locale === 'en') assert.ok(!/[\u3400-\u9fff]/u.test(await read(path)),`Untranslated client: ${path}`);
+  }
+  for (const item of [...localized.docs,...localized.components]) {
+    assert.equal(typeof item.title,'string');
+    await access(new URL(`dist/${item.source}`,root));
+    if (locale === 'en') assert.ok(!/[\u3400-\u9fff]/u.test(item.html),`Untranslated content: ${item.id}`);
+  }
+}
+for (const item of contracts) {
+  assert.match(item.id,/^[a-z][a-z-]+$/);
+  assert.ok(docs.some(doc=>doc.id===item.standard));
+  for (const [locale,suffix,sections] of [['en','',['Structure','State matrix','Keyboard behavior','Native mapping','Acceptance']],['zh-CN','.zh-CN',['结构','状态矩阵','键盘行为','原生映射','验收']]]) {
+    for (const key of ['title','group','summary','native']) assert.ok(item[key][locale],`${item.id}: missing ${locale} ${key}`);
+    const source=await read(`components/${item.id}${suffix}.md`);
+    for (const section of sections) assert.ok(source.includes(`## ${section}`),`${item.id}: missing ${section}`);
+  }
+}
+assert.ok((await read('dist/xu/xuui_tokens/mod.xu')).includes(tokens.version));
+const archiveName=`xu-ui-resources-${pkg.version}.tar.gz`;
+const archive=new URL(`dist/downloads/${archiveName}`,root);
+const archiveBytes=await readFile(archive);
+assert.equal(await read('dist/downloads/SHA256SUMS'),`${createHash('sha256').update(archiveBytes).digest('hex')}  ${archiveName}\n`);
+const manifest=await json('dist/downloads/manifest.json');
+assert.equal(manifest.version,pkg.version);
+for(const path of ['tokens/tokens.json','icons/play.svg','xu/xuui_tokens/mod.xu','LICENSE','MIGRATIONS.md','MIGRATIONS.zh-CN.md','standards/05-icons.md','standards/05-icons.zh-CN.md','standards/13-drawing.md','standards/13-drawing.zh-CN.md','components/button.md','components/button.zh-CN.md','components/chart.md','components/chart.zh-CN.md','assets/en/interactions.js']) {
+  const result=spawnSync('tar',['-xOf',archive.pathname,path]);
+  assert.equal(result.status,0,result.stderr?.toString());
+  assert.equal(createHash('sha256').update(result.stdout).digest('hex'),manifest.files[path],`Archive content mismatch: ${path}`);
+}
 // Exercise the actual preview server, including the root path and escape guard.
 const child = spawn(process.execPath, [new URL('scripts/serve.mjs', root).pathname], { cwd: root, env: { ...process.env, PORT:'0' }, stdio:['ignore','pipe','pipe'] });
 try {

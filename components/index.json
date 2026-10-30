@@ -1,0 +1,182 @@
+[
+  {
+    "id": "button",
+    "title": {
+      "en": "Button",
+      "zh-CN": "按钮"
+    },
+    "group": {
+      "en": "Actions",
+      "zh-CN": "操作"
+    },
+    "summary": {
+      "en": "Action hierarchy, size, loading and duplicate submission",
+      "zh-CN": "动作层级、尺寸、加载与重复提交"
+    },
+    "standard": "06-actions",
+    "native": {
+      "en": "widgets.Button / widgets.button; the basic action contract can be mapped, and host events use widgets.Action.",
+      "zh-CN": "widgets.Button / widgets.button；基础动作契约可对应，宿主事件使用 widgets.Action。"
+    }
+  },
+  {
+    "id": "input",
+    "title": {
+      "en": "Text input",
+      "zh-CN": "文本输入"
+    },
+    "group": {
+      "en": "Input",
+      "zh-CN": "输入"
+    },
+    "summary": {
+      "en": "Labels, help, errors and input recovery",
+      "zh-CN": "标签、帮助、错误、只读与输入恢复"
+    },
+    "standard": "07-forms",
+    "native": {
+      "en": "widgets.Editor / widgets.input / widgets.text_area; native IME, selection and clipboard are handled by the host.",
+      "zh-CN": "widgets.Editor / widgets.input / widgets.text_area；原生 IME、选区与剪贴板由宿主处理。"
+    }
+  },
+  {
+    "id": "feedback",
+    "title": {
+      "en": "Feedback and confirmation",
+      "zh-CN": "反馈与确认"
+    },
+    "group": {
+      "en": "Feedback",
+      "zh-CN": "反馈"
+    },
+    "summary": {
+      "en": "Status, notifications, waiting and confirmation",
+      "zh-CN": "状态文字、通知、等待与确认"
+    },
+    "standard": "09-feedback",
+    "native": {
+      "en": "Cross-host interaction principles; this library's browser dialog does not mean that native hosts already provide an API of the same name.",
+      "zh-CN": "跨宿主交互原则；此库的浏览器 dialog 不等于原生宿主已经提供同名 API。"
+    }
+  },
+  {
+    "id": "menu",
+    "title": {
+      "en": "Action menu",
+      "zh-CN": "操作菜单"
+    },
+    "group": {
+      "en": "Navigation",
+      "zh-CN": "导航"
+    },
+    "summary": {
+      "en": "Opening, arrow keys, disabled entries and closing",
+      "zh-CN": "展开、方向键、禁用项与退出"
+    },
+    "standard": "08-navigation",
+    "native": {
+      "en": "Native widgets.Menu and ui.MenuEntry both provide menu capabilities; hierarchy, shortcuts and the host menu bar need separate adaptation.",
+      "zh-CN": "原生 widgets.Menu 与 ui.MenuEntry 均有菜单能力；层级、快捷键和宿主菜单栏需要单独适配。"
+    }
+  },
+  {
+    "id": "tabs",
+    "title": {
+      "en": "Tabs",
+      "zh-CN": "页签"
+    },
+    "group": {
+      "en": "Navigation",
+      "zh-CN": "导航"
+    },
+    "summary": {
+      "en": "Selection, arrow keys and linked panels",
+      "zh-CN": "选中关系、方向键与关联面板"
+    },
+    "standard": "08-navigation",
+    "native": {
+      "en": "Where a native tab control exists, adapt it to the host focus model; this library only commits to this Web automatic-activation pattern.",
+      "zh-CN": "有原生页签控件时按宿主焦点模型适配；本库只承诺此 Web 自动激活模式。"
+    }
+  },
+  {
+    "id": "table",
+    "title": {
+      "en": "Table and pagination",
+      "zh-CN": "表格与分页"
+    },
+    "group": {
+      "en": "Data",
+      "zh-CN": "数据"
+    },
+    "summary": {
+      "en": "Sorting, pagination, empty results and action names",
+      "zh-CN": "排序、分页、空结果和操作名称"
+    },
+    "standard": "10-patterns",
+    "native": {
+      "en": "widgets.Table supports native tables and sorting; pagination belongs to the application data model and is not claimed to be provided automatically by the host.",
+      "zh-CN": "widgets.Table 支持原生表格与排序；分页属于应用数据模型，不声称由宿主自动提供。"
+    }
+  },
+  {
+    "id": "tree",
+    "title": {
+      "en": "File tree",
+      "zh-CN": "文件树"
+    },
+    "group": {
+      "en": "Data",
+      "zh-CN": "数据"
+    },
+    "summary": {
+      "en": "Hierarchy, selection and visible-item navigation",
+      "zh-CN": "展开层级、选中项目与可见项导航"
+    },
+    "standard": "08-navigation",
+    "native": {
+      "en": "Native Tree capabilities must be verified against the actual SDK interface; this Web tree uses the WAI-ARIA tree model.",
+      "zh-CN": "原生 Tree 能力需要对照实际 SDK 接口验证；此 Web 树使用 WAI-ARIA tree 模型。"
+    }
+  },
+  {
+    "id": "splitter",
+    "title": {
+      "en": "Split panes",
+      "zh-CN": "分割面板"
+    },
+    "group": {
+      "en": "Layout",
+      "zh-CN": "布局"
+    },
+    "summary": {
+      "en": "Constrained panel sizes and keyboard adjustment",
+      "zh-CN": "受约束的面板尺寸与键盘调整"
+    },
+    "standard": "04-layout",
+    "native": {
+      "en": "Native split layouts are adapted to host size constraints; Web pointer capture and the DOM separator must not be treated directly as a native implementation.",
+      "zh-CN": "原生分割布局按宿主尺寸约束适配；Web 指针捕获与 DOM separator 不能直接当作原生实现。"
+    }
+  },
+  {
+    "id": "chart",
+    "title": {
+      "en": "Canvas and chart",
+      "zh-CN": "画布与图表"
+    },
+    "group": {
+      "en": "Drawing",
+      "zh-CN": "绘图"
+    },
+    "summary": {
+      "en": "2D canvas primitives, series toggling, keyboard point inspection and chart types",
+      "zh-CN": "2D 画布图元、序列显隐、键盘数据点检视与图表类型切换"
+    },
+    "standard": "13-drawing",
+    "native": {
+      "en": "draw.Frame / draw.Path / draw.Surface / widgets.Chart; native XDF1 frames and CTM/layer stacks are verified by the host.",
+      "zh-CN": "draw.Frame / draw.Path / draw.Surface / widgets.Chart；原生 XDF1 帧记录与 CTM／图层栈由宿主校验执行。"
+    }
+  }
+]

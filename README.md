@@ -1,12 +1,14 @@
 # XUUI Design System
 
-XU 生态的 UI 设计标准库：**标准文档、设计 Token、SVG 图标、可操作的效果展厅**。
+[English](README.md) · [简体中文](README.zh-CN.md)
 
-当前版本为 `0.1.0`。这是一套浏览器参考实现，可供其他技术栈按契约实现；不代表 XU 原生 UI 已提供相同组件。
+UI standards for the XU ecosystem: **design documentation, semantic tokens, SVG icons and an interactive reference showcase**.
 
-## 运行效果展示
+Current development version: `0.1.1-dev.4`. Stable baseline: `0.1.0`. Web components have explicit behavior contracts. The native adapter targets the Editor in XU SDK 0.10.11; other native widgets require separate verification.
 
-需要 Node.js 22 或以上，无第三方依赖，无须安装 XU SDK。
+## Run the showcase
+
+Use Node.js 22 or later. The showcase has no runtime dependencies and does not need the XU SDK. Install development dependencies with `npm ci` for browser tests.
 
 ```sh
 git clone https://github.com/xulang-org/xu-ui-design.git
@@ -15,44 +17,55 @@ npm run check
 npm run dev
 ```
 
-默认 `main` 为已验收的正式基线；参与开发时从最新 `origin/dev` 建立任务分支。
+`main` contains the accepted stable baseline. Start development on a task branch from freshly fetched `origin/dev`.
 
-打开 [本地效果展厅](http://127.0.0.1:4173)。如端口冲突，运行 `PORT=4174 npm run dev`。修改源文件后重新执行构建并刷新；预览服务不提供自动热更新。
+Open the [local showcase](http://127.0.0.1:4173/). Use `PORT=4174 npm run dev` if the port is occupied. Rebuild and refresh after source changes; the preview server does not provide hot reload.
 
-| 展示区域 | 可验证的效果 |
+Use **English / 中文** in the header. The initial language follows the browser, with an explicit URL choice taking precedence over the saved preference. Examples: `/?lang=en#/icons` and `/?lang=zh-CN#/icons`. Switching preserves the route and theme and reloads the page. Unsaved form drafts should be saved before switching. Storage is optional; explicit language links work when it is unavailable.
+
+| Area | Working reference |
 | --- | --- |
-| 总览 | XU 品牌、工作区预览、亮／暗主题切换 |
-| 标准文档 | 12 篇标准、分组检索、篇内目录、在线阅读、Markdown 下载 |
-| 基础与 Token | 双主题色值、复制 CSS 变量、对比度、排版、间距 |
-| 组件实验室 | 按钮尺寸、加载与禁用、表单校验、选择、通知与模态框 |
-| ICON | 48 个 SVG、语义分组、双语名称、检视区、四档尺寸、复制和下载 |
-| 页面模式 | 本地设置保存、项目检索与状态筛选、排序、详情、空状态 |
+| Overview | XU identity, workspace preview and light/dark themes |
+| Standards | 13 documents in both languages, search, outline, reading and Markdown downloads |
+| Foundations | Theme values, CSS variable copying, contrast, type and spacing |
+| Component lab | Nine contracts: buttons, input, feedback, menus, tabs, tables, trees, split panels and charts |
+| Icons | 60 SVGs, bilingual search, categories, inspector, four sizes, copying and downloads |
+| Motion and feedback | XU stamp receipts, continuous tabs, disclosure and reduced motion |
+| Patterns | Local settings, project search and status filters, sorting, details, in-place creation, new-row focus and empty states |
 
-深链接示例：`http://127.0.0.1:4173/#/icons`。也支持部署到子目录，例如 `/xu-ui-design/`；无需服务器重写 hash 路由。
+Hash routes also work under a subdirectory such as `/xu-ui-design/`, without server-side route rewrites.
 
-## 标准目录
+## Standards
 
-| 基础 | 组件 | 模式与交付 |
+| Foundations | Components | Patterns and delivery |
 | --- | --- | --- |
-| [设计原则](standards/01-principles.md) | [操作与按钮](standards/06-actions.md) | [页面模式](standards/10-patterns.md) |
-| [色彩与主题](standards/02-color.md) | [表单与输入](standards/07-forms.md) | [可访问性与动效](standards/11-accessibility.md) |
-| [字体与排版](standards/03-typography.md) | [导航与信息层级](standards/08-navigation.md) | [开发交付与治理](standards/12-delivery.md) |
-| [布局与间距](standards/04-layout.md) | [反馈与浮层](standards/09-feedback.md) | |
-| [ICON 图标](standards/05-icons.md) | | |
+| [Design principles](standards/01-principles.md) | [Actions and buttons](standards/06-actions.md) | [Page patterns](standards/10-patterns.md) |
+| [Color and themes](standards/02-color.md) | [Forms and input](standards/07-forms.md) | [Accessibility and motion](standards/11-accessibility.md) |
+| [Typography](standards/03-typography.md) | [Navigation](standards/08-navigation.md) | [Delivery and governance](standards/12-delivery.md) |
+| [Layout and spacing](standards/04-layout.md) | [Feedback and overlays](standards/09-feedback.md) | |
+| [Icons](standards/05-icons.md) | [Drawing and data visualization](standards/13-drawing.md) | |
 
-## 消费设计资源
+Every standard and component contract has an English `.md` and a Simplified Chinese `.zh-CN.md` source. Online downloads follow the selected language. The resource archive includes both.
+
+## Use the resources
 
 ```sh
 npm run build
 ```
 
-生成的 `dist/` 包含可独立部署的展厅与资源：
+The generated `dist/` directory is a standalone static showcase with:
 
-- `assets/tokens.css`：语义变量、字号、间距、圆角、尺寸与动效 Token。
-- `assets/components.css`：按钮、输入、选择、开关、状态与进度的参考样式。
-- `assets/icons.svg`：同源外部 SVG Sprite；`icons/*.svg` 为带名称的独立 SVG。
-- `tokens/tokens.json`：项目自定义扁平 Token 数据，不宣称 DTCG 格式兼容。
-- `standards/*.md`：可离线保存的规范源文档。
+- `assets/tokens.css`: semantic colors, type, spacing, radii, sizes and motion.
+- `assets/components.css`: reference control, state and progress styles.
+- `assets/icons.svg` and `icons/*.svg`: a same-origin sprite and individually named SVGs.
+- `tokens/tokens.json`: the project token format; DTCG compatibility is not claimed.
+- `standards/*.md` and `components/*.md`: both language editions.
+- `assets/motion.css` and `assets/motion.js`: cancellable receipts, settling and status feedback.
+- `assets/interactions.js`: removable menu, tab, table, tree and splitter controllers; `assets/en/interactions.js` has English feedback.
+- `xu/xuui_tokens/mod.xu`: SDK 0.10.11 Editor styles and semantic colors.
+- `downloads/xu-ui-resources-0.1.1-dev.4.tar.gz`, `SHA256SUMS` and `manifest.json`: versioned resources and source/checksum metadata.
+
+Read [migration and adoption guidance](MIGRATIONS.md) and the [changelog](CHANGELOG.md). The [Writing Desk adapter](https://github.com/xulang-org/examples/pull/21) is integrated into the examples repository's `dev`, with a pinned source revision and SDK version.
 
 ```html
 <link rel="stylesheet" href="./assets/tokens.css">
@@ -61,18 +74,20 @@ npm run build
   <svg class="xu-icon" aria-hidden="true" focusable="false">
     <use href="./assets/icons.svg#plus"></use>
   </svg>
-  新建项目
+  Create project
 </button>
 ```
 
-根元素使用 `data-theme="light"` 切换主题；默认暗色。仅图标按钮必须在按钮上提供可访问名称。组件样式不自动接管业务状态、表单和对话框行为。
+Set `data-theme="light"` on the root to use the light theme; dark is the default. Icon-only buttons need an accessible name on the button. Component CSS does not manage application state, forms or dialogs.
 
-## 来源与维护
+## Sources and validation
 
-`tokens/tokens.json`、`icons/catalog.json`、`standards/` 是权威源；不直接编辑生成文件。原始品牌资产来自官网提交 [8d36bb4](https://github.com/xulang-org/xulang-org/tree/8d36bb410511f12429a12c8596d672e5e0b5a29f/brand)，保持原始几何和 MIT 许可。通用图标由本库创建，沿用仓库许可。代码和资源的许可不授予 XU 品牌背书。
+Authoritative sources are `tokens/tokens.json`, `icons/catalog.json`, `standards/`, `components/` and `locales/en.json`. Do not edit generated files. Brand geometry comes from [the XU website source](https://github.com/xulang-org/xulang-org/tree/8d36bb410511f12429a12c8596d672e5e0b5a29f/brand), under MIT. General icons are original to this repository. The license does not grant XU brand endorsement.
 
-`npm run check` 校验主题结构、已定义配色组合的对比度、SVG 安全白名单、文档链接、脚本语法、Token 引用和构建资源。此检查不等于整站 WCAG 认证；屏幕阅读器与目标平台的人工验收另见可访问性标准。
+`npm run check` validates tokens, defined contrast combinations, safe SVG geometry, both language inventories and links, JavaScript syntax, token references, archives and the HTTP preview. CI runs Chromium, Firefox and WebKit behavior checks, dual-theme axe scans and fixed-environment Chromium visual comparisons. See [browser acceptance](tests/browser/README.md).
 
-CI 对 `dev`／`main` 及 PR 执行检查并上传 `xu-ui-showcase` 静态产物；默认不发布网站、不改变仓库保护。GitHub Actions 产物下载后解压，可通过任意静态 HTTP 服务预览。正式部署须在 `dev` 集成验证后获得发布授权。
+Automated checks are not WCAG certification. Actual screen-reader speech acceptance is deferred at the user's request and remains **unverified**. Native verification covers macOS arm64 editing and themes; Windows, Linux and native screen-reader support remain unverified.
 
-参与维护请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
+Pages deploys only after `main` passes build and browser acceptance. The intended address is `https://xulang-org.github.io/xu-ui-design/`; a successful deployment must be confirmed before treating it as a live entry point. Changes go through a PR to `dev` first, then an authorized release to `main`. Roll back by reverting source and redeploying, without rewriting shared history.
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before making changes.

@@ -1,0 +1,215 @@
+{
+  "sourceRevision": "8e0b22ac8300323e3b500be09ba0fdcda702e76d",
+  "generationRun": "https://github.com/xulang-org/xu-ui-design/actions/runs/41043178433",
+  "container": "mcr.microsoft.com/playwright:v1.64.1-noble",
+  "browser": "Chromium (Playwright 1.64.1)",
+  "browserLocale": "zh-CN",
+  "contentLocales": [
+    "zh-CN",
+    "en"
+  ],
+  "reducedMotion": "reduce",
+  "viewports": {
+    "desktop": [
+      1440,
+      900
+    ],
+    "mobileControls": [
+      390,
+      900
+    ],
+    "mobileTabs": [
+      390,
+      844
+    ],
+    "motionMobile": [
+      390,
+      900
+    ]
+  },
+  "review": "36 explicitly reviewed renders. Eight new motion pages were reviewed after moving source into progressive disclosure; the other 28 match the reviewed candidates from run 40980383556 byte for byte. Those include reviewed empty-state actions, tab markers and icon navigation plus 12 unchanged button/tree renders from prior approved baselines. Temporal motion and real clipboard/creation are verified separately by behavior tests and a CI video; screenshots use reduced motion. No CI auto-acceptance.",
+  "sha256": {
+    "button-proportions-desktop-dark-en.png": "21422584c01a6f911e46be6c6ba0a20d98cedbe6407abde1f9ef3330f9ced3d3",
+    "button-proportions-desktop-dark.png": "c1ed4d22b4f8f21d369dec07698f5732ec929726594e5214129c65084b44534e",
+    "button-proportions-desktop-light-en.png": "1740237d48754fb28700255f7d44a01275e4369eca7091d91dfdc0b2e17611cc",
+    "button-proportions-desktop-light.png": "3c7ad625400056b71cfba918c0a1d697da8a457de3ca98844dae59e42664df80",
+    "button-proportions-mobile-dark-en.png": "f0e94484840741caa1ae7501dc3ee92ec04de61f296831a1637ab94b282c540e",
+    "button-proportions-mobile-dark.png": "75d00732a347b6ca1692a0a3cf55814279da8cf4ae472fdc36a2474ebc66cbec",
+    "button-proportions-mobile-light-en.png": "f4b90872a60134b1a391f698aaa2050839f271dcf639762b94e745a49f498b70",
+    "button-proportions-mobile-light.png": "52c8bc98b8c22bc3c62a0de4faa2ae8d2dca493a58fb5154d1bcfd545e692516",
+    "empty-state-desktop-dark-en.png": "b9e79adfdb4c21971080fc441ecddccf88a36bf70bea465b0da3302d05c281af",
+    "empty-state-desktop-dark.png": "f4d9ece44821aae92ccdc83e0d8371c443982d56216d7c989dbf8559fd75771e",
+    "empty-state-desktop-light-en.png": "7809751b8d12943857e92c02bc716c5425d9b568d1399f1ef855b12f812e079a",
+    "empty-state-desktop-light.png": "c016862c29d8e655b9ac629d00a862f3496ec40431639babab928dc7f44d8611",
+    "empty-state-mobile-dark-en.png": "53a84dfda2ddab2374b4b84842b8ccf12382ca1e18c36cb1bf575152630bcf5f",
+    "empty-state-mobile-dark.png": "6b8fb4c0884943eac93740ff7f98952340ee1a458ca1850e4a5e7b78f30fea09",
+    "empty-state-mobile-light-en.png": "592251532f71918fa0b414a0e2db1512259eda32676cf12e60d863318d243a70",
+    "empty-state-mobile-light.png": "edd02dc9bbd6704e6330ec2108867001a2ba871bd8b8c6556c9e50ab3792a09d",
+    "icons-desktop-dark-en.png": "497de08fdc519fa792ca72bdc6fdd48f7688ba975e36faea3bba6d6195dddd87",
+    "icons-desktop-dark.png": "33b0fc6bbcc1057ab6c2d628e291bfe99c0da0507e2a69e61b53007401438bfd",
+    "icons-desktop-light-en.png": "5c9df87e41484a4bf1dda1f9b109c828ce25fa56c8cf44579735beb2a3a708c5",
+    "icons-desktop-light.png": "09f9000e75f6fd6774e49ef1732e20d29a226eb8ca5093d258f34bbfb56808ba",
+    "motion-desktop-dark-en.png": "cf2e85bf7e6846430fa1f738f0999a58cd7ceb7cd6f5600bcad88424d237a9e7",
+    "motion-desktop-dark.png": "02dd577af389ece7203ed72c3cd39f2a57b9e9947a688e4cfa1e44928e67257a",
+    "motion-desktop-light-en.png": "ffda57c4b9c92176c0ff896a2ec0cbc742463de4841f6ff57bfb11e05f39d6cf",
+    "motion-desktop-light.png": "fc8ef341631acbda62257c902f6ffb8502305b471917693c902ffbcfb6eca108",
+    "motion-mobile-dark-en.png": "015dfb50e697de90eaa2590cd82cb73d2c868661dd5c0a80228c46924b954c69",
+    "motion-mobile-dark.png": "368e27898b3ac7e4e6c69cd4788fab2ececa45cb85ea98ead9b88e4a2b1b0a2a",
+    "motion-mobile-light-en.png": "84c98b075283d4b185adb4ab3c9266f3ae37e58f955318e83eb6c7bf850d1a45",
+    "motion-mobile-light.png": "2ed163a35ecfefcae9fc0ac3c7d7667556607982ac325c8f45a07257ee903e4e",
+    "tabs-mobile-dark-en.png": "affcbc25ef6880c6956d10c02409dcb01cd467197fe083d378fa2adb51ace92f",
+    "tabs-mobile-dark.png": "4e46c6a69210f920621d1834b5beb6882f16a54c24b784c786176d2f44109a60",
+    "tabs-mobile-light-en.png": "3debd3f6ef142be2fa57509d147ec551b06bec445eb1e1a9f8a6c8eb6ace3d10",
+    "tabs-mobile-light.png": "596a26af1d6648b4e576aedba886a4e34d2bb082807994a88f8047f0772bb4df",
+    "tree-focus-dark-en.png": "dd22aaf12427c9e679ccba6eaf16999b5387d29e990e9f8ec67873d068d70c93",
+    "tree-focus-dark.png": "dd22aaf12427c9e679ccba6eaf16999b5387d29e990e9f8ec67873d068d70c93",
+    "tree-focus-light-en.png": "2025becab4f7dba0aee3293d1cb1cf3868d1597dc569b87dc262eb5f435d3692",
+    "tree-focus-light.png": "2025becab4f7dba0aee3293d1cb1cf3868d1597dc569b87dc262eb5f435d3692"
+  },
+  "imageDimensions": {
+    "button-proportions-desktop-dark-en.png": [
+      876,
+      436
+    ],
+    "button-proportions-desktop-dark.png": [
+      876,
+      436
+    ],
+    "button-proportions-desktop-light-en.png": [
+      876,
+      436
+    ],
+    "button-proportions-desktop-light.png": [
+      876,
+      436
+    ],
+    "button-proportions-mobile-dark-en.png": [
+      358,
+      730
+    ],
+    "button-proportions-mobile-dark.png": [
+      358,
+      591
+    ],
+    "button-proportions-mobile-light-en.png": [
+      358,
+      730
+    ],
+    "button-proportions-mobile-light.png": [
+      358,
+      591
+    ],
+    "empty-state-desktop-dark-en.png": [
+      1124,
+      297
+    ],
+    "empty-state-desktop-dark.png": [
+      1124,
+      275
+    ],
+    "empty-state-desktop-light-en.png": [
+      1124,
+      297
+    ],
+    "empty-state-desktop-light.png": [
+      1124,
+      275
+    ],
+    "empty-state-mobile-dark-en.png": [
+      358,
+      301
+    ],
+    "empty-state-mobile-dark.png": [
+      358,
+      301
+    ],
+    "empty-state-mobile-light-en.png": [
+      358,
+      301
+    ],
+    "empty-state-mobile-light.png": [
+      358,
+      301
+    ],
+    "icons-desktop-dark-en.png": [
+      1440,
+      2382
+    ],
+    "icons-desktop-dark.png": [
+      1440,
+      2382
+    ],
+    "icons-desktop-light-en.png": [
+      1440,
+      2382
+    ],
+    "icons-desktop-light.png": [
+      1440,
+      2382
+    ],
+    "motion-desktop-dark-en.png": [
+      1440,
+      1324
+    ],
+    "motion-desktop-dark.png": [
+      1440,
+      1324
+    ],
+    "motion-desktop-light-en.png": [
+      1440,
+      1324
+    ],
+    "motion-desktop-light.png": [
+      1440,
+      1324
+    ],
+    "motion-mobile-dark-en.png": [
+      390,
+      2077
+    ],
+    "motion-mobile-dark.png": [
+      390,
+      1889
+    ],
+    "motion-mobile-light-en.png": [
+      390,
+      2077
+    ],
+    "motion-mobile-light.png": [
+      390,
+      1889
+    ],
+    "tabs-mobile-dark-en.png": [
+      390,
+      844
+    ],
+    "tabs-mobile-dark.png": [
+      390,
+      844
+    ],
+    "tabs-mobile-light-en.png": [
+      390,
+      844
+    ],
+    "tabs-mobile-light.png": [
+      390,
+      844
+    ],
+    "tree-focus-dark-en.png": [
+      810,
+      177
+    ],
+    "tree-focus-dark.png": [
+      810,
+      177
+    ],
+    "tree-focus-light-en.png": [
+      810,
+      177
+    ],
+    "tree-focus-light.png": [
+      810,
+      177
+    ]
+  }
+}
