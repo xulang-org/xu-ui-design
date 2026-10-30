@@ -38,6 +38,7 @@ function notify(message) {
 }
 
 async function copy(text, fallback, trigger) {
+  clearReceipt(trigger);
   try {
     if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
     await navigator.clipboard.writeText(text);
@@ -49,7 +50,9 @@ async function copy(text, fallback, trigger) {
     notify('已复制到剪贴板');
     return true;
   } catch {
-    if (fallback) { fallback.focus(); fallback.select(); }
+    clearReceipt(trigger);
+    trigger?.removeAttribute('data-confirmed');
+    if (fallback) { fallback.closest('details')?.setAttribute('open','');fallback.focus();fallback.select(); }
     notify(fallback ? '复制未完成，请手动复制已选中的源码。' : '剪贴板不可用，请从 Token 下载文件中复制。');
     return false;
   }
@@ -194,6 +197,7 @@ function updateInspector(animate = false) {
   if (animate) settle($('#icon-inspector'));
   $('#inspector-copy').addEventListener('click', async (event) => {
     const target=event.currentTarget;
+    clearReceipt(target);
     const field = $('#inspector-source');
     // Keep source available when clipboard access fails, without a blocking modal.
     try { await navigator.clipboard.writeText(source); acknowledge(target,'已复制');notify(`已复制：${item.name}.svg`); }
@@ -278,7 +282,9 @@ function createProject(trigger) {
     if (projects.some(item=>item.name.toLowerCase()===name.toLowerCase())) {
       input.setAttribute('aria-invalid','true');error.textContent='已有同名演示项目，请换一个名称。';settle(error);input.focus();return;
     }
-    projects.push({name,description:'刚创建的本地演示项目',platform:'Web',status:'draft',date:new Date().toISOString().slice(0,10)});
+    const today=new Date();
+    const date=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+    projects.push({name,description:'刚创建的本地演示项目',platform:'Web',status:'draft',date});
     $('#project-search').value='';$('#project-status').value='all';
     const row=updateProjects(name);
     opener=row.querySelector('th');
@@ -345,6 +351,7 @@ function bindPage() {
     $('#settings-form').addEventListener('change',dirty);
     $('#settings-form').addEventListener('submit', (event) => {
       event.preventDefault();
+      clearReceipt(saveButton);
       if (!validName(input, $('#workspace-error'), $('#settings-status'))) { input.focus(); return; }
       try {
         localStorage.setItem('xu-ui-demo-settings', JSON.stringify({ name: input.value.trim(), density: $('#workspace-density').value, autosave: $('#workspace-autosave').checked }));

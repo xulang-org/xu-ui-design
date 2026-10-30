@@ -9,8 +9,8 @@ export function motionPage({icon,button,esc,breadcrumbs,heading,footer,tokens}) 
     <section class="motion-specimen" aria-labelledby="motion-copy-title">
       <div><h2 id="motion-copy-title">落印 · 操作有回执</h2><p>复制成功后，原按钮显示确认印记。结果同时保留在下方，不需要移开视线寻找通知。</p>
       ${button(`${icon('copy')}复制动效 Token`,'id="motion-copy"','primary')}
-      <p id="motion-copy-status" role="status" class="demo-result">复制下面的参数，直接用于你的界面。</p>
-      <label for="motion-source" class="sr-only">动效 Token 源码</label><textarea id="motion-source" class="xu-textarea motion-copy-source" readonly spellcheck="false">${esc(sample)}</textarea></div>
+      <p id="motion-copy-status" role="status" class="demo-result">复制统一参数，直接用于你的界面。</p>
+      <details class="motion-code"><summary>查看动效 Token 源码</summary><div><label for="motion-source" class="sr-only">动效 Token 源码</label><textarea id="motion-source" class="xu-textarea motion-copy-source" readonly spellcheck="false">${esc(sample)}</textarea></div></details></div>
       <div class="motion-signature"><div class="motion-seal" id="motion-seal" aria-hidden="true"><img src="./assets/brand/xu-classic.svg" alt="">${icon('check')}</div><p id="motion-seal-label">等待操作</p></div>
     </section>
     <div class="motion-cases"><section class="motion-case"><h2>归位 · 切换有连续性</h2><p>指示线跟随选择移动，内容在原位接续。方向键可切换，操作始终即时响应。</p>
@@ -28,13 +28,23 @@ export function motionPage({icon,button,esc,breadcrumbs,heading,footer,tokens}) 
 export function mountMotionPage({copy,showStatus}) {
   const root=document.querySelector('[data-view="motion"]');
   const abort=new AbortController();
+  const source=root.querySelector('#motion-source');
+  let previousWidth=0;
+  const sizing=new ResizeObserver(([entry])=>{
+    const width=entry.contentRect.width;
+    if (width>0 && width!==previousWidth) {
+      source.style.height='auto';
+      source.style.height=`${source.scrollHeight+source.offsetHeight-source.clientHeight}px`;
+    }
+    previousWidth=width;
+  });
+  sizing.observe(source);
   const preference=matchMedia('(prefers-reduced-motion: reduce)');
   const update=()=>{document.querySelector('#motion-system-state').textContent=motionEnabled()?'动效开启 · 跟随系统':'减少动态效果 · 跟随系统';};
   update();preference.addEventListener('change',update,{signal:abort.signal});
   const unmount=mountTabs(root.querySelector('[data-motion-tabs]'));
   root.querySelector('#motion-copy').addEventListener('click',async(event)=>{
     const target=event.currentTarget;
-    const source=root.querySelector('#motion-source');
     const copied=await copy(source.value,source,target);
     if (abort.signal.aborted) return;
     const seal=root.querySelector('#motion-seal');
@@ -49,5 +59,5 @@ export function mountMotionPage({copy,showStatus}) {
     }
   },{signal:abort.signal});
   settle(root.querySelector('.motion-seal'));
-  return ()=>{abort.abort();unmount();};
+  return ()=>{abort.abort();sizing.disconnect();unmount();};
 }

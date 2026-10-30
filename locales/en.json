@@ -447,5 +447,7 @@
   "刚创建的本地演示项目": "New local demo project",
   "已创建演示项目：": "Demo project created: ",
   "刷新页面会重置列表。": " Refreshing resets the list.",
-  "在这个本地示例中创建项目，完成后会定位到列表记录。": "Create a project in this local demo, then go straight to its record in the list."
+  "在这个本地示例中创建项目，完成后会定位到列表记录。": "Create a project in this local demo, then go straight to its record in the list.",
+  "复制统一参数，直接用于你的界面。": "Copy the shared settings into your interface.",
+  "查看动效 Token 源码": "View motion token source"
 }

@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 // This video is evidence, not a golden and never enters the source repository.
   test.skip(!process.env.CI,'Generate evidence in the pinned Linux environment.');
   test.skip(({browserName})=>browserName!=='chromium','One recording is sufficient; behavior runs in all engines.');
-  test.use({reducedMotion:'no-preference',viewport:{width:1280,height:900},permissions:['clipboard-read','clipboard-write'],video:{mode:'on',size:{width:1280,height:900}}});
+  test.use({reducedMotion:'no-preference',timezoneId:'America/New_York',viewport:{width:1280,height:900},permissions:['clipboard-read','clipboard-write'],video:{mode:'on',size:{width:1280,height:900}}});
   test('record stamp, continuous selection and in-place creation',async({page})=>{
     await page.goto('/?lang=zh-CN&theme=light#/motion');
     await expect(page.locator('#motion-copy')).toBeVisible();await page.waitForTimeout(700);

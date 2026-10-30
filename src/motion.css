@@ -46,7 +46,8 @@ dialog[open]::backdrop { animation: xu-fade var(--xu-duration-enter) var(--xu-ea
 .motion-seal[data-confirmed] img { opacity: 0; }
 .motion-seal[data-confirmed] > .xu-icon { opacity: 1; }
 .motion-signature > p { margin: 0; font-size: var(--xu-text-sm); }
-.motion-copy-source { min-height: 148px; margin-top: var(--xu-space-6); font: var(--xu-text-sm)/1.6 var(--xu-font-mono); }
+.motion-code { margin-top: var(--xu-space-6); }
+.motion-copy-source { display: block; min-height: 148px; margin-top: var(--xu-space-3); font: var(--xu-text-sm)/1.6 var(--xu-font-mono); }
 .motion-cases { display: grid; grid-template-columns: 1fr 1fr; gap: var(--xu-space-8); margin-top: var(--xu-space-12); }
 .motion-case { min-width: 0; padding-top: var(--xu-space-6); border-top: 1px solid var(--xu-border); }
 .motion-case h2 { font-size: var(--xu-text-lg); }
@@ -64,6 +65,6 @@ dialog[open]::backdrop { animation: xu-fade var(--xu-duration-enter) var(--xu-ea
 @media (prefers-reduced-motion: reduce) {
   .xu-button, .xu-icon-button, .xu-tree [data-tree-toggle] { transition: none; }
   .xu-button:active:not(:disabled), .xu-icon-button:active:not(:disabled) { transform: none; }
-  .nav-link[aria-current="page"]::before, .xu-menu:not([hidden]), dialog[open], dialog[open]::backdrop, .xu-field:has([aria-invalid="true"]) .xu-error { animation: none; }
+  .nav-link[aria-current="page"]::before, .sidebar.open, .xu-menu:not([hidden]), dialog[open], dialog[open]::backdrop, .xu-field:has([aria-invalid="true"]) .xu-error { animation: none; }
   .token-button[data-confirmed]::after { animation: none; opacity: 1; }
 }

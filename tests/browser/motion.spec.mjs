@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+test.use({timezoneId:'America/New_York'});
 
 const clipboard = async page => page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:async text=>{window.copiedText=text;}}}));
 const visit=async(page,route='motion')=>{await page.goto(`/?lang=zh-CN#/${route}`);await expect(page.locator('h1')).toBeVisible();};
@@ -66,6 +67,8 @@ test('failed copy does not show a success stamp and selects recoverable source',
   await expect(page.locator('#motion-seal')).not.toHaveAttribute('data-confirmed');
   await expect(page.locator('#motion-copy-status')).toHaveAttribute('data-state','error');
   await expect(page.locator('#motion-source')).toBeFocused();
+  await expect(page.locator('.motion-code')).toHaveAttribute('open','');
+  await expect.poll(()=>page.locator('#motion-source').evaluate(element=>element.scrollHeight-element.clientHeight)).toBe(0);
 });
 
 test('editing saved settings immediately clears the saved receipt',async({page})=>{
@@ -77,7 +80,22 @@ test('editing saved settings immediately clears the saved receipt',async({page})
   await expect(page.locator('#settings-status')).toHaveText('有未保存的更改。');
 });
 
+test('a failed retry clears the previous successful receipt',async({page})=>{
+  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:async()=>{if(window.failCopy)throw new Error('clipboard unavailable');}}}));
+  await visit(page);await page.locator('#motion-copy').click();
+  await expect(page.locator('#motion-copy')).toHaveAttribute('data-receipt','success');
+  await page.evaluate(()=>{window.failCopy=true;});await page.locator('#motion-copy').click();
+  await expect(page.locator('#motion-copy')).not.toHaveAttribute('data-receipt');
+  await expect(page.locator('#motion-seal')).not.toHaveAttribute('data-confirmed');
+  await visit(page,'patterns');const save=page.locator('#settings-form [type="submit"]');
+  await save.click();await expect(save).toHaveAttribute('data-receipt','success');
+  await page.evaluate(()=>Object.defineProperty(Storage.prototype,'setItem',{value(){throw new Error('storage unavailable');}}));
+  await save.click();await expect(save).not.toHaveAttribute('data-receipt');
+  await expect(page.locator('#settings-status')).toHaveAttribute('data-state','error');
+});
+
 for (const locale of ['zh-CN','en']) test(`create in place, recover errors and locate the new record: ${locale}`,async({page})=>{
+  await page.clock.setFixedTime(new Date('2026-10-30T00:30:00Z'));
   await page.setViewportSize({width:320,height:900});await page.goto(`/?lang=${locale}#/patterns`);
   await page.locator('#project-search').fill('missing-record');await page.locator('#project-status').selectOption('archived');
   await page.locator('[data-create-project]').click();const dialog=page.getByRole('dialog');
@@ -89,6 +107,7 @@ for (const locale of ['zh-CN','en']) test(`create in place, recover errors and l
   await expect(dialog).not.toBeVisible();await expect(page).toHaveURL(/#\/patterns$/);
   const row=page.locator('[data-project-row]').filter({hasText:name});
   await expect(row).toHaveCount(1);await expect(row).toHaveAttribute('data-created','');
+  await expect(row).toContainText('2026-10-29');
   await expect(row.locator('th')).toBeFocused();
   await expect(page.locator('#project-search')).toHaveValue('');await expect(page.locator('#project-status')).toHaveValue('all');
   await expect(page.locator('#project-table tbody tr')).toHaveCount(5);
