@@ -14,6 +14,8 @@ npm run test:browser
 
 行为回归在 Chromium、Firefox、WebKit 执行；涵盖菜单禁用跳过、页签、分页边界、树键盘、分栏、表单恢复、模态框焦点、图标下载及剪贴板／存储失败。八个组件在双主题 320 px 下检查溢出与 axe WCAG A/AA 规则。axe 通过不等于人工屏幕阅读器验收或 WCAG 认证。
 
+动效验收覆盖原位回执与尺寸不变、连续快速切换、播放中改变系统偏好、旧保存状态清理、复制失败、本地创建和新增记录焦点。仅 CI Chromium 录制真实剪贴板及创建交互，视频只作 artifact，不作源码基线。
+
 ## 视觉基线
 
 正式基线必须来自 `mcr.microsoft.com/playwright:v1.64.1-noble`，与锁文件的 Playwright 版本一致。固定 Chromium、zh-CN、reducedMotion、桌面 1440×900／移动 390×844；不使用本机 macOS 截图更新 Linux 基线。

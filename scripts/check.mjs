@@ -72,7 +72,7 @@ for (const doc of docs) {
   }
   assert.equal(outlines[0],outlines[1],`${doc.id}: keep section deep links aligned across languages`);
 }
-for (const file of ['src/app.js','src/boot.js','scripts/localize.mjs','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs','scripts/package.mjs','scripts/check-hygiene.mjs','scripts/native-tokens.mjs','src/interactions.js','src/component-pages.js']) {
+for (const file of ['src/app.js','src/boot.js','scripts/localize.mjs','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs','scripts/package.mjs','scripts/check-hygiene.mjs','scripts/native-tokens.mjs','src/interactions.js','src/component-pages.js','src/motion.js','src/motion-page.js']) {
   const result = spawnSync(process.execPath, ['--check', new URL(file, root).pathname], { encoding:'utf8' });
   assert.equal(result.status, 0, result.stderr);
 }
@@ -82,7 +82,7 @@ for (const [,path] of html.matchAll(/(?:src|href)="\.\/([^"#]+)"/g)) await acces
 assert.ok(!html.includes('{{VERSION}}'));
 const app = await read('src/app.js');
 for (const [,name] of app.matchAll(/icon\('([a-z-]+)'/g)) assert.ok(names.has(name), `Unknown icon reference: ${name}`);
-for (const file of ['src/components.css','src/site.css','src/component-lab.css']) {
+for (const file of ['src/components.css','src/site.css','src/component-lab.css','src/motion.css']) {
   const source = await read(file);
   for (const [,name] of source.matchAll(/var\(--xu-([a-z0-9-]+)/g)) assert.ok(name in tokens.base || name in tokens.themes.dark, `Unknown token: ${name}`);
 }
@@ -103,7 +103,7 @@ for (const locale of ['en','zh-CN']) {
   assert.equal(localized.locale,locale);
   assert.equal(localized.docs.length,12);
   assert.equal(localized.components.length,8);
-  for (const file of ['app.js','component-pages.js','interactions.js']) {
+  for (const file of ['app.js','component-pages.js','interactions.js','motion.js','motion-page.js']) {
     const path=`dist/assets/${locale}/${file}`;
     const syntax=spawnSync(process.execPath,['--check',new URL(path,root).pathname],{encoding:'utf8'});
     assert.equal(syntax.status,0,syntax.stderr);

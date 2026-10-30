@@ -19,6 +19,14 @@ for(const locale of ['zh-CN','en']) for(const theme of ['dark','light']) {
       await page.mouse.move(0,0);await compare(demo,`button-proportions-${device}-${theme}${suffix}.png`);
     });
   }
+  for(const [device,width] of [['desktop',1440],['mobile',390]]) {
+    test(`@visual ${locale} motion ${device} ${theme}`,async({page})=>{
+      await page.setViewportSize({width,height:900});
+      await page.goto(`/?lang=${locale}&theme=${theme}#/motion`);
+      await expect(page.locator('#motion-copy')).toBeVisible();
+      await page.mouse.move(0,0);await compare(page,`motion-${device}-${theme}${suffix}.png`,{fullPage:true});
+    });
+  }
   test(`@visual ${locale} tree focus ${theme}`,async({page})=>{
     await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
     await page.setViewportSize({width:1440,height:900});await page.goto(`/?lang=${locale}#/components/tree`);

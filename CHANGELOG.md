@@ -2,6 +2,13 @@
 
 [English](CHANGELOG.md) · [简体中文](CHANGELOG.zh-CN.md)
 
+## 0.1.1-dev.4
+
+- Add XU press/stamp/settle motion, in-place copy/save receipts, continuous tab indicators and an interactive motion standard.
+- Create local demo projects without leaving the patterns page; validate names, clear conflicting filters and focus the new record.
+- Preserve meaningful feedback with reduced motion, cancel in-flight effects on preference/route changes and clear saved receipts when editing.
+- Add real-browser motion, geometry, error and keyboard checks, dual-language visual coverage and a CI interaction recording.
+
 ## 0.1.1-dev.3
 
 - Add English and Simplified Chinese navigation, standards, component contracts, icon metadata, examples, errors and accessible names.

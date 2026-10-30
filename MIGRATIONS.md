@@ -2,6 +2,12 @@
 
 [English](MIGRATIONS.md) · [简体中文](MIGRATIONS.zh-CN.md)
 
+## 0.1.1-dev.3 → 0.1.1-dev.4
+
+New motion resources are assets/motion.js and assets/motion.css. Update tokens.css and the behavior files together: interactions.js now imports its sibling motion.js, including the English edition under assets/en/. Existing mount function names and DOM contracts remain unchanged. The new tokens are duration-enter and motion-distance; existing timing values stay the same. No external runtime package is required.
+
+Transient receipts keep the original accessible button name. Use a separate live status for the outcome and clear receipts when a new edit makes the result stale. Motion follows the system preference and never delays the semantic state, focus or action. Demo project creation now stays in the patterns page, adds local draft rows and resets on refresh.
+
 ## 0.1.1-dev.2 → 0.1.1-dev.3
 
 Existing token names, CSS classes, icon identifiers and hash routes are preserved. English documents use `.md`; Chinese documents use `.zh-CN.md`. Update direct Markdown links if they need to stay Chinese. Online downloads automatically use the selected language. Resource archives contain both editions.

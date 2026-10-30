@@ -12,6 +12,8 @@ npm run test:browser
 
 Chromium, Firefox and WebKit cover disabled menu entries, tabs, pagination boundaries, tree navigation, splitters, form recovery, modal focus, icon downloads, clipboard failure and storage failure. Both languages are checked for switching, document completeness, translated interactions and responsive overflow. Eight components receive axe A/AA checks in both themes at 320 px. Automated checks are not manual screen-reader acceptance or WCAG certification.
 
+Motion acceptance also checks in-place receipts without geometry changes, rapid tab switches, preference changes during animation, stale saved state, copy failure, safe local creation and focus on new records. The CI-only Chromium evidence test records real clipboard operations and creation at a watchable pace; video remains an artifact, not a baseline.
+
 ## Visual baselines
 
 Use `mcr.microsoft.com/playwright:v1.64.1-noble`, matching the lockfile. Fix Chromium, zh-CN, reduced motion and desktop 1440×900 / mobile 390×844. Never use macOS screenshots to replace Linux baselines.

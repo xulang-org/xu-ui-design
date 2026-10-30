@@ -28,7 +28,7 @@ export async function packageResources(pkg) {
     }
   };
   for(const path of ['dist/tokens','dist/icons','dist/standards','dist/components','dist/xu']) await walk(path);
-  for(const file of ['tokens.css','components.css','component-lab.css','interactions.js','en/interactions.js','icons.svg']) await add(`dist/assets/${file}`,`assets/${file}`);
+  for(const file of ['tokens.css','components.css','component-lab.css','interactions.js','en/interactions.js','motion.js','en/motion.js','motion.css','icons.svg']) await add(`dist/assets/${file}`,`assets/${file}`);
   for(const file of ['LICENSE','README.md','README.zh-CN.md','CHANGELOG.md','CHANGELOG.zh-CN.md','MIGRATIONS.md','MIGRATIONS.zh-CN.md']) await add(file);
   const revision=spawnSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'});
   const status=spawnSync('git',['status','--porcelain'],{cwd:root,encoding:'utf8'});

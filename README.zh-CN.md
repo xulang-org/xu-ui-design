@@ -4,7 +4,7 @@
 
 XU 生态的 UI 设计标准库：**标准文档、设计 Token、SVG 图标、可操作的效果展厅**。
 
-当前开发版本为 `0.1.1-dev.3`，正式基线为 `0.1.0`。浏览器提供组件契约与交互实现；原生适配针对 SDK 0.10.11 的 Editor，其他原生组件须按实际 SDK 验证。
+当前开发版本为 `0.1.1-dev.4`，正式基线为 `0.1.0`。浏览器提供组件契约与交互实现；原生适配针对 SDK 0.10.11 的 Editor，其他原生组件须按实际 SDK 验证。
 
 ## 运行效果展示
 
@@ -28,7 +28,8 @@ npm run dev
 | 基础与 Token | 双主题色值、复制 CSS 变量、对比度、排版、间距 |
 | 组件实验室 | 八份独立契约：按钮、输入、反馈、菜单、页签、分页表格、树和分栏 |
 | ICON | 60 个 SVG、语义分组、双语名称、检视区、四档尺寸、复制和下载 |
-| 页面模式 | 本地设置保存、项目检索与状态筛选、排序、详情、空状态 |
+| 动效与反馈 | XU 落印回执、连续页签、按需展开，跟随系统减少动态效果 |
+| 页面模式 | 本地设置保存、项目检索与状态筛选、排序、详情、原位创建与新增行定位、空状态 |
 
 深链接示例：`http://127.0.0.1:4173/#/icons`。也支持部署到子目录，例如 `/xu-ui-design/`；无需服务器重写 hash 路由。
 
@@ -57,9 +58,10 @@ npm run build
 - `assets/icons.svg`：同源外部 SVG Sprite；`icons/*.svg` 为带名称的独立 SVG。
 - `tokens/tokens.json`：项目自定义扁平 Token 数据，不宣称 DTCG 格式兼容。
 - `standards/*.md`、`components/*.md`：标准与组件契约。
+- `assets/motion.css`／`assets/motion.js`：动效样式与可取消的确认、归位和状态反馈。
 - `assets/interactions.js`：可卸载的菜单、页签、表格、树和分栏行为。
 - `xu/xuui_tokens/mod.xu`：SDK 0.10.11 原生 Editor 样式与颜色函数。
-- `downloads/xu-ui-resources-0.1.1-dev.3.tar.gz`、`SHA256SUMS` 和 `manifest.json`：版本资源包与来源、校验信息。
+- `downloads/xu-ui-resources-0.1.1-dev.4.tar.gz`、`SHA256SUMS` 和 `manifest.json`：版本资源包与来源、校验信息。
 
 接入与回退见 [MIGRATIONS.md](MIGRATIONS.zh-CN.md)，版本变更见 [CHANGELOG.md](CHANGELOG.zh-CN.md)。
 

@@ -5,7 +5,7 @@ for(const theme of ['dark','light']) {
     test(`empty state preserves the shared action geometry: ${theme} / ${width}`,async({page})=>{
       await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
       await page.setViewportSize({width,height:900});await page.goto('/#/patterns');
-      const action=page.getByRole('link',{name:'尝试创建交互',exact:true});await expect(action).toBeVisible();
+      const action=page.locator('[data-create-project]');await expect(action).toBeVisible();
       const metrics=await action.evaluate(link=>{
         const reference=document.querySelector('#new-demo-project');
         const icon=link.querySelector('svg'), referenceIcon=reference.querySelector('svg');
@@ -19,7 +19,8 @@ for(const theme of ['dark','light']) {
       expect(metrics.iconSize).toBe(metrics.referenceIconSize);
       expect(metrics.centerOffset).toBeLessThan(.5);
       expect(metrics.iconForeground).toBe(metrics.foreground);
-      await action.click();await expect(page.getByRole('heading',{name:'组件实验室',exact:true})).toBeVisible();
+      await action.click();await expect(page.getByRole('dialog')).toBeVisible();
+      await page.keyboard.press('Escape');await expect(action).toBeFocused();
     });
   }
 }

@@ -17,7 +17,41 @@
 
 ## 动效
 
-快速反馈 120 ms，一般切换 200 ms，使用 ease-out。仅对 opacity 和 transform 添加过渡；避免大幅位移、循环装饰和闪烁。prefers-reduced-motion: reduce 时关闭非必要动效，loader 保留文字等待反馈。
+XU 动效由三个连续动作构成：按下响应接触，落印确认完成，归位解释变化中的位置。每个动作对应真实状态，不人为增加等待。
+
+| 用途 | Token／数值 | 约定 |
+| --- | --- | --- |
+| 按下／落印 | duration-fast / 120 ms | 在操作来源给出一次短反馈 |
+| 切换／归位 | duration-normal / 200 ms | 指示线随选择移动，内容保留在原区域 |
+| 面板进入 | duration-enter / 220 ms | 对话框与面板进入，焦点立即可用 |
+| 进入距离 | motion-distance / 6 px | 轻量纵向位移，避免大幅运动 |
+| 缓动 | ease-out | 减速后精确停靠，不回弹 |
+
+只对 opacity 和 transform 做动画，不动画 width、height、top 或 left。页签指示线使用最终测量尺寸与 transform，不逐帧修改宽度。菜单和对话框立即关闭，不延迟键盘焦点恢复。避免循环装饰、闪烁和每次按键都播放的动效。
+
+### 回执与下一步
+
+- 复制与保存成功后，原按钮显示方形勾选印记，按钮尺寸不变。临时回执保留 1.4 秒，之后仍有可读状态文字。
+- 结果完成后才显示成功。复制失败提供可选源码，保存失败保留输入；再次编辑会立即清除旧的保存回执。
+- 原按钮的可访问名称保留，live status 播报结果。不能只依赖颜色或动作表达状态。
+- 项目创建留在页面模式中。先校验，再插入记录；清除冲突筛选，聚焦新增行的名称，并让新行归位。明确告知刷新会重置这些本地演示记录。
+
+### 减少动态效果与清理
+
+prefers-reduced-motion: reduce 时停止位移、缩放和转场，保留确认文字、选中标记、错误与下一步。播放中切换系统偏好会取消动效，保留已提交的最终状态。操作不等待动画完成；离开页面或卸载控制器时清理所属动画与临时回执。
+
+### 网页接入
+
+同时加载 tokens.css、components.css 和 motion.css。独立 interactions.js 现在会导入同目录 motion.js，必须一起复制；英文控制器使用 assets/en/motion.js。不引入外部运行库。
+
+```js
+import { acknowledge, showStatus } from './assets/motion.js';
+await navigator.clipboard.writeText(source);
+acknowledge(copyButton, '已复制');
+showStatus(status, '已复制，可粘贴到项目中。');
+```
+
+回执使用 ./assets/icons.svg 中的图标，接入时保持资源路径一致。动效展厅提供复制确认、连续页签和逐层展开示例。原生产品遵循宿主动效机制，此网页控制器不代表原生 SDK 已提供对应动画能力。
 
 ## 验收步骤
 

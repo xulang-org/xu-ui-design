@@ -6,6 +6,8 @@ Page patterns combine basic components to show complete tasks. All project names
 
 Order the page as "Basic information → Behavior preferences → Save result". Field labels sit above fields, and help text follows the field. Setting changes are first kept as a draft. After a successful save, show a clear result. If storage fails, keep the input and allow retry. The example's local storage key is xu-ui-demo-settings. No backend API is used.
 
+The save button confirms in place; the result remains below it. Editing again immediately returns to an unsaved state.
+
 Acceptance: saved content is read after refresh. Invalid names block saving. When storage is disabled, show the failure and do not pretend it succeeded. The example does not save personal information or credentials.
 
 ## Data list
@@ -13,6 +15,8 @@ Acceptance: saved content is read after refresh. Invalid names block saving. Whe
 The order is "Title and create entry → Search → Status filter → Data table → Result count". Column names explain their meaning. Text is left-aligned and numbers are right-aligned. Row actions state their target. Prefer table to keep semantics. On narrow screens, let the table container scroll on its own.
 
 Acceptance: keyword and status filter together. No results shows a clear-filters action. The details button shows the corresponding demo project. Sort buttons sit in column headers that carry aria-sort. Status text must not be replaced by icons.
+
+Creation opens a named local demo form in the current page. Empty or duplicate names keep focus on the error. Success inserts one draft record, clears search/status filters and focuses the new row name. Records are held on the current page and reset on refresh; no repository is created.
 
 ## Empty states
 

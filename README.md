@@ -4,7 +4,7 @@
 
 UI standards for the XU ecosystem: **design documentation, semantic tokens, SVG icons and an interactive reference showcase**.
 
-Current development version: `0.1.1-dev.3`. Stable baseline: `0.1.0`. Web components have explicit behavior contracts. The native adapter targets the Editor in XU SDK 0.10.11; other native widgets require separate verification.
+Current development version: `0.1.1-dev.4`. Stable baseline: `0.1.0`. Web components have explicit behavior contracts. The native adapter targets the Editor in XU SDK 0.10.11; other native widgets require separate verification.
 
 ## Run the showcase
 
@@ -30,7 +30,8 @@ Use **English / 中文** in the header. The initial language follows the browser
 | Foundations | Theme values, CSS variable copying, contrast, type and spacing |
 | Component lab | Eight contracts: buttons, input, feedback, menus, tabs, tables, trees and split panels |
 | Icons | 60 SVGs, bilingual search, categories, inspector, four sizes, copying and downloads |
-| Patterns | Local settings, project search and status filters, sorting, details and empty states |
+| Motion and feedback | XU stamp receipts, continuous tabs, disclosure and reduced motion |
+| Patterns | Local settings, project search and status filters, sorting, details, in-place creation, new-row focus and empty states |
 
 Hash routes also work under a subdirectory such as `/xu-ui-design/`, without server-side route rewrites.
 
@@ -59,9 +60,10 @@ The generated `dist/` directory is a standalone static showcase with:
 - `assets/icons.svg` and `icons/*.svg`: a same-origin sprite and individually named SVGs.
 - `tokens/tokens.json`: the project token format; DTCG compatibility is not claimed.
 - `standards/*.md` and `components/*.md`: both language editions.
+- `assets/motion.css` and `assets/motion.js`: cancellable receipts, settling and status feedback.
 - `assets/interactions.js`: removable menu, tab, table, tree and splitter controllers; `assets/en/interactions.js` has English feedback.
 - `xu/xuui_tokens/mod.xu`: SDK 0.10.11 Editor styles and semantic colors.
-- `downloads/xu-ui-resources-0.1.1-dev.3.tar.gz`, `SHA256SUMS` and `manifest.json`: versioned resources and source/checksum metadata.
+- `downloads/xu-ui-resources-0.1.1-dev.4.tar.gz`, `SHA256SUMS` and `manifest.json`: versioned resources and source/checksum metadata.
 
 Read [migration and adoption guidance](MIGRATIONS.md) and the [changelog](CHANGELOG.md). The [Writing Desk adapter](https://github.com/xulang-org/examples/pull/21) is integrated into the examples repository's `dev`, with a pinned source revision and SDK version.
 

@@ -1,3 +1,4 @@
+import { settle, playMotion, cancelMotion, disposeMotion } from './motion.js';
 // Framework-neutral reference controllers. Each mount returns a cleanup function.
 const all = (root, selector) => [...root.querySelectorAll(selector)];
 
@@ -38,21 +39,36 @@ export function mountMenu(root, onAction = () => {}) {
   document.addEventListener('click', (event) => { if (!root.contains(event.target)) close(); }, opts);
   root.addEventListener('focusout', () => queueMicrotask(() => { if (!root.contains(document.activeElement)) close(); }), opts);
   close();
-  return () => abort.abort();
+  return () => {abort.abort();disposeMotion(root);};
 }
 
 export function mountTabs(root) {
   const abort = new AbortController();
   const tabs = all(root, '[role="tab"]');
   const available = tabs.filter((tab) => !tab.disabled);
+  const list=root.querySelector('[role="tablist"]');
+  const marker=document.createElement('span');
+  marker.className='xu-tab-marker';marker.setAttribute('aria-hidden','true');
+  list.append(marker);list.dataset.motionReady='true';
+  const position=(target,animate=true)=>{
+    const from=getComputedStyle(marker).transform;
+    const bounds=target.getBoundingClientRect(),frame=list.getBoundingClientRect();
+    const next=`translate(${bounds.left-frame.left}px,${bounds.bottom-frame.top-2}px) scaleX(${bounds.width})`;
+    marker.style.transform=next;
+    if (animate) playMotion(marker,[{transform:from},{transform:next}]);
+    else cancelMotion(marker);
+  };
   const activate = (target, focus = true) => {
     tabs.forEach((tab) => {
       const selected = tab === target;
       tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1;
       const panel = root.querySelector(`#${tab.getAttribute('aria-controls')}`);
       panel.hidden = !selected;
+      if (selected && focus) settle(panel);
+      if (!selected) cancelMotion(panel);
     });
     if (focus) target.focus();
+    position(target,focus);
   };
   available.forEach((tab) => {
     tab.addEventListener('click', () => activate(tab), { signal:abort.signal });
@@ -67,7 +83,9 @@ export function mountTabs(root) {
     }, { signal:abort.signal });
   });
   activate(tabs.find((tab) => tab.getAttribute('aria-selected') === 'true') || available[0], false);
-  return () => abort.abort();
+  const observer=new ResizeObserver(()=>position(tabs.find(tab=>tab.getAttribute('aria-selected')==='true'),false));
+  observer.observe(list);
+  return () => {abort.abort();observer.disconnect();disposeMotion(root);marker.remove();delete list.dataset.motionReady;};
 }
 
 export function mountPagedTable(root, records) {
@@ -99,7 +117,7 @@ export function mountPagedTable(root, records) {
   next.addEventListener('click', () => { page++; update(); }, opts);
   sort.addEventListener('click', () => { ascending=!ascending; update(); }, opts);
   clear.addEventListener('click', () => { input.value=''; page=1; update(); input.focus(); }, opts);
-  update(); return () => abort.abort();
+  update(); return () => {abort.abort();disposeMotion(root);};
 }
 
 export function mountTree(root, onSelect = () => {}) {
@@ -109,7 +127,7 @@ export function mountTree(root, onSelect = () => {}) {
   const focus = (item) => { items.forEach((entry) => entry.tabIndex=entry===item ? 0 : -1); item.focus(); };
   const expand = (item, value) => {
     const group = [...item.children].find((child) => child.getAttribute('role') === 'group');
-    if (group) { item.setAttribute('aria-expanded', String(value)); group.hidden=!value; }
+    if (group) { item.setAttribute('aria-expanded', String(value)); group.hidden=!value;if(value)settle(group);else cancelMotion(group); }
   };
   const select = (item) => { items.forEach((entry) => entry.setAttribute('aria-selected',String(entry===item))); onSelect(item.dataset.path); };
   root.addEventListener('click', (event) => {
@@ -137,7 +155,7 @@ export function mountTree(root, onSelect = () => {}) {
     else return;
     event.preventDefault(); if (target) focus(target);
   }, { signal:abort.signal });
-  return () => abort.abort();
+  return () => {abort.abort();disposeMotion(root);};
 }
 
 export function mountSplitter(root) {
@@ -167,5 +185,5 @@ export function mountSplitter(root) {
   },opts);
   const release=(event) => { if (separator.hasPointerCapture(event.pointerId)) separator.releasePointerCapture(event.pointerId); };
   separator.addEventListener('pointerup',release,opts); separator.addEventListener('pointercancel',release,opts);
-  set(50); return () => abort.abort();
+  set(50); return () => {abort.abort();disposeMotion(root);};
 }

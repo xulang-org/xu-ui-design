@@ -9,6 +9,6 @@
   {"id":"08-navigation","demo":"components","title":{"en":"Navigation and hierarchy","zh-CN":"导航与信息层级"},"group":{"en":"Components","zh-CN":"组件"},"summary":{"en":"Current location, grouping, tabs and narrow-screen navigation","zh-CN":"当前位置、分组、页签与窄屏导航"}},
   {"id":"09-feedback","demo":"components","title":{"en":"Feedback and overlays","zh-CN":"反馈与浮层"},"group":{"en":"Components","zh-CN":"组件"},"summary":{"en":"Status, notifications, confirmation and focus management","zh-CN":"状态、通知、确认与焦点管理"}},
   {"id":"10-patterns","demo":"patterns","title":{"en":"Page patterns","zh-CN":"页面模式"},"group":{"en":"Patterns","zh-CN":"模式"},"summary":{"en":"Settings pages, data lists and empty states","zh-CN":"设置页、数据列表与空状态"}},
-  {"id":"11-accessibility","demo":"components","title":{"en":"Accessibility and motion","zh-CN":"可访问性与动效"},"group":{"en":"Delivery","zh-CN":"交付"},"summary":{"en":"Keyboard, semantics, contrast and reduced motion","zh-CN":"键盘、语义、对比与减少动效"}},
+  {"id":"11-accessibility","demo":"motion","title":{"en":"Accessibility and motion","zh-CN":"可访问性与动效"},"group":{"en":"Delivery","zh-CN":"交付"},"summary":{"en":"Keyboard, semantics, contrast and reduced motion","zh-CN":"键盘、语义、对比与减少动效"}},
   {"id":"12-delivery","demo":"overview","title":{"en":"Delivery and governance","zh-CN":"开发交付与治理"},"group":{"en":"Delivery","zh-CN":"交付"},"summary":{"en":"Token adoption, acceptance and versioning","zh-CN":"Token 接入、验收与版本管理"}}
 ]

@@ -17,7 +17,7 @@ await writeFile(new URL('assets/tokens.css', out), css);
 await writeFile(new URL('assets/icons.svg', out), `<svg xmlns="http://www.w3.org/2000/svg"><defs>${icons.map((v) => `<symbol id="${v.name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${v.body}</symbol>`).join('')}</defs></svg>`);
 await Promise.all(icons.map((v) => writeFile(new URL(`icons/${v.name}.svg`, out), svg(v, true))));
 await cp(new URL('src/brand/', root), new URL('assets/brand/', out), { recursive: true });
-await Promise.all(['components.css', 'site.css', 'app.js', 'interactions.js', 'component-pages.js','component-lab.css','boot.js'].map((file) => cp(new URL(`src/${file}`, root), new URL(`assets/${file}`, out))));
+await Promise.all(['components.css', 'site.css', 'app.js', 'interactions.js', 'component-pages.js','component-lab.css','boot.js','motion.js','motion-page.js','motion.css'].map((file) => cp(new URL(`src/${file}`, root), new URL(`assets/${file}`, out))));
 await cp(new URL('tokens/tokens.json', root), new URL('tokens/tokens.json', out));
 await cp(new URL('icons/catalog.json', root), new URL('icons/catalog.json', out));
 const documents = async (items, directory, locale) => Promise.all(items.map(async item => {
@@ -35,7 +35,7 @@ const ratios = Object.fromEntries(Object.entries(tokens.themes).map(([mode, them
 ]));
 for (const locale of locales) {
   await mkdir(new URL(`assets/${locale}/`,out),{recursive:true});
-  for (const file of ['app.js','interactions.js','component-pages.js']) {
+  for (const file of ['app.js','interactions.js','component-pages.js','motion.js','motion-page.js']) {
     await writeFile(new URL(`assets/${locale}/${file}`,out),localize(await read(`src/${file}`),locale));
   }
   const docs = await documents(standards,'standards',locale);

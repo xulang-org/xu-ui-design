@@ -2,6 +2,12 @@
 
 [English](MIGRATIONS.md) · [简体中文](MIGRATIONS.zh-CN.md)
 
+## 0.1.1-dev.3 → 0.1.1-dev.4
+
+新增 assets/motion.js 与 assets/motion.css。Token 样式与行为模块须一起更新：interactions.js 现在会导入同目录 motion.js，assets/en/ 下英文版也一样。原有 mount 函数名称与 DOM 契约保持。新增 duration-enter 和 motion-distance，既有时长不变，不引入外部运行包。
+
+临时回执保留原按钮的可访问名称，另用 live status 传达结果；再次编辑时清除已经过时的回执。动效跟随系统偏好，不延迟状态、焦点或操作。演示项目创建现在留在页面模式中，新增本地草稿行，刷新后重置。
+
 ## 0.1.1-dev.2 → 0.1.1-dev.3
 
 英文文档使用 `.md`，中文文档使用 `.zh-CN.md`；需要固定中文的直接文档链接须更新。Token、CSS 类名、图标标识与 hash 路由保持。在线下载跟随所选语言，资源包包含两种文档。

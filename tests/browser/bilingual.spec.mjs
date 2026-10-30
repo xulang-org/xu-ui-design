@@ -119,7 +119,7 @@ test('English clipboard failure and confirmation are translated',async({page})=>
 });
 
 for (const theme of ['dark','light']) {
-  for (const route of ['overview','standards','foundations','icons','patterns','components','components/button','components/input','components/feedback','components/menu','components/tabs','components/table','components/tree','components/splitter']) {
+  for (const route of ['overview','standards','foundations','icons','motion','patterns','components','components/button','components/input','components/feedback','components/menu','components/tabs','components/table','components/tree','components/splitter']) {
     test(`English narrow reflow and axe: ${route} / ${theme}`,async({page})=>{
       await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
       await page.setViewportSize({width:320,height:900});

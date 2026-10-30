@@ -1,4 +1,6 @@
 import { componentDetail, mountComponent } from './component-pages.js';
+import { acknowledge, clearReceipt, showStatus, settle, stamp, disposeMotion } from './motion.js';
+import { motionPage, mountMotionPage } from './motion-page.js';
 const $ = (selector, parent = document) => parent.querySelector(selector);
 const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
 const esc = (text) => String(text).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c]);
@@ -35,14 +37,21 @@ function notify(message) {
   toastTimer = setTimeout(() => toast.classList.remove('visible'), 4000);
 }
 
-async function copy(text, fallback) {
+async function copy(text, fallback, trigger) {
   try {
     if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
     await navigator.clipboard.writeText(text);
+    if (trigger?.matches('.xu-button')) acknowledge(trigger,'已复制');
+    else if (trigger?.isConnected) {
+      trigger.dataset.confirmed='true';stamp(trigger);
+      setTimeout(()=>trigger.removeAttribute('data-confirmed'),1400);
+    }
     notify('已复制到剪贴板');
+    return true;
   } catch {
     if (fallback) { fallback.focus(); fallback.select(); }
     notify(fallback ? '复制未完成，请手动复制已选中的源码。' : '剪贴板不可用，请从 Token 下载文件中复制。');
+    return false;
   }
 }
 
@@ -70,7 +79,7 @@ function closeMenu(restore = false) {
 }
 
 function navigation() {
-  const entries = [['overview','总览','grid'], ['standards','设计标准','file'], ['foundations','基础与 Token','palette'], ['components','组件实验室','layers'], ['icons','ICON 图标库','square'], ['patterns','页面模式','monitor']];
+  const entries = [['overview','总览','grid'], ['standards','设计标准','file'], ['foundations','基础与 Token','palette'], ['components','组件实验室','layers'], ['icons','ICON 图标库','square'], ['motion','动效与反馈','play'], ['patterns','页面模式','monitor']];
   const current = (route) => (activeRoute === route || (route === 'components' && activeRoute.startsWith('components/'))) ? 'aria-current="page"' : '';
   const reading = activeRoute.startsWith('standards');
   $('#sidebar').innerHTML = `<nav aria-label="主要导航">
@@ -115,7 +124,7 @@ function overview() {
       <a class="resource-row" href="#/icons"><span class="resource-symbol">${icon('grid')}</span><div><h3>ICON 图标库</h3><p>统一网格与线宽，按需检索、复制和下载。</p></div><span class="resource-detail">${data.icons.length} 枚 SVG</span>${icon('arrow-right')}</a>
       <a class="resource-row" href="#/patterns"><span class="resource-symbol">${icon('monitor')}</span><div><h3>页面模式</h3><p>通过设置、列表和空状态，核对完整任务。</p></div><span class="resource-detail">交互示例</span>${icon('arrow-right')}</a>
     </section>
-    <section><div class="section-heading"><h2>设计基础</h2><a href="#/foundations">查看全部 Token ${icon('arrow-right')}</a></div><div id="overview-colors">${swatches()}</div></section>${footer()}`;
+    <section><div class="section-heading"><h2>设计基础</h2><a href="#/motion">动效与反馈 ${icon('arrow-right')}</a><a href="#/foundations">查看全部 Token ${icon('arrow-right')}</a></div><div id="overview-colors">${swatches()}</div></section>${footer()}`;
 }
 
 function standards() {
@@ -174,7 +183,7 @@ function svgSource(item) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${item.body}</svg>`;
 }
 
-function updateInspector() {
+function updateInspector(animate = false) {
   const item = data.icons.find((entry) => entry.name === selectedIcon);
   const source = svgSource(item);
   $('#icon-inspector').innerHTML = `<div class="inspector-heading"><span class="small muted">图标详情</span><span class="xu-badge">${item.category}</span></div><div class="icon-blueprint">${icon(item.name)}<span>24 × 24</span></div><h2>${item.label}</h2><p class="icon-identifier">${item.name}</p>
@@ -182,10 +191,12 @@ function updateInspector() {
     <div class="inspector-actions">${button(`${icon('copy')}复制 SVG`,'id="inspector-copy"','primary')}<a class="xu-button" href="./icons/${item.name}.svg" download="${item.name}.svg">${icon('download')}下载</a></div>
     <details class="inspector-code"><summary>查看 SVG 源码</summary><label class="sr-only" for="inspector-source">所选图标 SVG 源码</label><textarea id="inspector-source" class="xu-textarea source-code" readonly spellcheck="false">${esc(source)}</textarea></details>
     <p class="inspector-note">装饰图标使用 aria-hidden。仅图标按钮仍需提供可访问名称。</p>`;
-  $('#inspector-copy').addEventListener('click', async () => {
+  if (animate) settle($('#icon-inspector'));
+  $('#inspector-copy').addEventListener('click', async (event) => {
+    const target=event.currentTarget;
     const field = $('#inspector-source');
     // Keep source available when clipboard access fails, without a blocking modal.
-    try { await navigator.clipboard.writeText(source); notify('已复制到剪贴板'); }
+    try { await navigator.clipboard.writeText(source); acknowledge(target,'已复制');notify(`已复制：${item.name}.svg`); }
     catch { $('.inspector-code').open = true; field.focus(); field.select(); notify('复制未完成，请手动复制已选中的源码。'); }
   });
 }
@@ -211,32 +222,37 @@ const projects = [
 ];
 
 function patterns() {
-  return `${breadcrumbs('页面模式')}${heading('PATTERNS / REAL SCENARIOS','页面模式','设置、数据列表、空状态。以下均为演示数据，帮助检查组件组合后的层级和操作路径。')}<section class="demo-section">${demoTitle('工作区设置','10-patterns')}<div class="demo-frame"><div class="pattern-header"><div><h2>工作区设置</h2><p>示例 · 仅保存至当前浏览器</p></div><span class="xu-badge">LOCAL DEMO</span></div><div class="settings-layout"><div class="settings-rail" aria-hidden="true"><span>基本设置</span><span>外观与主题</span><span>通知偏好</span></div><form id="settings-form" class="field-stack" novalidate><div class="xu-field"><label for="workspace-name">工作区名称 <span class="muted small">必填</span></label><input class="xu-input" id="workspace-name" name="name" required maxlength="40" aria-describedby="workspace-help workspace-error"><p class="xu-help" id="workspace-help">使用 1–40 个字符；请勿填写私密信息。</p><p class="xu-error" id="workspace-error"></p></div><div class="xu-field"><label for="workspace-density">界面密度偏好</label><span class="xu-select-wrap"><select class="xu-select" id="workspace-density" name="density"><option value="comfortable">舒适 · 较多留白</option><option value="compact">紧凑 · 更多信息</option></select>${icon('chevron-down')}</span><p class="xu-help">此示例仅保存偏好值，不改变整个展厅布局。</p></div><label class="xu-check"><input type="checkbox" id="workspace-autosave" name="autosave">保存时保留本地草稿（示例偏好）</label><div><button type="submit" class="xu-button primary">${icon('check')} 保存到本地</button></div><p id="settings-status" class="small muted" role="status">尚未保存。</p></form></div></div></section><section class="demo-section">${demoTitle('项目列表','10-patterns')}<div class="demo-frame"><div class="pattern-header"><div><h2>项目工作台</h2><p>4 条本地演示记录 · 非真实仓库状态</p></div>${button(`${icon('plus')}新建演示项目`,'id="new-demo-project"','primary')}</div><div class="toolbar"><div class="xu-field"><label for="project-search">搜索项目</label><input type="search" class="xu-input" id="project-search" placeholder="按项目名称或说明查找"></div><div class="xu-field compact"><label for="project-status">状态</label><span class="xu-select-wrap"><select class="xu-select" id="project-status"><option value="all">全部状态</option><option value="active">进行中</option><option value="draft">草稿</option><option value="archived">已归档</option></select>${icon('chevron-down')}</span></div></div><div id="project-table"></div><p id="project-count" class="result-count" role="status" style="margin-top:16px"></p></div></section><section class="demo-section">${demoTitle('初始空状态','10-patterns')}<div class="empty">${icon('folder')}<h3>为下一个想法，建立工作区。</h3><p>当前是空状态示例。先创建一个项目，再逐步添加内容。</p>${link(`${icon('plus')}尝试创建交互`, 'components', 'primary')}</div></section>${footer()}`;
+  return `${breadcrumbs('页面模式')}${heading('PATTERNS / REAL SCENARIOS','页面模式','设置、数据列表、空状态。以下均为演示数据，帮助检查组件组合后的层级和操作路径。')}<section class="demo-section">${demoTitle('工作区设置','10-patterns')}<div class="demo-frame"><div class="pattern-header"><div><h2>工作区设置</h2><p>示例 · 仅保存至当前浏览器</p></div><span class="xu-badge">LOCAL DEMO</span></div><div class="settings-layout"><div class="settings-rail" aria-hidden="true"><span>基本设置</span><span>外观与主题</span><span>通知偏好</span></div><form id="settings-form" class="field-stack" novalidate><div class="xu-field"><label for="workspace-name">工作区名称 <span class="muted small">必填</span></label><input class="xu-input" id="workspace-name" name="name" required maxlength="40" aria-describedby="workspace-help workspace-error"><p class="xu-help" id="workspace-help">使用 1–40 个字符；请勿填写私密信息。</p><p class="xu-error" id="workspace-error"></p></div><div class="xu-field"><label for="workspace-density">界面密度偏好</label><span class="xu-select-wrap"><select class="xu-select" id="workspace-density" name="density"><option value="comfortable">舒适 · 较多留白</option><option value="compact">紧凑 · 更多信息</option></select>${icon('chevron-down')}</span><p class="xu-help">此示例仅保存偏好值，不改变整个展厅布局。</p></div><label class="xu-check"><input type="checkbox" id="workspace-autosave" name="autosave">保存时保留本地草稿（示例偏好）</label><div><button type="submit" class="xu-button primary">${icon('check')} 保存到本地</button></div><p id="settings-status" class="small muted" role="status">尚未保存。</p></form></div></div></section><section class="demo-section">${demoTitle('项目列表','10-patterns')}<div class="demo-frame"><div class="pattern-header"><div><h2>项目工作台</h2><p id="project-total">${projects.length} 条本地演示记录 · 非真实仓库状态</p></div>${button(`${icon('plus')}新建演示项目`,'id="new-demo-project"','primary')}</div><div class="toolbar"><div class="xu-field"><label for="project-search">搜索项目</label><input type="search" class="xu-input" id="project-search" placeholder="按项目名称或说明查找"></div><div class="xu-field compact"><label for="project-status">状态</label><span class="xu-select-wrap"><select class="xu-select" id="project-status"><option value="all">全部状态</option><option value="active">进行中</option><option value="draft">草稿</option><option value="archived">已归档</option></select>${icon('chevron-down')}</span></div></div><div id="project-table"></div><p id="project-count" class="result-count" role="status" style="margin-top:16px"></p></div></section><section class="demo-section">${demoTitle('初始空状态','10-patterns')}<div class="empty">${icon('folder')}<h3>为下一个想法，建立工作区。</h3><p>在这个本地示例中创建项目，完成后会定位到列表记录。</p>${button(`${icon('plus')}创建演示项目`, 'data-create-project', 'primary')}</div></section>${footer()}`;
 }
 
 let sortAscending = true;
-function updateProjects() {
+function updateProjects(createdName) {
+  $('#project-total').textContent=`${projects.length} 条本地演示记录 · 非真实仓库状态`;
   const query = $('#project-search').value.trim().toLowerCase();
   const status = $('#project-status').value;
   const filtered = projects.filter((item) => `${item.name} ${item.description}`.toLowerCase().includes(query) && (status === 'all' || status === item.status)).sort((a,b) => sortAscending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
   $('#project-count').textContent = `显示 ${filtered.length} / ${projects.length} 条演示记录`;
   const statuses = { active:['success','进行中'], draft:['warning','草稿'], archived:['info','已归档'] };
-  $('#project-table').innerHTML = filtered.length ? `<div class="table-scroll" role="region" aria-label="演示项目列表" tabindex="0"><table class="table-demo"><thead><tr><th scope="col" aria-sort="${sortAscending ? 'ascending' : 'descending'}"><button type="button" class="sort-button" id="sort-projects">项目名称 ${icon(sortAscending ? 'arrow-up' : 'arrow-down')}</button></th><th scope="col">平台</th><th scope="col">状态</th><th scope="col">更新日期</th><th scope="col">操作</th></tr></thead><tbody>${filtered.map((item) => `<tr><td><strong>${esc(item.name)}</strong><small>${esc(item.description)}</small></td><td class="mono small">${item.platform}</td><td><span class="xu-badge ${statuses[item.status][0]}">${statuses[item.status][1]}</span></td><td class="mono small muted">${item.date}</td><td>${button('详情', `data-project="${esc(item.name)}" aria-label="查看 ${esc(item.name)} 详情" data-size="sm"`, 'ghost')}</td></tr>`).join('')}</tbody></table></div>` : `<div class="empty">${icon('search')}<h3>没有匹配的项目</h3><p>清空关键词和状态条件，重新查看演示记录。</p>${button('清空筛选','id="clear-projects"')}</div>`;
+  $('#project-table').innerHTML = filtered.length ? `<div class="table-scroll" role="region" aria-label="演示项目列表" tabindex="0"><table class="table-demo"><thead><tr><th scope="col" aria-sort="${sortAscending ? 'ascending' : 'descending'}"><button type="button" class="sort-button" id="sort-projects">项目名称 ${icon(sortAscending ? 'arrow-up' : 'arrow-down')}</button></th><th scope="col">平台</th><th scope="col">状态</th><th scope="col">更新日期</th><th scope="col">操作</th></tr></thead><tbody>${filtered.map((item) => `<tr data-project-row="${esc(item.name)}" ${item.name===createdName?'data-created':''}><th scope="row" tabindex="-1"><strong>${esc(item.name)}</strong><small>${esc(item.description)}</small></th><td class="mono small">${item.platform}</td><td><span class="xu-badge ${statuses[item.status][0]}">${statuses[item.status][1]}</span></td><td class="mono small muted">${item.date}</td><td>${button('详情', `data-project="${esc(item.name)}" aria-label="查看 ${esc(item.name)} 详情" data-size="sm"`, 'ghost')}</td></tr>`).join('')}</tbody></table></div>` : `<div class="empty">${icon('search')}<h3>没有匹配的项目</h3><p>清空关键词和状态条件，重新查看演示记录。</p>${button('清空筛选','id="clear-projects"')}</div>`;
   $('#sort-projects')?.addEventListener('click', () => { sortAscending = !sortAscending; updateProjects(); $('#sort-projects')?.focus(); });
   $('#clear-projects')?.addEventListener('click', () => { $('#project-search').value = ''; $('#project-status').value = 'all'; updateProjects(); $('#project-search').focus(); });
+  return $$('[data-project-row]').find(row=>row.dataset.projectRow===createdName);
 }
 
 function validName(input, error, status) {
   const value = input.value.trim();
   const message = !value ? '请输入项目或工作区名称，不能只包含空格。' : value.length > 40 ? '名称不能超过 40 个字符。' : '';
   input.setAttribute('aria-invalid', String(!!message));
+  const changed=error.textContent!==message;
   error.textContent = message;
-  if (message && status) status.textContent = '';
+  if (message && changed) settle(error);
+  if (message && status) {status.textContent = '';status.removeAttribute('data-state');}
   return !message;
 }
 
 function openDialog(content, trigger) {
   opener = trigger || document.activeElement;
+  disposeMotion($('#dialog-content'));
   $('#dialog-content').innerHTML = content;
   dialog.showModal();
   $('[autofocus]', dialog)?.focus();
@@ -248,17 +264,41 @@ function confirmDemo(trigger) {
   $('#confirm-demo-action').addEventListener('click', () => { dialog.close(); notify('已完成确认交互演示，未删除真实资源。'); });
 }
 
+function createProject(trigger) {
+  dialog.setAttribute('aria-describedby','create-project-description');
+  openDialog(`<div class="dialog-heading"><h2 id="dialog-title">创建演示项目</h2>${button(icon('x'),'data-close-dialog aria-label="关闭创建窗口"','ghost icon-only')}</div>
+    <p id="create-project-description" class="small muted">仅在当前页面保留，刷新会重置。不创建真实仓库。</p>
+    <form id="create-project-form" class="field-stack" novalidate><div class="xu-field"><label for="create-project-name">项目名称（必填）</label><input id="create-project-name" class="xu-input" maxlength="40" required aria-describedby="create-project-help create-project-error" autofocus><p id="create-project-help" class="xu-help">使用 1–40 个字符，完成后会定位到新记录。</p><p id="create-project-error" class="xu-error"></p></div><div class="row">${button('取消','data-close-dialog')}<button type="submit" class="xu-button primary">创建并定位 ${icon('arrow-right')}</button></div></form>`,trigger);
+  const input=$('#create-project-name'),error=$('#create-project-error');
+  input.addEventListener('input',()=>{if(input.getAttribute('aria-invalid')==='true')validName(input,error);});
+  $('#create-project-form').addEventListener('submit',event=>{
+    event.preventDefault();
+    if (!validName(input,error)) {input.focus();return;}
+    const name=input.value.trim();
+    if (projects.some(item=>item.name.toLowerCase()===name.toLowerCase())) {
+      input.setAttribute('aria-invalid','true');error.textContent='已有同名演示项目，请换一个名称。';settle(error);input.focus();return;
+    }
+    projects.push({name,description:'刚创建的本地演示项目',platform:'Web',status:'draft',date:new Date().toISOString().slice(0,10)});
+    $('#project-search').value='';$('#project-status').value='all';
+    const row=updateProjects(name);
+    opener=row.querySelector('th');
+    dialog.close();opener.focus();settle(row);
+    notify(`已创建演示项目：${name}。刷新页面会重置列表。`);
+  });
+}
+
 function iconDetail(name, trigger) {
   const item = data.icons.find((entry) => entry.name === name);
   const source = svgSource(item);
   dialog.removeAttribute('aria-describedby');
   openDialog(`<div class="dialog-heading"><div><h2 id="dialog-title">${item.label}</h2><span class="mono small muted">${item.name}</span></div>${button(icon('x'),'data-close-dialog aria-label="关闭图标详情" autofocus','ghost icon-only')}</div><div class="icon-enlarged">${icon(item.name)}</div><p class="small muted">${item.category} / 24 × 24 / 1.5 stroke<br>复制用于装饰的内联 SVG；仅图标按钮仍须提供可访问名称。</p><label for="icon-source" class="small">SVG 源码</label><textarea id="icon-source" class="xu-textarea source-code" readonly spellcheck="false">${esc(source)}</textarea><div class="row">${button(`${icon('copy')}复制 SVG`,'id="copy-icon"','primary')}<a class="xu-button" href="./icons/${item.name}.svg" download="${item.name}.svg">${icon('download')}下载 SVG</a></div>`, trigger);
-  $('#copy-icon').addEventListener('click', () => copy(source, $('#icon-source')));
+  $('#copy-icon').addEventListener('click', (event) => copy(source, $('#icon-source'),event.currentTarget));
 }
 
 function missing() { return `${heading('404 / PAGE NOT FOUND','这个页面还不存在。','从设计系统总览重新开始，或使用侧栏查找标准。')}${link('返回总览','overview','primary')}`; }
 
 function bindPage() {
+  if (activeRoute === 'motion') {pageCleanup=mountMotionPage({copy,showStatus});return;}
   if (activeRoute.startsWith('components/')) {
     if ($('#contract-demo')) pageCleanup=mountComponent(activeRoute.slice(11),notify);
     return;
@@ -299,32 +339,38 @@ function bindPage() {
     $('#workspace-autosave').checked = stored?.autosave ?? true;
     if (stored?.name) $('#settings-status').textContent = '已载入当前浏览器保存的示例设置。';
     const input = $('#workspace-name');
-    input.addEventListener('input', () => { $('#settings-status').textContent = '有未保存的更改。'; if (input.getAttribute('aria-invalid') === 'true') validName(input, $('#workspace-error')); });
-    $('#settings-form').addEventListener('change', () => $('#settings-status').textContent = '有未保存的更改。');
+    const saveButton=$('#settings-form [type="submit"]');
+    const dirty=()=>{clearReceipt(saveButton);showStatus($('#settings-status'),'有未保存的更改。','dirty');};
+    input.addEventListener('input', () => { dirty(); if (input.getAttribute('aria-invalid') === 'true') validName(input, $('#workspace-error')); });
+    $('#settings-form').addEventListener('change',dirty);
     $('#settings-form').addEventListener('submit', (event) => {
       event.preventDefault();
       if (!validName(input, $('#workspace-error'), $('#settings-status'))) { input.focus(); return; }
       try {
         localStorage.setItem('xu-ui-demo-settings', JSON.stringify({ name: input.value.trim(), density: $('#workspace-density').value, autosave: $('#workspace-autosave').checked }));
-        $('#settings-status').textContent = '已保存到当前浏览器。刷新后可恢复；未上传到远端。';
-      } catch { $('#settings-status').textContent = '本地保存失败。输入已保留，请允许浏览器存储后重试。'; }
+        acknowledge(saveButton,'已保存');
+        showStatus($('#settings-status'),'已保存到当前浏览器。刷新后可恢复；未上传到远端。');
+      } catch { showStatus($('#settings-status'),'本地保存失败。输入已保留，请允许浏览器存储后重试。','error'); }
     });
-    $('#new-demo-project').addEventListener('click', () => { location.hash = '/components'; });
   }
 }
 
 function render(focus = false) {
+  if (dialog.open) {opener=undefined;dialog.close();}
   pageCleanup?.(); pageCleanup=undefined;
+  disposeMotion(main);
   const [route, section] = location.hash.replace(/^#\//, '').split('#');
   activeRoute = route.replace(/\/$/, '') || 'overview';
   if (activeRoute === '#main') activeRoute = 'overview';
-  const views = { overview, standards, foundations, components, icons, patterns };
+  const motion=()=>motionPage({icon,button,esc,breadcrumbs,heading,footer,tokens:data.tokens});
+  const views = { overview, standards, foundations, components, icons, motion, patterns };
   const contract=data.components.find((item)=>activeRoute===`components/${item.id}`);
   main.innerHTML = activeRoute.startsWith('standards/') ? documentView(activeRoute.slice(10)) : activeRoute.startsWith('components/') ? (contract ? `${breadcrumbs(`组件 / ${contract.title}`)}${componentDetail(contract,{icon,button,esc})}${footer()}` : missing()) : (views[activeRoute] || missing)();
   main.dataset.view = activeRoute.split('/')[0];
   navigation();
   updateThemeButton();
   bindPage();
+  settle($('.page-heading',main) || $('.cover-intro',main));
   const title = $('h1', main);
   document.title = activeRoute === 'overview' ? 'XUUI · 界面设计标准' : `${title?.textContent || '设计标准'} · XUUI`;
   if (section && /^section-\d+$/.test(section)) {
@@ -348,13 +394,15 @@ document.addEventListener('click', (event) => {
   if (!target) return;
   if (target.matches('[data-set-theme]')) { setTheme(target.dataset.setTheme); if ($('#overview-colors')) $('#overview-colors').innerHTML = swatches(); }
   if (target.matches('[data-notify]')) notify(target.dataset.notify);
-  if (target.matches('[data-copy-token]')) copy(`var(--xu-${target.dataset.copyToken})`);
+  if (target.matches('[data-copy-token]')) copy(`var(--xu-${target.dataset.copyToken})`,undefined,target);
+  if (target.matches('[data-create-project],#new-demo-project')) createProject(target);
   if (target.matches('[data-confirm]')) confirmDemo(target);
   if (target.matches('[data-close-dialog]')) dialog.close();
   if (target.matches('[data-icon]')) {
     selectedIcon = target.dataset.icon;
     $$('[data-icon]').forEach((entry) => entry.setAttribute('aria-pressed', String(entry === target)));
-    if (window.matchMedia('(min-width: 840px)').matches) updateInspector();
+    stamp($('.tile-art',target));
+    if (window.matchMedia('(min-width: 840px)').matches) updateInspector(true);
     else iconDetail(selectedIcon, target);
   }
   if (target.matches('[data-project]')) {
@@ -370,6 +418,9 @@ document.addEventListener('click', (event) => {
 });
 document.addEventListener('change', (event) => { if (event.target.matches('[data-demo-switch]')) notify(`演示开关已${event.target.checked ? '开启' : '关闭'}。`); });
 dialog.addEventListener('close', () => { if (opener?.isConnected) opener.focus(); });
+document.addEventListener('toggle',event=>{
+  if (event.target.matches('details[open]')) settle(event.target.querySelector(':scope > div, :scope > pre, :scope > textarea'));
+},true);
 window.addEventListener('hashchange', () => { if (location.hash !== '#main') { closeMenu(); render(true); } });
 
 try {
