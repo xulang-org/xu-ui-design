@@ -18,25 +18,28 @@ Adaptive mobile scaffold, navigation stack and modal bottom sheet for portrait a
 | Landscape / wide shell | Switches to side navigation rail with list-detail workspace; removes stacked bottom bar |
 | Pushed detail route | Shows explicit Back affordance and supports platform Back dismissal while preserving underlying tab state |
 | Bottom sheet open | Enters modal layer with backdrop scrim, grabber, close control and focus trapped/contained until dismissed |
-| Keyboard / IME active | Raises form/sheet clearance cleanly above `view_insets.bottom` so active controls stay visible |
+| Keyboard / IME active | Opens IME session, raises form/sheet clearance cleanly above `view_insets.bottom`, and keeps caret, preedit underline, and clear button (`>= 44 px`) accessible |
+| Field inline error | Marks field border and tint with `--xu-danger`, shows inline error text, and preserves user-entered value |
 | Snackbar active | Floats above bottom bar + `safe_bottom` without overlapping tabs or stealing keyboard focus |
 
 ## Keyboard behavior
 
 - Navigation tabs support click activation and standard keyboard focus (`Tab` / `Enter` / `Space`); `aria-current="page"` or `aria-selected="true"` marks the current destination.
 - Pushing a detail route reveals the Back trigger; activating Back pops the route stack and returns focus cleanly.
+- Back / `Escape` dismissal priority: active IME / soft keyboard dismisses first (preserving draft input), followed by any open modal bottom sheet (restoring focus to its opener), then any pushed detail route.
 - Opening the modal bottom sheet moves focus inside the sheet header/close control; `Escape`, scrim click or Close closes the sheet and restores focus to the trigger.
 
 ## Tokens and sizing
 
-Use `--xu-canvas`, `--xu-surface`, `--xu-elevated`, `--xu-border`, `--xu-text`, `--xu-muted`, `--xu-brand`, `--xu-brand-soft`, `--xu-on-brand`, `--xu-focus`, `--xu-overlay` and `--xu-target-min`. Portrait interactive controls preserve at least `44 px` height (`48 px` recommended for mobile list rows and Android touch targets) with `8 px` (`--xu-space-2`) minimum gap between peer targets. Components honor `data-theme="light"`/`"dark"` and `prefers-reduced-motion: reduce`.
+Use `--xu-canvas`, `--xu-surface`, `--xu-elevated`, `--xu-border`, `--xu-text`, `--xu-muted`, `--xu-brand`, `--xu-brand-soft`, `--xu-on-brand`, `--xu-danger`, `--xu-danger-soft`, `--xu-focus`, `--xu-overlay` and `--xu-target-min`. Portrait interactive controls preserve at least `44 px` height (`48 px` recommended for mobile list rows, inputs and Android touch targets) with `8 px` (`--xu-space-2`) minimum gap between peer targets. Components honor `data-theme="light"`/`"dark"` and `prefers-reduced-motion: reduce`.
 
 ## Native mapping
 
-Maps to `#ui/phone` scaffold primitives, route stack, bottom sheet and `xu/xuui_tokens/mod.xu` (`phone_touch_target`, `phone_bar_height`, `phone_nav_height`, `phone_rail_width`, `phone_gutter`, `phone_sheet_radius`). Actual iOS/Android safe-area insets, fling decay physics, system translucent bars and hardware/gesture Back require host runtime wiring and real-device verification.
+Maps to `#ui/phone` scaffold primitives, `TextField`, route stack, bottom sheet and `xu/xuui_tokens/mod.xu` (`phone_touch_target`, `phone_bar_height`, `phone_nav_height`, `phone_rail_width`, `phone_gutter`, `phone_sheet_radius`, `phone_input_height`). Actual iOS/Android safe-area insets, `UITextInput` / `InputConnection` soft keyboards, fling decay physics, system translucent bars and hardware/gesture Back require host runtime wiring and real-device verification.
 
 ## Acceptance
 
 - Switching iOS vs Android posture updates bar alignment, overscroll/Back cue and safe-area readout cleanly; switching Portrait vs Landscape swaps bottom bar and side rail with zero horizontal overflow at `320 px`.
+- Focusing the Settings draft field engages IME lift, clearing resets input via a `>= 44 px` target, invalid submission shows inline error while preserving entered text, and pressing `Escape` dismisses simulated IME without losing draft text.
 - Opening the Bottom Sheet isolates background interaction in the preview, closes on Close button, scrim click or `Escape`, and returns focus to the trigger.
 - Both light and dark themes and both languages (`zh-CN` and `en`) pass `320 px` reflow and WCAG 2.2 AA automated contrast/structure checks.

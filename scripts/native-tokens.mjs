@@ -47,6 +47,10 @@ pub fn phone_sheet_radius() f64 {
     << 16.0
 }
 
+pub fn phone_input_height() f64 {
+    << ${parseFloat(tokens.base['control-lg']).toFixed(1)}
+}
+
 pub fn chart_palette(dark bool) []draw.Color {
     << [chart_1(dark),chart_2(dark),chart_3(dark),chart_4(dark),chart_5(dark),chart_6(dark),chart_7(dark),chart_8(dark)]
 }

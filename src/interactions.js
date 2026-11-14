@@ -455,6 +455,65 @@ export function mountPhone(root) {
     showSnackbar(event.currentTarget.checked ? '状态栏图标对比度已设为自动跟随主题。' : '已切换为手动状态栏外观。');
   }, opts);
 
+  const noteForm = root.querySelector('[data-phone-note-form]');
+  const noteInput = root.querySelector('[data-phone-note-input]');
+  const noteClear = root.querySelector('[data-phone-note-clear]');
+  const noteError = root.querySelector('[data-phone-note-error]');
+  const syncNoteClear = () => {
+    if (noteClear && noteInput) noteClear.hidden = noteInput.value.length === 0;
+  };
+  const validateNote = () => {
+    if (!noteInput || !noteError) return true;
+    const trimmed = noteInput.value.trim();
+    const valid = trimmed.length >= 2 && trimmed.length <= 40;
+    noteInput.setAttribute('aria-invalid', String(!valid));
+    noteError.textContent = valid ? '' : '请输入 2–40 个非空白字符，当前输入已保留。';
+    return valid;
+  };
+  noteInput?.addEventListener('focus', () => {
+    if (!ime) {
+      ime = true;
+      sync(false);
+    }
+  }, opts);
+  noteInput?.addEventListener('input', () => {
+    syncNoteClear();
+    if (noteInput.getAttribute('aria-invalid') === 'true') validateNote();
+  }, opts);
+  noteInput?.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && ime) {
+      event.preventDefault();
+      event.stopPropagation();
+      ime = false;
+      sync(false);
+    }
+  }, opts);
+  noteClear?.addEventListener('click', () => {
+    if (!noteInput || !noteError) return;
+    noteInput.value = '';
+    noteInput.removeAttribute('aria-invalid');
+    noteError.textContent = '';
+    syncNoteClear();
+    noteInput.focus();
+    if (!ime) {
+      ime = true;
+      sync(false);
+    }
+  }, opts);
+  noteForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!validateNote()) {
+      noteInput?.focus();
+      return;
+    }
+    if (noteInput) noteInput.removeAttribute('aria-invalid');
+    if (noteError) noteError.textContent = '';
+    ime = false;
+    sync(false);
+    showSnackbar('已保存移动草稿，未丢失当前导航状态。');
+  }, opts);
+  syncNoteClear();
+
   all(root, '[data-phone-open-sheet]').forEach((btn) => btn.addEventListener('click', () => openSheet(btn), opts));
   sheetClose.addEventListener('click', () => closeSheet(true), opts);
   sheetBackdrop.addEventListener('click', (event) => {
