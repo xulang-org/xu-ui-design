@@ -39,4 +39,6 @@ SDK 自定义绘制控件的语义暴露和屏幕阅读器支持须在原生产�
 
 ## 网页行为模块
 
-`assets/interactions.js` 导出 mountMenu、mountTabs、mountPagedTable、mountTree、mountSplitter；每个函数返回清理函数，卸载时调用，避免重复事件绑定。挂载点及必要的 data/ARIA 结构以仓库 `src/component-pages.js` 和对应 `components/*.md` 为准。这是参考实现，接入业务前须替换本地演示数据并处理产品实际状态。
+`assets/interactions.js` 导出 `mountMenu`、`mountTabs`、`mountPagedTable`、`mountTree`、`mountSplitter`、`mountChart` 与 `mountPhone`；每个函数返回清理函数，卸载时调用，避免重复事件绑定。挂载点及必要的 data/ARIA 结构以仓库 `src/component-pages.js` 和对应 `components/*.md` 为准。这是参考实现，接入业务前须替换本地演示数据并处理产品实际状态。
+
+移动端接入参考 `standards/14-phone.zh-CN.md` 与 `components/phone.zh-CN.md`。生成文件 `xu/xuui_tokens/mod.xu` 同步补充了完整双主题语义色（`border`、`brand_hover`、`brand_pressed`、`brand_soft`、`control_pressed`、`success`、`success_soft`、`warning`、`warning_soft`、`info`、`info_soft`）与移动端基准度量（`phone_ios_target`、`phone_touch_target`、`phone_touch_gap`、`phone_gutter`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_sheet_radius`）；真机安全区、输入法高度与滚动物理仍须由宿主运行时实现。

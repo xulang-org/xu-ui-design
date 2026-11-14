@@ -1,7 +1,7 @@
 // Generate the verified Editor, Chart and Frame token contract for XU SDK 0.10.11+.
 export function nativeTokens(tokens) {
   const rgb = hex => hex.slice(1).match(/../g).slice(0,3).map(part=>parseInt(part,16)).join(',');
-  const roles=['canvas','surface','elevated','subtle','text','muted','brand','focus','control-border','on-brand','danger','danger-soft','chart-1','chart-2','chart-3','chart-4','chart-5','chart-6','chart-7','chart-8'];
+  const roles=['canvas','surface','elevated','subtle','border','text','muted','brand','brand-hover','brand-pressed','brand-soft','focus','control-border','control-pressed','on-brand','success','success-soft','warning','warning-soft','danger','danger-soft','info','info-soft','chart-1','chart-2','chart-3','chart-4','chart-5','chart-6','chart-7','chart-8'];
   const functions=roles.map(role=>`pub fn ${role.replaceAll('-','_')}(dark bool) draw.Color {
     if dark { << draw.rgb(${rgb(tokens.themes.dark[role])}) }
     << draw.rgb(${rgb(tokens.themes.light[role])})
@@ -13,6 +13,39 @@ export function nativeTokens(tokens) {
 #ui/widgets
 
 ${functions}
+
+// Mobile baseline layout constants aligned with standard 14-phone.
+pub fn phone_ios_target() f64 {
+    << ${parseFloat(tokens.base['target-min']).toFixed(1)}
+}
+
+pub fn phone_touch_target() f64 {
+    << ${parseFloat(tokens.base['control-lg']).toFixed(1)}
+}
+
+pub fn phone_touch_gap() f64 {
+    << ${parseFloat(tokens.base['space-2']).toFixed(1)}
+}
+
+pub fn phone_gutter() f64 {
+    << ${parseFloat(tokens.base['space-5']).toFixed(1)}
+}
+
+pub fn phone_bar_height() f64 {
+    << 56.0
+}
+
+pub fn phone_nav_height() f64 {
+    << 64.0
+}
+
+pub fn phone_rail_width() f64 {
+    << 76.0
+}
+
+pub fn phone_sheet_radius() f64 {
+    << 16.0
+}
 
 pub fn chart_palette(dark bool) []draw.Color {
     << [chart_1(dark),chart_2(dark),chart_3(dark),chart_4(dark),chart_5(dark),chart_6(dark),chart_7(dark),chart_8(dark)]

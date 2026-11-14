@@ -43,4 +43,6 @@ Custom-drawn native controls require their own accessibility-tree and screen-rea
 
 ## Web behavior modules
 
-`assets/interactions.js` exports `mountMenu`, `mountTabs`, `mountPagedTable`, `mountTree` and `mountSplitter`; the English edition is `assets/en/interactions.js`. Each returns a cleanup function: call it on unmount to avoid duplicate listeners. See `src/component-pages.js` and the component contracts for required data/ARIA structure. Replace local demo records and handle real product states before production adoption.
+`assets/interactions.js` exports `mountMenu`, `mountTabs`, `mountPagedTable`, `mountTree`, `mountSplitter`, `mountChart` and `mountPhone`; the English edition is `assets/en/interactions.js`. Each returns a cleanup function: call it on unmount to avoid duplicate listeners. See `src/component-pages.js` and the component contracts for required data/ARIA structure. Replace local demo records and handle real product states before production adoption.
+
+For mobile adoption, follow `standards/14-phone.md` and `components/phone.md`. `xu/xuui_tokens/mod.xu` additionally exports full semantic theme colors (`border`, `brand_hover`, `brand_pressed`, `brand_soft`, `control_pressed`, `success`, `success_soft`, `warning`, `warning_soft`, `info`, `info_soft`) and mobile baseline dimensions (`phone_ios_target`, `phone_touch_target`, `phone_touch_gap`, `phone_gutter`, `phone_bar_height`, `phone_nav_height`, `phone_rail_width`, `phone_sheet_radius`); device safe areas, IME resizing and gesture physics remain host runtime responsibilities.
