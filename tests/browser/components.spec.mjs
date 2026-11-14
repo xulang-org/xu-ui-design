@@ -132,6 +132,9 @@ test('chart switches modes, inspects slots with arrows and recovers from hidden 
 
 test('phone switches posture, adapts navigation, manages route stack and restores bottom sheet focus',async({page})=>{
   await visit(page,'phone');
+  await page.locator('[data-phone-refresh]').click();
+  await expect(page.locator('[data-phone-refresh-status]')).toContainText('#2');
+  await expect(page.locator('[data-phone-snackbar]')).toBeVisible();
   await page.locator('[data-phone-platform="android"]').click();
   await expect(page.locator('[data-phone-device]')).toHaveAttribute('data-platform','android');
   await expect(page.locator('[data-phone-meta-platform]')).toContainText('Android');
@@ -178,8 +181,21 @@ test('phone switches posture, adapts navigation, manages route stack and restore
   await page.keyboard.press('Escape');
   await expect(page.locator('[data-phone-device]')).toHaveAttribute('data-ime','false');
   await expect(note).toHaveValue('Phone IME ready');
+  await page.locator('[data-phone-note-copy]').click();
+  await expect(page.locator('[data-phone-snackbar]')).toBeVisible();
   await page.locator('[data-phone-note-save]').click();
   await expect(page.locator('[data-phone-snackbar]')).toBeVisible();
+});
+
+test('phone draft copy fallback selects text without claiming success',async({page})=>{
+  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{value:undefined}));
+  await visit(page,'phone');
+  await page.locator('[data-phone-tab="settings"]').click();
+  const note=page.locator('[data-phone-note-input]');
+  await note.fill('Fallback draft');
+  await page.locator('[data-phone-note-copy]').click();
+  await expect(note).toBeFocused();
+  await expect(page.locator('[data-phone-snackbar]')).toContainText('复制未完成');
 });
 
 for(const theme of ['dark','light']) {
