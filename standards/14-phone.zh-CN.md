@@ -39,7 +39,7 @@ XUUI 通过[色彩与主题](02-color.zh-CN.md)保持跨端视觉一致，同时
 - **最小可触控目标**：遵循[可访问性与动效](11-accessibility.zh-CN.md)的 `--xu-target-min`（`44 × 44 px` 底线），**Android 端要求不低于 `48 × 48 dp`**（对应 `--xu-control-lg`）；相邻交互目标之间至少保留 **`8 px`（`--xu-space-2`）** 间距，防止拇指误触。
 - **移动端节奏与留白**：页面左右安全内边距取 `16–20 px`（`space-4` 至 `space-5`）；表单项垂直间距取 `16–20 px`；常规双行列表行最小高度为 `64–72 px`，文案容器配置 `min-width: 0`，保证长文本换行或安全省略而不引起整页横向溢出。
 - **禁止依赖悬停操作**：所有关键操作不得隐藏在 hover 浮层、悬停提示或右键菜单中；操作入口须直接可见，或收敛到尺寸至少 `44 px` 的显式操作菜单触发器中。
-- **动态字体与方向适应**：在 `1.0x` 到 `1.5x+` 系统字体放大与 `320 px` 极窄宽度下，卡片与列表行须随文本自然增高，不得固定行高裁切内容。排版与间距基础见[字体与排版](03-typography.zh-CN.md)和[布局与间距](04-layout.zh-CN.md)。
+- **动态字体、多行折行与方向适应**：正文、详情说明与长备注应按可用宽度（`wrap_width`）与明确行高（`line_height >= 1.4x`）沿中西文字素边界自然折行，不得以单行截断掩盖正文信息；在 `1.0x` 到 `1.5x+` 系统字体放大与 `320 px` 极窄宽度下，卡片与列表行须依据真实文本高度自然增高，不得重叠或裁切内容。排版与间距基础见[字体与排版](03-typography.zh-CN.md)和[布局与间距](04-layout.zh-CN.md)。
 
 ## 滚动物理与手势判别
 
@@ -57,10 +57,12 @@ XUUI 通过[色彩与主题](02-color.zh-CN.md)保持跨端视觉一致，同时
   - 破坏性确认沿用[反馈与浮层](09-feedback.zh-CN.md)约定，默认聚焦取消且不嵌套第二层确认模态框。
 - **软键盘 / IME 避让**：当 `view_insets.bottom > 0` 时，应缩减可滚动表单区域高度并将当前聚焦输入框及主提交按钮滚入可视区；打开中的底部抽屉须同步上抬，不被输入法遮挡底端操作栏。
 - **移动端文本输入与 IME 组合输入**：输入框高度不少于 `48 px`（`phone_input_height`），提供清晰标签、不少于 `44 px` 的清空按钮（`phone_touch_target`）、明确的聚焦描边（`focus`）以及报错后原地保留用户输入的持久内联校验（`danger`）。输入法预编辑串（preedit / composing）须与已提交文本以独立下划线明确区分，并在点击完成或场外失焦时干净落字或收尾；系统返回按「软键盘 / 活跃输入 -> 底部抽屉 -> 二级详情页 -> 应用退后台」顺序逐级收起。
+- **下拉刷新与触觉反馈**：当列表位于顶部（`scroll == 0`）并向下拖拽达到 `phone_refresh_threshold`（`64 px`）阈值时触发刷新周期，同时须提供不少于 `44 px` 的可访问显式刷新按钮；在 `prefers-reduced-motion: reduce` 下避免持续旋转动效。轻量触觉反馈（`selection`、`impact`、`success`、`error`）应与视觉状态及校验结果同步配合，但不得替代可见状态提示。
+- **系统剪贴板操作**：复制／粘贴动作仅在用户显式触发时访问宿主剪贴板，成功后通过状态／Snackbar 回执；若剪贴板受限则保持原文选中并提示手动复制，严禁虚报成功。
 - **Snackbar 与阻断错误**：瞬时非关键回执悬浮在 `bottom_bar_height + safe_bottom + 12 px` 之上，至多提供一个“撤销／重试”动作，不得覆盖底部导航或抢占焦点；表单校验失败与保存错误须原地持久保留，见[反馈与浮层](09-feedback.zh-CN.md)。
 
 ## 原生映射与验收
 
-- 生成文件 `xu/xuui_tokens/mod.xu` 已提供双主题语义色与移动端基础度量函数（`canvas`、`surface`、`brand`、`brand_soft`、`control_border`、`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`、`phone_input_height`），使 `#ui/phone` 与原生画布渲染可直接对齐 Web 标准。
-- **能力边界声明**：本设计库展厅中的浏览器示例用于验证竖屏／横屏自适应切换、安全区边界、软键盘避让示意、校验失败保留输入内容、路由进退、底部抽屉焦点恢复与 Snackbar 位置；真实触控 slop、速度惯性、输入法窗口回调（`UITextInput` / `InputConnection`）、透明系统栏与原生返回手势由宿主运行时（`#ui/phone`、iOS `UIKit`/`WKWebView`、Android `WebView`/原生组件）负责实现与验收。
+- 生成文件 `xu/xuui_tokens/mod.xu` 已提供双主题语义色与移动端基础度量函数（`canvas`、`surface`、`brand`、`brand_soft`、`control_border`、`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`、`phone_input_height`、`phone_refresh_threshold`），使 `#ui/phone` 与原生画布渲染可直接对齐 Web 标准。
+- **能力边界声明**：本设计库展厅中的浏览器示例用于验证竖屏／横屏自适应切换、安全区边界、软键盘避让示意、多行折行、校验失败保留输入与剪贴板降级、显式刷新触发、路由进退、底部抽屉焦点恢复与 Snackbar 位置；真实触控 slop、速度惯性、下拉刷新顶部弹性阻尼、原生触觉马达、系统剪贴板（`UIPasteboard` / `ClipboardManager`）、输入法窗口回调（`UITextInput` / `InputConnection`）、透明系统栏与原生返回手势由宿主运行时（`#ui/phone`、iOS `UIKit`/`WKWebView`、Android `WebView`/原生组件）负责实现与验收。
 - **验收要点**：`320 px` 至横屏宽视口下零整页横向溢出；亮暗双主题前景／背景与遮罩对比度通过校验；实机真机上的 VoiceOver 与 TalkBack 读屏播报仍为独立人工验收门槛，不被网页自动化扫描替代。

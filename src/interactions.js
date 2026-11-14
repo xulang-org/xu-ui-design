@@ -309,6 +309,9 @@ export function mountPhone(root) {
   const metaStack = root.querySelector('[data-phone-meta-stack]');
   const taskFilters = all(root, '[data-phone-task-filter]');
   const taskRows = all(root, '[data-phone-task]');
+  const viewport = root.querySelector('[data-phone-viewport]');
+  const refreshBtn = root.querySelector('[data-phone-refresh]');
+  const refreshStatus = root.querySelector('[data-phone-refresh-status]');
 
   let platform = 'ios';
   let layout = 'portrait';
@@ -318,6 +321,8 @@ export function mountPhone(root) {
   let taskFilter = 'all';
   let opener = null;
   let snackbarTimer = null;
+  let refreshCount = 1;
+  let pullStartY = null;
 
   const details = {
     physics: {
@@ -455,9 +460,30 @@ export function mountPhone(root) {
     showSnackbar(event.currentTarget.checked ? '状态栏图标对比度已设为自动跟随主题。' : '已切换为手动状态栏外观。');
   }, opts);
 
+  const triggerRefresh = () => {
+    refreshCount += 1;
+    if (refreshStatus) refreshStatus.textContent = `已同步 #${refreshCount}`;
+    if (refreshBtn) playMotion(refreshBtn, [{ transform: 'translateY(3px)' }, { transform: 'translateY(0)' }], 'settle');
+    showSnackbar('列表已刷新，触觉确认与当前状态已同步。');
+  };
+  refreshBtn?.addEventListener('click', triggerRefresh, opts);
+  viewport?.addEventListener('pointerdown', (event) => {
+    if (activeTab !== 'overview' || detailId || viewport.scrollTop > 0) return;
+    if (event.target.closest('button, a, input')) return;
+    pullStartY = event.clientY;
+  }, opts);
+  viewport?.addEventListener('pointerup', (event) => {
+    if (pullStartY === null) return;
+    const pulled = event.clientY - pullStartY;
+    pullStartY = null;
+    if (pulled >= 64) triggerRefresh();
+  }, opts);
+  viewport?.addEventListener('pointercancel', () => { pullStartY = null; }, opts);
+
   const noteForm = root.querySelector('[data-phone-note-form]');
   const noteInput = root.querySelector('[data-phone-note-input]');
   const noteClear = root.querySelector('[data-phone-note-clear]');
+  const noteCopy = root.querySelector('[data-phone-note-copy]');
   const noteError = root.querySelector('[data-phone-note-error]');
   const syncNoteClear = () => {
     if (noteClear && noteInput) noteClear.hidden = noteInput.value.length === 0;
@@ -498,6 +524,24 @@ export function mountPhone(root) {
     if (!ime) {
       ime = true;
       sync(false);
+    }
+  }, opts);
+  noteCopy?.addEventListener('click', async () => {
+    if (!noteInput || !noteError) return;
+    const value = noteInput.value;
+    if (value.trim().length === 0) {
+      validateNote();
+      noteInput.focus();
+      return;
+    }
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(value);
+      showSnackbar('已复制移动草稿到剪贴板。');
+    } catch {
+      noteInput.focus();
+      noteInput.select();
+      showSnackbar('复制未完成，已选中草稿以便手动复制。');
     }
   }, opts);
   noteForm?.addEventListener('submit', (event) => {

@@ -51,6 +51,10 @@ pub fn phone_input_height() f64 {
     << ${parseFloat(tokens.base['control-lg']).toFixed(1)}
 }
 
+pub fn phone_refresh_threshold() f64 {
+    << 64.0
+}
+
 pub fn chart_palette(dark bool) []draw.Color {
     << [chart_1(dark),chart_2(dark),chart_3(dark),chart_4(dark),chart_5(dark),chart_6(dark),chart_7(dark),chart_8(dark)]
 }

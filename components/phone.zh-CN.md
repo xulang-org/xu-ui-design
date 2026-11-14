@@ -18,8 +18,10 @@
 | 横屏／宽屏外壳 | 自动转换为左侧导航轨与分栏阅读空间，移除重复的底部导航栏 |
 | 二级详情推入态 | 显示显式返回入口与系统返回动作，返回后恢复原页签与局部状态 |
 | 底部抽屉展开态 | 显示背景遮罩、抓手条与关闭按钮，焦点迁入抽屉内直到显式关闭 |
+| 下拉刷新触发态 | 列表位于顶部并下拉达到 `64 px` 阈值或点按显式刷新按钮时更新列表状态，遵守 `prefers-reduced-motion` 并通过非抢焦点方式播报结果 |
 | 软键盘 / IME 激活态 | 拉起输入法会话并将视口／抽屉底部抬升 `view_insets.bottom`，保证光标、preedit 下划线、`>= 44 px` 清空按钮及主动作可见 |
 | 输入校验错误态 | 以 `--xu-danger` 标识边框与底色并显示内联错误信息，同时原地保留用户已输入文本 |
+| 剪贴板复制与降级态 | 复制草稿成功后经 Snackbar 回执；当剪贴板不可用时自动选中草稿文本并提示失败，绝不虚报成功 |
 | Snackbar 提示态 | 悬浮于底栏与安全底部上方，不遮挡导航按钮且不抢占当前键盘焦点 |
 
 ## 键盘行为
@@ -35,11 +37,12 @@
 
 ## 原生映射
 
-对应 `#ui/phone` 外壳脚手架、`TextField`、路由栈、底部抽屉原语与 `xu/xuui_tokens/mod.xu`（`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`、`phone_input_height`）。真实 iOS / Android 安全区插槽、`UITextInput` / `InputConnection` 软键盘会话、惯性抛掷衰减、透明系统栏与预测返回手势须在对应原生宿主适配层实现并真机验证。
+对应 `#ui/phone` 外壳脚手架、`TextField`、多行折行段落、`Touch` 下拉刷新与触觉反馈、宿主剪贴板桥接、路由栈、底部抽屉原语与 `xu/xuui_tokens/mod.xu`（`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`、`phone_input_height`、`phone_refresh_threshold`）。真实 iOS / Android 安全区插槽、`UITextInput` / `InputConnection` 软键盘会话、马达触觉反馈、系统剪贴板（`UIPasteboard` / `ClipboardManager`）、惯性抛掷衰减、透明系统栏与预测返回手势须在对应原生宿主适配层实现并真机验证。
 
 ## 验收
 
 - 切换 iOS 与 Android 平台姿态时，顶栏对齐、返回手势说明与物理属性读数同步更新；切换竖屏与横屏时，底部导航栏与左侧导航轨互斥显示，且在 `320 px` 极窄浏览器宽度下零横向溢出。
-- 在设置页签聚焦草稿输入框可激活 IME 上抬，`>= 44 px` 清空按钮可清空草稿，非法提交保留用户输入并显示内联错误，按 `Escape` 可收起 IME 而不丢失已键入内容。
+- 触发下拉刷新（点按刷新按钮或在顶部下拉超过 `64 px`）后同步计数更新并给出 Snackbar 回执，且不丢失当前页签与路由状态；多行中英文文案在 `320 px` 下按行高自然折行而不被裁切。
+- 在设置页签聚焦草稿输入框可激活 IME 上抬，`>= 44 px` 清空按钮可清空草稿，复制按钮支持剪贴板回执或降级选中原文，非法提交保留用户输入并显示内联错误，按 `Escape` 可收起 IME 而不丢失已键入内容。
 - 打开底部抽屉后可经关闭按钮、点击遮罩或 `Escape` 退出，并将焦点准确恢复到触发按钮。
 - 亮暗双主题与中英双语页面在 `320 px` 视口及 WCAG 2.2 AA 自动化检测中均保持零违规。
