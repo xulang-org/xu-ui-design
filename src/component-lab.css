@@ -146,6 +146,29 @@
 .phone-metric { display: grid; gap: 2px; padding: var(--xu-space-3); border: 1px solid var(--xu-border); border-radius: var(--xu-radius-md); background: var(--xu-canvas); min-width: 0; }
 .phone-metric small { font: 400 var(--xu-text-xs)/1.3 var(--xu-font-sans); color: var(--xu-muted); }
 .phone-metric strong { font: 500 var(--xu-text-xs)/1.4 var(--xu-font-mono); color: var(--xu-text); overflow-wrap: anywhere; }
+.slider-head, .progress-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--xu-space-2); }
+.slider-head label, .progress-head label { font: 600 var(--xu-text-sm)/1.4 var(--xu-font-sans); color: var(--xu-text); }
+.slider-output, .progress-pct { font: 600 var(--xu-text-sm)/1.4 var(--xu-font-mono); font-variant-numeric: tabular-nums; color: var(--xu-brand); }
+.slider-track-row { display: flex; align-items: center; gap: var(--xu-space-2); min-width: 0; }
+.slider-track-row .xu-button { min-width: var(--xu-target-min); min-height: var(--xu-target-min); padding-inline: var(--xu-space-2); flex-shrink: 0; }
+.progress-busy-row { display: flex; align-items: center; gap: var(--xu-space-3); padding: var(--xu-space-3); border: 1px solid var(--xu-border); border-radius: var(--xu-radius-md); background: var(--xu-surface); font-size: var(--xu-text-sm); }
+.progress-spinner-box { display: inline-flex; flex-shrink: 0; color: var(--xu-brand); }
+.progress-spinner-box > .xu-icon { animation: xu-spin 1s linear infinite; }
+.dialog-trigger-meta { font-size: var(--xu-text-sm); color: var(--xu-muted); margin: 0; line-height: 1.5; }
+.dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--xu-space-2); margin-top: var(--xu-space-5); }
+.phone-progress-row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--xu-space-2); }
+.phone-progress-val { font: 500 var(--xu-text-xs)/1.3 var(--xu-font-mono); font-variant-numeric: tabular-nums; color: var(--xu-brand); }
+.phone-slider-row { display: grid; gap: var(--xu-space-1); padding: var(--xu-space-3); border: 1px solid var(--xu-border); border-radius: var(--xu-radius-md); background: var(--xu-surface); }
+.phone-empty { display: grid; justify-items: center; gap: var(--xu-space-2); padding: var(--xu-space-5) var(--xu-space-4); text-align: center; border: 1px dashed var(--xu-border); border-radius: var(--xu-radius-md); background: var(--xu-surface); }
+.phone-empty[hidden] { display: none; }
+.phone-empty p { margin: 0; font-size: var(--xu-text-xs); color: var(--xu-muted); }
+.phone-dialog-backdrop { position: absolute; inset: 0; background: var(--xu-overlay); display: grid; place-items: center; padding: var(--xu-space-4); z-index: var(--xu-z-menu); }
+.phone-dialog-backdrop[hidden] { display: none; }
+.phone-dialog { width: 100%; max-width: 312px; display: grid; gap: var(--xu-space-3); padding: var(--xu-space-4); border: 1px solid var(--xu-control-border); border-radius: var(--xu-radius-lg); background: var(--xu-surface); }
+.phone-dialog-heading { margin: 0; font: 600 var(--xu-text-md)/1.35 var(--xu-font-sans); color: var(--xu-text); }
+.phone-dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--xu-space-2); }
+.phone-dialog-actions .xu-button { min-height: var(--xu-control-lg); flex: 1 1 112px; }
+@media (prefers-reduced-motion: reduce) { .progress-spinner-box > .xu-icon { animation: none; } }
 @media (max-width:1199px) { .component-detail-layout { grid-template-columns: 1fr; } .component-related { padding: 20px 0 0; border-left: 0; border-top: 1px solid var(--xu-border); } }
 @media (max-width:799px) { .draw-primitives, .phone-telemetry { grid-template-columns: 1fr; } }
 @media (max-width:599px) { .component-index { grid-template-columns: 1fr; } .component-entry:nth-last-child(2) { border-bottom: 0; } .button-size-row { grid-template-columns: 1fr; gap: var(--xu-space-2); } .button-size-label { display: flex; justify-content: space-between; align-items: baseline; } .button-size-label small { margin: 0; } .xu-tabs [role="tab"] { padding-inline: 12px; } .xu-split-panels > section { padding: 12px; } .chart-stage-wrap { padding: var(--xu-space-2); } .phone-viewport { padding: var(--xu-space-3); } .phone-device[data-layout="landscape"] .phone-shell-body { grid-template-columns: 64px minmax(0,1fr); } }
