@@ -279,3 +279,558 @@ export function mountChart(root) {
   render(false);
   return () => { abort.abort(); disposeMotion(root); };
 }
+
+export function mountPhone(root) {
+  const abort = new AbortController();
+  const opts = { signal: abort.signal };
+  const device = root.querySelector('[data-phone-device]');
+  const shellBody = root.querySelector('[data-phone-shell-body]');
+  const notch = root.querySelector('[data-phone-notch]');
+  const bottomLabel = root.querySelector('[data-phone-bottom-label]');
+  const titleEl = root.querySelector('[data-phone-title]');
+  const backBtn = root.querySelector('[data-phone-back]');
+  const popBtn = root.querySelector('[data-phone-pop]');
+  const views = all(root, '[data-phone-view]');
+  const tabs = all(root, '[data-phone-tab]');
+  const platformBtns = all(root, '[data-phone-platform]');
+  const layoutBtns = all(root, '[data-phone-layout]');
+  const imeBtn = root.querySelector('[data-phone-ime]');
+  const sheetBackdrop = root.querySelector('[data-phone-sheet]');
+  const sheet = sheetBackdrop.querySelector('.phone-sheet');
+  const sheetClose = root.querySelector('[data-phone-sheet-close]');
+  const snackbar = root.querySelector('[data-phone-snackbar]');
+  const snackbarText = root.querySelector('[data-phone-snackbar-text]');
+  const statusEl = root.querySelector('[data-phone-status]');
+  const detailHeading = root.querySelector('[data-phone-detail-heading]');
+  const detailCopy = root.querySelector('[data-phone-detail-copy]');
+  const backHint = root.querySelector('[data-phone-back-hint]');
+  const metaPlatform = root.querySelector('[data-phone-meta-platform]');
+  const metaInsets = root.querySelector('[data-phone-meta-insets]');
+  const metaStack = root.querySelector('[data-phone-meta-stack]');
+  const taskFilters = all(root, '[data-phone-task-filter]');
+  const taskRows = all(root, '[data-phone-task]');
+  const taskEmpty = root.querySelector('[data-phone-empty]');
+  const taskResetBtn = root.querySelector('[data-phone-task-reset]');
+  const viewport = root.querySelector('[data-phone-viewport]');
+  const refreshBtn = root.querySelector('[data-phone-refresh]');
+  const refreshStatus = root.querySelector('[data-phone-refresh-status]');
+  const progressBar = root.querySelector('[data-phone-progress]');
+  const progressPct = root.querySelector('[data-phone-progress-pct]');
+  const openDialogBtn = root.querySelector('[data-phone-open-dialog]');
+  const dialogBackdrop = root.querySelector('[data-phone-dialog]');
+  const dialogEl = dialogBackdrop?.querySelector('.phone-dialog');
+  const dialogCancelBtn = root.querySelector('[data-phone-dialog-cancel]');
+  const dialogConfirmBtn = root.querySelector('[data-phone-dialog-confirm]');
+  const phoneSlider = root.querySelector('[data-phone-slider]');
+  const phoneSliderOut = root.querySelector('[data-phone-slider-output]');
+  const phoneRadios = all(root, '[data-phone-radio]');
+
+  let platform = 'ios';
+  let layout = 'portrait';
+  let ime = false;
+  let activeTab = 'overview';
+  let detailId = null;
+  let taskFilter = 'all';
+  let archivedDone = false;
+  let opener = null;
+  let dialogOpener = null;
+  let snackbarTimer = null;
+  let refreshCount = 1;
+  let progressVal = 72;
+  let pullStartY = null;
+
+  const details = {
+    physics: {
+      title: '滚动物理与拖拽阈值',
+      copy: '指针位移超过 8 dp 阈值后捕获纵向滚动，并取消行项目按压高亮；高速离手触发惯性衰减，触底由平台策略处理。'
+    },
+    insets: {
+      title: '安全区与边缘延伸',
+      copy: 'canvas 与模态遮罩延伸至系统栏下方，顶栏、底栏与软键盘避让区读取统一的系统插槽高度，避免写死色块填补。'
+    }
+  };
+  const tabTitles = { overview: '工作区概览', tasks: '任务队列', settings: '设备与偏好' };
+
+  const sync = (animate = false) => {
+    device.dataset.platform = platform;
+    device.dataset.layout = layout;
+    device.dataset.ime = String(ime);
+    platformBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.phonePlatform === platform)));
+    layoutBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.phoneLayout === layout)));
+    imeBtn.setAttribute('aria-pressed', String(ime));
+
+    const topInset = platform === 'ios' ? (layout === 'portrait' ? 44 : 0) : 24;
+    const bottomInset = platform === 'ios' ? 34 : 16;
+    const imeInset = ime ? 260 : 0;
+    notch.textContent = platform === 'ios' ? `SAFE TOP ${topInset}` : `ANDROID ${topInset}`;
+    bottomLabel.textContent = platform === 'ios' ? `SAFE BOTTOM ${bottomInset}` : `GESTURE BAR ${bottomInset}`;
+
+    tabs.forEach((tab) => {
+      const current = tab.dataset.phoneTab === activeTab;
+      if (current) tab.setAttribute('aria-current', 'page');
+      else tab.removeAttribute('aria-current');
+    });
+
+    const showingDetail = Boolean(detailId);
+    backBtn.hidden = !showingDetail;
+    titleEl.textContent = showingDetail ? details[detailId].title : tabTitles[activeTab];
+    views.forEach((view) => {
+      view.hidden = showingDetail ? view.dataset.phoneView !== 'detail' : view.dataset.phoneView !== activeTab;
+    });
+    if (showingDetail) {
+      detailHeading.textContent = details[detailId].title;
+      detailCopy.textContent = details[detailId].copy;
+      backHint.textContent = platform === 'ios'
+        ? '当前返回模式：iOS 左缘轻扫返回 + 居中标题'
+        : '当前返回模式：Android 预测返回栈 + 左对齐标题';
+      if (animate) settle(root.querySelector('[data-phone-view="detail"]'));
+    } else if (animate) {
+      settle(root.querySelector(`[data-phone-view="${activeTab}"]`));
+    }
+
+    taskFilters.forEach((btn) => btn.setAttribute('aria-pressed', String(btn.dataset.phoneTaskFilter === taskFilter)));
+    taskRows.forEach((row) => {
+      const kind = row.dataset.phoneTask;
+      const hiddenByArchive = archivedDone && kind === 'done';
+      const matches = taskFilter === 'all' ? !hiddenByArchive : taskFilter === kind && !hiddenByArchive;
+      row.hidden = !matches;
+    });
+    if (taskEmpty) taskEmpty.hidden = taskRows.some((row) => !row.hidden);
+    if (progressBar && progressPct) {
+      progressBar.value = progressVal;
+      progressBar.setAttribute('aria-valuetext', `${progressVal}%`);
+      progressBar.className = progressVal >= 100 ? 'xu-progress success' : 'xu-progress';
+      progressPct.textContent = `${progressVal}%`;
+    }
+
+    const platformText = platform === 'ios' ? 'iOS · Bouncing' : 'Android · Clamping';
+    const layoutText = layout === 'portrait' ? '竖屏 · 底部导航栏' : '横屏 · 左侧导航轨';
+    metaPlatform.textContent = platformText;
+    metaInsets.textContent = `top ${topInset} · btm ${bottomInset} · ime ${imeInset}`;
+    metaStack.textContent = showingDetail ? `[${activeTab}, detail:${detailId}]` : `[${activeTab}]`;
+    statusEl.textContent = `当前姿态：${platform === 'ios' ? 'iOS' : 'Android'} ${layoutText}${ime ? '（软键盘已展开）' : ''}`;
+  };
+
+  const hideSnackbar = () => {
+    clearTimeout(snackbarTimer);
+    snackbar.hidden = true;
+    snackbarText.textContent = '';
+  };
+  const showSnackbar = (message) => {
+    clearTimeout(snackbarTimer);
+    snackbarText.textContent = message;
+    snackbar.hidden = false;
+    settle(snackbar);
+    snackbarTimer = setTimeout(hideSnackbar, 3200);
+  };
+
+  const closeSheet = (restore = false) => {
+    if (sheetBackdrop.hidden) return;
+    sheetBackdrop.hidden = true;
+    shellBody.inert = false;
+    if (restore && opener?.isConnected) opener.focus();
+    opener = null;
+  };
+  const openSheet = (trigger) => {
+    opener = trigger || document.activeElement;
+    sheetBackdrop.hidden = false;
+    shellBody.inert = true;
+    playMotion(sheet, [{ transform: 'translateY(12px)' }, { transform: 'translateY(0)' }], 'enter');
+    sheetClose.focus();
+  };
+
+  platformBtns.forEach((btn) => btn.addEventListener('click', () => {
+    platform = btn.dataset.phonePlatform;
+    sync(false);
+  }, opts));
+  layoutBtns.forEach((btn) => btn.addEventListener('click', () => {
+    layout = btn.dataset.phoneLayout;
+    sync(true);
+  }, opts));
+  imeBtn.addEventListener('click', () => {
+    ime = !ime;
+    sync(false);
+  }, opts);
+
+  tabs.forEach((tab) => tab.addEventListener('click', () => {
+    activeTab = tab.dataset.phoneTab;
+    detailId = null;
+    sync(true);
+  }, opts));
+
+  all(root, '[data-phone-push]').forEach((btn) => btn.addEventListener('click', () => {
+    detailId = btn.dataset.phonePush;
+    sync(true);
+    backBtn.focus();
+  }, opts));
+
+  const popRoute = () => {
+    if (!detailId) return;
+    detailId = null;
+    sync(true);
+    root.querySelector(`[data-phone-tab="${activeTab}"]`)?.focus();
+  };
+  backBtn.addEventListener('click', popRoute, opts);
+  popBtn.addEventListener('click', popRoute, opts);
+
+  taskFilters.forEach((btn) => btn.addEventListener('click', () => {
+    taskFilter = btn.dataset.phoneTaskFilter;
+    sync(false);
+  }, opts));
+  taskRows.forEach((row) => row.addEventListener('click', () => {
+    showSnackbar('已更新任务状态（不抢占底部导航与焦点）。');
+  }, opts));
+
+  root.querySelector('[data-phone-setting-bar]')?.addEventListener('change', (event) => {
+    showSnackbar(event.currentTarget.checked ? '状态栏图标对比度已设为自动跟随主题。' : '已切换为手动状态栏外观。');
+  }, opts);
+
+  const triggerRefresh = () => {
+    refreshCount += 1;
+    progressVal = progressVal >= 100 ? 72 : Math.min(100, progressVal + 14);
+    sync(false);
+    if (refreshStatus) refreshStatus.textContent = `已同步 #${refreshCount}`;
+    if (refreshBtn) playMotion(refreshBtn, [{ transform: 'translateY(3px)' }, { transform: 'translateY(0)' }], 'settle');
+    showSnackbar('列表已刷新，触觉确认与当前状态已同步。');
+  };
+  refreshBtn?.addEventListener('click', triggerRefresh, opts);
+  viewport?.addEventListener('pointerdown', (event) => {
+    if (activeTab !== 'overview' || detailId || viewport.scrollTop > 0) return;
+    if (event.target.closest('button, a, input')) return;
+    pullStartY = event.clientY;
+  }, opts);
+  viewport?.addEventListener('pointerup', (event) => {
+    if (pullStartY === null) return;
+    const pulled = event.clientY - pullStartY;
+    pullStartY = null;
+    if (pulled >= 64) triggerRefresh();
+  }, opts);
+  viewport?.addEventListener('pointercancel', () => { pullStartY = null; }, opts);
+
+  const noteForm = root.querySelector('[data-phone-note-form]');
+  const noteInput = root.querySelector('[data-phone-note-input]');
+  const noteClear = root.querySelector('[data-phone-note-clear]');
+  const noteCopy = root.querySelector('[data-phone-note-copy]');
+  const noteError = root.querySelector('[data-phone-note-error]');
+  const syncNoteClear = () => {
+    if (noteClear && noteInput) noteClear.hidden = noteInput.value.length === 0;
+  };
+  const validateNote = () => {
+    if (!noteInput || !noteError) return true;
+    const trimmed = noteInput.value.trim();
+    const valid = trimmed.length >= 2 && trimmed.length <= 40;
+    noteInput.setAttribute('aria-invalid', String(!valid));
+    noteError.textContent = valid ? '' : '请输入 2–40 个非空白字符，当前输入已保留。';
+    return valid;
+  };
+  noteInput?.addEventListener('focus', () => {
+    if (!ime) {
+      ime = true;
+      sync(false);
+    }
+  }, opts);
+  noteInput?.addEventListener('input', () => {
+    syncNoteClear();
+    if (noteInput.getAttribute('aria-invalid') === 'true') validateNote();
+  }, opts);
+  noteInput?.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && ime) {
+      event.preventDefault();
+      event.stopPropagation();
+      ime = false;
+      sync(false);
+    }
+  }, opts);
+  noteClear?.addEventListener('click', () => {
+    if (!noteInput || !noteError) return;
+    noteInput.value = '';
+    noteInput.removeAttribute('aria-invalid');
+    noteError.textContent = '';
+    syncNoteClear();
+    noteInput.focus();
+    if (!ime) {
+      ime = true;
+      sync(false);
+    }
+  }, opts);
+  noteCopy?.addEventListener('click', async () => {
+    if (!noteInput || !noteError) return;
+    const value = noteInput.value;
+    if (value.trim().length === 0) {
+      validateNote();
+      noteInput.focus();
+      return;
+    }
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(value);
+      showSnackbar('已复制移动草稿到剪贴板。');
+    } catch {
+      noteInput.focus();
+      noteInput.select();
+      showSnackbar('复制未完成，已选中草稿以便手动复制。');
+    }
+  }, opts);
+  noteForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!validateNote()) {
+      noteInput?.focus();
+      return;
+    }
+    if (noteInput) noteInput.removeAttribute('aria-invalid');
+    if (noteError) noteError.textContent = '';
+    ime = false;
+    sync(false);
+    showSnackbar('已保存移动草稿，未丢失当前导航状态。');
+  }, opts);
+  syncNoteClear();
+
+  all(root, '[data-phone-open-sheet]').forEach((btn) => btn.addEventListener('click', () => openSheet(btn), opts));
+  sheetClose.addEventListener('click', () => closeSheet(true), opts);
+  sheetBackdrop.addEventListener('click', (event) => {
+    if (event.target === sheetBackdrop) closeSheet(true);
+  }, opts);
+  sheet.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      closeSheet(true);
+    }
+  }, opts);
+  all(root, '[data-phone-sheet-action]').forEach((btn) => btn.addEventListener('click', () => {
+    const action = btn.dataset.phoneSheetAction;
+    closeSheet(false);
+    if (action === 'detail') {
+      activeTab = 'overview';
+      detailId = 'insets';
+      sync(true);
+      backBtn.focus();
+    } else {
+      showSnackbar('Snackbar 已定位在底栏与安全区之上。');
+      root.querySelector('[data-phone-open-sheet]')?.focus();
+    }
+  }, opts));
+  root.querySelector('[data-phone-snackbar-close]')?.addEventListener('click', hideSnackbar, opts);
+
+  const closeDialog = (restore = false) => {
+    if (!dialogBackdrop || dialogBackdrop.hidden) return;
+    dialogBackdrop.hidden = true;
+    shellBody.inert = false;
+    if (restore && dialogOpener?.isConnected) dialogOpener.focus();
+    dialogOpener = null;
+  };
+  const openDialog = (trigger) => {
+    if (!dialogBackdrop) return;
+    dialogOpener = trigger || document.activeElement;
+    dialogBackdrop.hidden = false;
+    shellBody.inert = true;
+    playMotion(dialogEl, [{ opacity: 0 }, { opacity: 1 }], 'enter');
+    dialogCancelBtn?.focus();
+  };
+  openDialogBtn?.addEventListener('click', () => openDialog(openDialogBtn), opts);
+  dialogCancelBtn?.addEventListener('click', () => closeDialog(true), opts);
+  dialogConfirmBtn?.addEventListener('click', () => {
+    archivedDone = true;
+    closeDialog(true);
+    sync(false);
+    showSnackbar('已归档已完成任务。');
+  }, opts);
+  dialogBackdrop?.addEventListener('click', (event) => {
+    if (event.target === dialogBackdrop) closeDialog(true);
+  }, opts);
+  dialogEl?.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      closeDialog(true);
+    }
+  }, opts);
+  taskResetBtn?.addEventListener('click', () => {
+    archivedDone = false;
+    taskFilter = 'all';
+    sync(false);
+    showSnackbar('已恢复全部任务显示。');
+  }, opts);
+  phoneSlider?.addEventListener('input', () => {
+    const val = phoneSlider.value;
+    phoneSlider.setAttribute('aria-valuetext', `${val}%`);
+    if (phoneSliderOut) phoneSliderOut.textContent = `${val}%`;
+  }, opts);
+  phoneRadios.forEach((radio) => radio.addEventListener('change', (event) => {
+    if (!event.currentTarget.checked) return;
+    showSnackbar(event.currentTarget.value === 'auto' ? '已切换为自动增量同步。' : '已切换为仅手动同步。');
+  }, opts));
+
+  sync(false);
+  return () => {
+    clearTimeout(snackbarTimer);
+    shellBody.inert = false;
+    abort.abort();
+    disposeMotion(root);
+  };
+}
+
+export function mountSwitch(root) {
+  const abort = new AbortController(), opts = { signal: abort.signal };
+  const syncEl = root.querySelector('[data-switch-sync]');
+  const hapticsEl = root.querySelector('[data-switch-haptics]');
+  const statusEl = root.querySelector('[data-switch-status]');
+  const update = () => {
+    if (!statusEl) return;
+    statusEl.textContent = `自动同步：${syncEl?.checked ? '已开启' : '已关闭'} · 触觉反馈：${hapticsEl?.checked ? '已开启' : '已关闭'}`;
+  };
+  [syncEl, hapticsEl].forEach((el) => el?.addEventListener('change', update, opts));
+  update();
+  return () => abort.abort();
+}
+
+export function mountRadio(root) {
+  const abort = new AbortController(), opts = { signal: abort.signal };
+  const statusEl = root.querySelector('[data-radio-status]');
+  const labels = { realtime: '实时增量同步', battery: '省电批处理', manual: '仅手动触发' };
+  const update = () => {
+    const selected = root.querySelector('input[type="radio"][data-radio-input]:checked');
+    if (statusEl && selected) statusEl.textContent = `当前策略：${labels[selected.value] || selected.value} (${selected.value})`;
+  };
+  all(root, 'input[type="radio"][data-radio-input]').forEach((input) => input.addEventListener('change', update, opts));
+  update();
+  return () => abort.abort();
+}
+
+export function mountSlider(root) {
+  const abort = new AbortController(), opts = { signal: abort.signal };
+  const input = root.querySelector('[data-slider-input]');
+  const output = root.querySelector('[data-slider-output]');
+  const statusEl = root.querySelector('[data-slider-status]');
+  const apply = (raw) => {
+    if (!input) return;
+    const min = Number(input.min || 0), max = Number(input.max || 100), step = Number(input.step || 1);
+    const clamped = Math.max(min, Math.min(max, Math.round(Number(raw) / step) * step));
+    input.value = String(clamped);
+    input.setAttribute('aria-valuetext', `${clamped}%`);
+    if (output) output.textContent = `${clamped}%`;
+    if (statusEl) statusEl.textContent = `当前触觉强度：${clamped}%`;
+  };
+  input?.addEventListener('input', () => apply(input.value), opts);
+  all(root, '[data-slider-step]').forEach((btn) => btn.addEventListener('click', () => {
+    if (input) apply(Number(input.value) + Number(btn.dataset.sliderStep || 0));
+  }, opts));
+  apply(input?.value ?? 60);
+  return () => abort.abort();
+}
+
+export function mountProgress(root) {
+  const abort = new AbortController(), opts = { signal: abort.signal };
+  const bar = root.querySelector('[data-progress-bar]');
+  const pct = root.querySelector('[data-progress-pct]');
+  const statusEl = root.querySelector('[data-progress-status]');
+  let value = Number(bar?.value ?? 65);
+  const render = (tone = '', message = '') => {
+    if (bar) {
+      bar.value = value;
+      bar.setAttribute('aria-valuetext', `${value}%`);
+      bar.className = tone ? `xu-progress ${tone}` : 'xu-progress';
+    }
+    if (pct) pct.textContent = `${value}%`;
+    if (statusEl) statusEl.textContent = message;
+  };
+  all(root, '[data-progress-action]').forEach((btn) => btn.addEventListener('click', () => {
+    const action = btn.dataset.progressAction;
+    if (action === 'advance') {
+      value = Math.min(100, value + 20);
+      if (value >= 100) render('success', '构建已完成：100%');
+      else render('', `构建进行中：${value}%`);
+    } else if (action === 'complete') {
+      value = 100;
+      render('success', '构建已完成：100%');
+    } else if (action === 'error') {
+      render('danger', '构建已暂停：请检查签名后重试。');
+    } else if (action === 'reset') {
+      value = 0;
+      render('', '已重置为 0%，等待启动。');
+    }
+  }, opts));
+  render('', `构建进行中：${value}%`);
+  return () => abort.abort();
+}
+
+export function mountBadge(root) {
+  const abort = new AbortController(), opts = { signal: abort.signal };
+  const hostCount = root.querySelector('[data-badge-host-count]');
+  const countEl = root.querySelector('[data-badge-count]');
+  const hostDot = root.querySelector('[data-badge-host-dot]');
+  const dotEl = root.querySelector('[data-badge-dot]');
+  const statusEl = root.querySelector('[data-badge-status]');
+  let count = 3;
+  const render = () => {
+    const text = count > 99 ? '99+' : String(count);
+    if (countEl) {
+      countEl.textContent = text;
+      countEl.hidden = count === 0;
+    }
+    if (hostCount) hostCount.setAttribute('aria-label', count === 0 ? '收件箱通知 暂无未读' : `收件箱通知 ${text} 条未读`);
+    if (dotEl) dotEl.hidden = count === 0;
+    if (hostDot) hostDot.setAttribute('aria-label', count === 0 ? '发布通道 暂无未读更新' : '发布通道 有未读更新');
+    if (statusEl) statusEl.textContent = count === 0 ? '当前暂无未读消息，状态点已隐藏。' : `当前未读计数：${count}，胶囊显示 ${text}`;
+  };
+  all(root, '[data-badge-op]').forEach((btn) => btn.addEventListener('click', () => {
+    const op = btn.dataset.badgeOp;
+    if (op === 'inc') count += 1;
+    else if (op === 'overflow') count = 128;
+    else if (op === 'clear') count = 0;
+    render();
+  }, opts));
+  render();
+  return () => abort.abort();
+}
+
+export function mountDialog(root) {
+  const abort = new AbortController(), opts = { signal: abort.signal };
+  const modal = root.querySelector('[data-dialog-modal]');
+  const titleEl = root.querySelector('[data-dialog-title]');
+  const descEl = root.querySelector('[data-dialog-desc]');
+  const cancelBtn = root.querySelector('[data-dialog-cancel]');
+  const closeBtn = root.querySelector('[data-dialog-close]');
+  const confirmBtn = root.querySelector('[data-dialog-confirm]');
+  const statusEl = root.querySelector('[data-dialog-status]');
+  let opener = null;
+  let activeMode = 'publish';
+  const configs = {
+    publish: { title: '确认发布工作区版本', desc: '将把当前资源包标记为可分发状态，所有订阅者可见。', label: '确认发布', danger: false, confirmed: '已确认：发布工作区版本。' },
+    revoke: { title: '确认撤销签名凭证', desc: '此操作不可撤销，现有已签名包将需要重新签发。', label: '撤销凭证', danger: true, confirmed: '已确认：撤销签名凭证。' }
+  };
+  const closeModal = (msg) => {
+    if (msg && statusEl) statusEl.textContent = msg;
+    if (modal?.open) modal.close();
+  };
+  all(root, '[data-dialog-open]').forEach((btn) => btn.addEventListener('click', () => {
+    if (!modal) return;
+    opener = btn;
+    activeMode = btn.dataset.dialogOpen || 'publish';
+    const cfg = configs[activeMode] || configs.publish;
+    if (titleEl) titleEl.textContent = cfg.title;
+    if (descEl) descEl.textContent = cfg.desc;
+    if (confirmBtn) {
+      confirmBtn.textContent = cfg.label;
+      confirmBtn.className = cfg.danger ? 'xu-button danger' : 'xu-button primary';
+    }
+    if (!modal.open) modal.showModal();
+    cancelBtn?.focus();
+  }, opts));
+  cancelBtn?.addEventListener('click', () => closeModal('已取消操作，未做更改。'), opts);
+  closeBtn?.addEventListener('click', () => closeModal('已取消操作，未做更改。'), opts);
+  confirmBtn?.addEventListener('click', () => closeModal((configs[activeMode] || configs.publish).confirmed), opts);
+  modal?.addEventListener('click', (event) => {
+    if (event.target === modal) closeModal('已取消操作，未做更改。');
+  }, opts);
+  modal?.addEventListener('cancel', () => {
+    if (statusEl) statusEl.textContent = '已取消操作，未做更改。';
+  }, opts);
+  modal?.addEventListener('close', () => {
+    if (opener?.isConnected) opener.focus();
+  }, opts);
+  return () => {
+    if (modal?.open) modal.close();
+    abort.abort();
+  };
+}
