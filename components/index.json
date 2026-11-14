@@ -178,5 +178,25 @@
       "en": "draw.Frame / draw.Path / draw.Surface / widgets.Chart; native XDF1 frames and CTM/layer stacks are verified by the host.",
       "zh-CN": "draw.Frame / draw.Path / draw.Surface / widgets.Chart；原生 XDF1 帧记录与 CTM／图层栈由宿主校验执行。"
     }
+  },
+  {
+    "id": "phone",
+    "title": {
+      "en": "Phone shell & sheet",
+      "zh-CN": "Phone 外壳与底部抽屉"
+    },
+    "group": {
+      "en": "Mobile",
+      "zh-CN": "移动端"
+    },
+    "summary": {
+      "en": "Adaptive bottom bar vs rail, safe areas, pushed route Back stack and modal bottom sheet",
+      "zh-CN": "自适应底栏与导航轨、安全区避让、详情路由栈与模态底部抽屉"
+    },
+    "standard": "14-phone",
+    "native": {
+      "en": "#ui/phone adaptive shell, route stack, bottom sheet and xuui_tokens mobile metrics; device safe areas, IME insets and fling physics require host validation.",
+      "zh-CN": "#ui/phone 自适应外壳、路由栈、底部抽屉与 xuui_tokens 移动度量；真机安全区、软键盘与滚动物理须在宿主侧验证。"
+    }
   }
 ]

@@ -279,3 +279,214 @@ export function mountChart(root) {
   render(false);
   return () => { abort.abort(); disposeMotion(root); };
 }
+
+export function mountPhone(root) {
+  const abort = new AbortController();
+  const opts = { signal: abort.signal };
+  const device = root.querySelector('[data-phone-device]');
+  const shellBody = root.querySelector('[data-phone-shell-body]');
+  const notch = root.querySelector('[data-phone-notch]');
+  const bottomLabel = root.querySelector('[data-phone-bottom-label]');
+  const titleEl = root.querySelector('[data-phone-title]');
+  const backBtn = root.querySelector('[data-phone-back]');
+  const popBtn = root.querySelector('[data-phone-pop]');
+  const views = all(root, '[data-phone-view]');
+  const tabs = all(root, '[data-phone-tab]');
+  const platformBtns = all(root, '[data-phone-platform]');
+  const layoutBtns = all(root, '[data-phone-layout]');
+  const imeBtn = root.querySelector('[data-phone-ime]');
+  const sheetBackdrop = root.querySelector('[data-phone-sheet]');
+  const sheet = sheetBackdrop.querySelector('.phone-sheet');
+  const sheetClose = root.querySelector('[data-phone-sheet-close]');
+  const snackbar = root.querySelector('[data-phone-snackbar]');
+  const snackbarText = root.querySelector('[data-phone-snackbar-text]');
+  const statusEl = root.querySelector('[data-phone-status]');
+  const detailHeading = root.querySelector('[data-phone-detail-heading]');
+  const detailCopy = root.querySelector('[data-phone-detail-copy]');
+  const backHint = root.querySelector('[data-phone-back-hint]');
+  const metaPlatform = root.querySelector('[data-phone-meta-platform]');
+  const metaInsets = root.querySelector('[data-phone-meta-insets]');
+  const metaStack = root.querySelector('[data-phone-meta-stack]');
+  const taskFilters = all(root, '[data-phone-task-filter]');
+  const taskRows = all(root, '[data-phone-task]');
+
+  let platform = 'ios';
+  let layout = 'portrait';
+  let ime = false;
+  let activeTab = 'overview';
+  let detailId = null;
+  let taskFilter = 'all';
+  let opener = null;
+  let snackbarTimer = null;
+
+  const details = {
+    physics: {
+      title: '滚动物理与拖拽阈值',
+      copy: '指针位移超过 8 dp 阈值后捕获纵向滚动，并取消行项目按压高亮；高速离手触发惯性衰减，触底由平台策略处理。'
+    },
+    insets: {
+      title: '安全区与边缘延伸',
+      copy: 'canvas 与模态遮罩延伸至系统栏下方，顶栏、底栏与软键盘避让区读取统一的系统插槽高度，避免写死色块填补。'
+    }
+  };
+  const tabTitles = { overview: '工作区概览', tasks: '任务队列', settings: '设备与偏好' };
+
+  const sync = (animate = false) => {
+    device.dataset.platform = platform;
+    device.dataset.layout = layout;
+    device.dataset.ime = String(ime);
+    platformBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.phonePlatform === platform)));
+    layoutBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.phoneLayout === layout)));
+    imeBtn.setAttribute('aria-pressed', String(ime));
+
+    const topInset = platform === 'ios' ? (layout === 'portrait' ? 44 : 0) : 24;
+    const bottomInset = platform === 'ios' ? 34 : 16;
+    const imeInset = ime ? 260 : 0;
+    notch.textContent = platform === 'ios' ? `SAFE TOP ${topInset}` : `ANDROID ${topInset}`;
+    bottomLabel.textContent = platform === 'ios' ? `SAFE BOTTOM ${bottomInset}` : `GESTURE BAR ${bottomInset}`;
+
+    tabs.forEach((tab) => {
+      const current = tab.dataset.phoneTab === activeTab;
+      if (current) tab.setAttribute('aria-current', 'page');
+      else tab.removeAttribute('aria-current');
+    });
+
+    const showingDetail = Boolean(detailId);
+    backBtn.hidden = !showingDetail;
+    titleEl.textContent = showingDetail ? details[detailId].title : tabTitles[activeTab];
+    views.forEach((view) => {
+      view.hidden = showingDetail ? view.dataset.phoneView !== 'detail' : view.dataset.phoneView !== activeTab;
+    });
+    if (showingDetail) {
+      detailHeading.textContent = details[detailId].title;
+      detailCopy.textContent = details[detailId].copy;
+      backHint.textContent = platform === 'ios'
+        ? '当前返回模式：iOS 左缘轻扫返回 + 居中标题'
+        : '当前返回模式：Android 预测返回栈 + 左对齐标题';
+      if (animate) settle(root.querySelector('[data-phone-view="detail"]'));
+    } else if (animate) {
+      settle(root.querySelector(`[data-phone-view="${activeTab}"]`));
+    }
+
+    taskFilters.forEach((btn) => btn.setAttribute('aria-pressed', String(btn.dataset.phoneTaskFilter === taskFilter)));
+    taskRows.forEach((row) => {
+      row.hidden = taskFilter === 'pending' && row.dataset.phoneTask !== 'pending';
+    });
+
+    const platformText = platform === 'ios' ? 'iOS · Bouncing' : 'Android · Clamping';
+    const layoutText = layout === 'portrait' ? '竖屏 · 底部导航栏' : '横屏 · 左侧导航轨';
+    metaPlatform.textContent = platformText;
+    metaInsets.textContent = `top ${topInset} · btm ${bottomInset} · ime ${imeInset}`;
+    metaStack.textContent = showingDetail ? `[${activeTab}, detail:${detailId}]` : `[${activeTab}]`;
+    statusEl.textContent = `当前姿态：${platform === 'ios' ? 'iOS' : 'Android'} ${layoutText}${ime ? '（软键盘已展开）' : ''}`;
+  };
+
+  const hideSnackbar = () => {
+    clearTimeout(snackbarTimer);
+    snackbar.hidden = true;
+    snackbarText.textContent = '';
+  };
+  const showSnackbar = (message) => {
+    clearTimeout(snackbarTimer);
+    snackbarText.textContent = message;
+    snackbar.hidden = false;
+    settle(snackbar);
+    snackbarTimer = setTimeout(hideSnackbar, 3200);
+  };
+
+  const closeSheet = (restore = false) => {
+    if (sheetBackdrop.hidden) return;
+    sheetBackdrop.hidden = true;
+    shellBody.inert = false;
+    if (restore && opener?.isConnected) opener.focus();
+    opener = null;
+  };
+  const openSheet = (trigger) => {
+    opener = trigger || document.activeElement;
+    sheetBackdrop.hidden = false;
+    shellBody.inert = true;
+    playMotion(sheet, [{ transform: 'translateY(12px)' }, { transform: 'translateY(0)' }], 'enter');
+    sheetClose.focus();
+  };
+
+  platformBtns.forEach((btn) => btn.addEventListener('click', () => {
+    platform = btn.dataset.phonePlatform;
+    sync(false);
+  }, opts));
+  layoutBtns.forEach((btn) => btn.addEventListener('click', () => {
+    layout = btn.dataset.phoneLayout;
+    sync(true);
+  }, opts));
+  imeBtn.addEventListener('click', () => {
+    ime = !ime;
+    sync(false);
+  }, opts);
+
+  tabs.forEach((tab) => tab.addEventListener('click', () => {
+    activeTab = tab.dataset.phoneTab;
+    detailId = null;
+    sync(true);
+  }, opts));
+
+  all(root, '[data-phone-push]').forEach((btn) => btn.addEventListener('click', () => {
+    detailId = btn.dataset.phonePush;
+    sync(true);
+    backBtn.focus();
+  }, opts));
+
+  const popRoute = () => {
+    if (!detailId) return;
+    detailId = null;
+    sync(true);
+    root.querySelector(`[data-phone-tab="${activeTab}"]`)?.focus();
+  };
+  backBtn.addEventListener('click', popRoute, opts);
+  popBtn.addEventListener('click', popRoute, opts);
+
+  taskFilters.forEach((btn) => btn.addEventListener('click', () => {
+    taskFilter = btn.dataset.phoneTaskFilter;
+    sync(false);
+  }, opts));
+  taskRows.forEach((row) => row.addEventListener('click', () => {
+    showSnackbar('已更新任务状态（不抢占底部导航与焦点）。');
+  }, opts));
+
+  root.querySelector('[data-phone-setting-bar]')?.addEventListener('change', (event) => {
+    showSnackbar(event.currentTarget.checked ? '状态栏图标对比度已设为自动跟随主题。' : '已切换为手动状态栏外观。');
+  }, opts);
+
+  all(root, '[data-phone-open-sheet]').forEach((btn) => btn.addEventListener('click', () => openSheet(btn), opts));
+  sheetClose.addEventListener('click', () => closeSheet(true), opts);
+  sheetBackdrop.addEventListener('click', (event) => {
+    if (event.target === sheetBackdrop) closeSheet(true);
+  }, opts);
+  sheet.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      closeSheet(true);
+    }
+  }, opts);
+  all(root, '[data-phone-sheet-action]').forEach((btn) => btn.addEventListener('click', () => {
+    const action = btn.dataset.phoneSheetAction;
+    closeSheet(false);
+    if (action === 'detail') {
+      activeTab = 'overview';
+      detailId = 'insets';
+      sync(true);
+      backBtn.focus();
+    } else {
+      showSnackbar('Snackbar 已定位在底栏与安全区之上。');
+      root.querySelector('[data-phone-open-sheet]')?.focus();
+    }
+  }, opts));
+  root.querySelector('[data-phone-snackbar-close]')?.addEventListener('click', hideSnackbar, opts);
+
+  sync(false);
+  return () => {
+    clearTimeout(snackbarTimer);
+    shellBody.inert = false;
+    abort.abort();
+    disposeMotion(root);
+  };
+}

@@ -130,8 +130,39 @@ test('chart switches modes, inspects slots with arrows and recovers from hidden 
   await expect(page.locator('[data-chart-series="fps"]')).toHaveAttribute('aria-pressed','true');
 });
 
+test('phone switches posture, adapts navigation, manages route stack and restores bottom sheet focus',async({page})=>{
+  await visit(page,'phone');
+  await page.locator('[data-phone-platform="android"]').click();
+  await expect(page.locator('[data-phone-device]')).toHaveAttribute('data-platform','android');
+  await expect(page.locator('[data-phone-meta-platform]')).toContainText('Android');
+  await page.locator('[data-phone-layout="landscape"]').click();
+  await expect(page.locator('[data-phone-device]')).toHaveAttribute('data-layout','landscape');
+  await page.locator('[data-phone-ime]').click();
+  await expect(page.locator('[data-phone-device]')).toHaveAttribute('data-ime','true');
+  await expect(page.locator('[data-phone-meta-insets]')).toContainText('ime 260');
+  await page.locator('[data-phone-push="physics"]').click();
+  await expect(page.locator('[data-phone-back]')).toBeVisible();
+  await expect(page.locator('[data-phone-meta-stack]')).toHaveText('[overview, detail:physics]');
+  await page.locator('[data-phone-back]').click();
+  await expect(page.locator('[data-phone-back]')).toBeHidden();
+  await page.locator('[data-phone-tab="tasks"]').click();
+  await page.locator('[data-phone-task-filter="pending"]').click();
+  await page.locator('[data-phone-tab="overview"]').click();
+  await page.locator('[data-phone-tab="tasks"]').click();
+  await expect(page.locator('[data-phone-task-filter="pending"]')).toHaveAttribute('aria-pressed','true');
+  const opener=page.locator('[data-phone-open-sheet]').first();
+  await opener.click();
+  await expect(page.locator('[data-phone-sheet]')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('[data-phone-sheet]')).toBeHidden();
+  await expect(opener).toBeFocused();
+  await opener.click();
+  await page.locator('[data-phone-sheet-action="notify"]').click();
+  await expect(page.locator('[data-phone-snackbar]')).toBeVisible();
+});
+
 for(const theme of ['dark','light']) {
-  for(const id of ['menu','tabs','table','tree','splitter','input','button','feedback','chart']) {
+  for(const id of ['menu','tabs','table','tree','splitter','input','button','feedback','chart','phone']) {
     test(`axe and narrow reflow: ${id} / ${theme}`,async({page})=>{
       await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
       await page.setViewportSize({width:320,height:800});await visit(page,id);

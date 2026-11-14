@@ -26,9 +26,9 @@ Use **English / 中文** in the header. The initial language follows the browser
 | Area | Working reference |
 | --- | --- |
 | Overview | XU identity, workspace preview and light/dark themes |
-| Standards | 13 documents in both languages, search, outline, reading and Markdown downloads |
+| Standards | 14 documents in both languages, search, outline, reading and Markdown downloads |
 | Foundations | Theme values, CSS variable copying, contrast, type and spacing |
-| Component lab | Nine contracts: buttons, input, feedback, menus, tabs, tables, trees, split panels and charts |
+| Component lab | Ten contracts: buttons, input, feedback, menus, tabs, tables, trees, split panels, charts and phone shells |
 | Icons | 60 SVGs, bilingual search, categories, inspector, four sizes, copying and downloads |
 | Motion and feedback | XU stamp receipts, continuous tabs, disclosure and reduced motion |
 | Patterns | Local settings, project search and status filters, sorting, details, in-place creation, new-row focus and empty states |
@@ -44,6 +44,7 @@ Hash routes also work under a subdirectory such as `/xu-ui-design/`, without ser
 | [Typography](standards/03-typography.md) | [Navigation](standards/08-navigation.md) | [Delivery and governance](standards/12-delivery.md) |
 | [Layout and spacing](standards/04-layout.md) | [Feedback and overlays](standards/09-feedback.md) | |
 | [Icons](standards/05-icons.md) | [Drawing and data visualization](standards/13-drawing.md) | |
+| | [Phone and adaptive mobile](standards/14-phone.md) | |
 
 Every standard and component contract has an English `.md` and a Simplified Chinese `.zh-CN.md` source. Online downloads follow the selected language. The resource archive includes both.
 
