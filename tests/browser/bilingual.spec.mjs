@@ -57,7 +57,7 @@ test('both language inventories and download editions are complete',async({page,
   for (const locale of ['en','zh-CN']) {
     const response=await request.get(`/assets/data.${locale}.json`);
     const data=await response.json();
-    expect(data.docs).toHaveLength(14);expect(data.components).toHaveLength(10);expect(data.icons).toHaveLength(60);
+    expect(data.docs).toHaveLength(14);expect(data.components).toHaveLength(16);expect(data.icons).toHaveLength(60);
     for (const item of [...data.docs,...data.components]) {
       await page.goto(`/?lang=${locale}#/${data.docs.includes(item)?'standards':'components'}/${item.id}`);
       await expect(page.getByRole('heading',{level:1})).toHaveText(item.title);
@@ -119,7 +119,7 @@ test('English clipboard failure and confirmation are translated',async({page})=>
 });
 
 for (const theme of ['dark','light']) {
-  for (const route of ['overview','standards','foundations','icons','motion','patterns','components','components/button','components/input','components/feedback','components/menu','components/tabs','components/table','components/tree','components/splitter','components/chart','components/phone']) {
+  for (const route of ['overview','standards','foundations','icons','motion','patterns','components','components/button','components/input','components/switch','components/radio','components/slider','components/feedback','components/progress','components/badge','components/dialog','components/menu','components/tabs','components/table','components/tree','components/splitter','components/chart','components/phone']) {
     test(`English narrow reflow and axe: ${route} / ${theme}`,async({page})=>{
       await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
       await page.setViewportSize({width:320,height:900});

@@ -63,6 +63,7 @@ XUUI 通过[色彩与主题](02-color.zh-CN.md)保持跨端视觉一致，同时
 
 ## 原生映射与验收
 
-- 生成文件 `xu/xuui_tokens/mod.xu` 已提供双主题语义色与移动端基础度量函数（`canvas`、`surface`、`brand`、`brand_soft`、`control_border`、`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`、`phone_input_height`、`phone_refresh_threshold`），使 `#ui/phone` 与原生画布渲染可直接对齐 Web 标准。
+- 移动端交互控件组（`Segmented` 分段选择、`Switch` 开关行、`Check`/`Radio` 选项行、带 `24 dp` 滑块圆钮 `phone_slider_thumb` 的 `Slider`、`6 dp` 高度 `phone_progress_height` 的 `Progress` 进度条、语义 `Badge`、`Divider` 分隔线、`EmptyState` 空状态恢复，以及采用 `16 dp` 圆角 `phone_dialog_radius` 与 `overlay(dark)` 遮罩的确认 `Dialog`）遵循统一的宣纸／曜石／朱砂语义色、`>= 48 dp` 列表行触控目标，以及「`输入法 -> 确认弹窗 -> 底部抽屉 -> 二级详情页`」的逐级返回顺序。
+- 生成文件 `xu/xuui_tokens/mod.xu` 已提供双主题语义色与移动端基础度量函数（`canvas`、`surface`、`brand`、`brand_soft`、`control_border`、`overlay`、`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`、`phone_input_height`、`phone_refresh_threshold`、`phone_switch_width`、`phone_switch_height`、`phone_slider_thumb`、`phone_progress_height`、`phone_dialog_radius`），使 `#ui/phone` 与原生画布渲染可直接对齐 Web 标准。
 - **能力边界声明**：本设计库展厅中的浏览器示例用于验证竖屏／横屏自适应切换、安全区边界、软键盘避让示意、多行折行、校验失败保留输入与剪贴板降级、显式刷新触发、路由进退、底部抽屉焦点恢复与 Snackbar 位置；真实触控 slop、速度惯性、下拉刷新顶部弹性阻尼、原生触觉马达、系统剪贴板（`UIPasteboard` / `ClipboardManager`）、输入法窗口回调（`UITextInput` / `InputConnection`）、透明系统栏与原生返回手势由宿主运行时（`#ui/phone`、iOS `UIKit`/`WKWebView`、Android `WebView`/原生组件）负责实现与验收。
 - **验收要点**：`320 px` 至横屏宽视口下零整页横向溢出；亮暗双主题前景／背景与遮罩对比度通过校验；实机真机上的 VoiceOver 与 TalkBack 读屏播报仍为独立人工验收门槛，不被网页自动化扫描替代。

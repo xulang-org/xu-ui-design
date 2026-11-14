@@ -198,8 +198,144 @@ test('phone draft copy fallback selects text without claiming success',async({pa
   await expect(page.locator('[data-phone-snackbar]')).toContainText('复制未完成');
 });
 
+test('phone extended widgets cover progress, empty state, dialog, radio and slider',async({page})=>{
+  await visit(page,'phone');
+  await expect(page.locator('[data-phone-progress]')).toHaveAttribute('value','72');
+  await page.locator('[data-phone-refresh]').click();
+  await expect(page.locator('[data-phone-progress]')).toHaveAttribute('value','86');
+
+  await page.locator('[data-phone-tab="tasks"]').click();
+  await page.locator('[data-phone-task-filter="archived"]').click();
+  await expect(page.locator('[data-phone-empty]')).toBeVisible();
+  await page.locator('[data-phone-task-reset]').click();
+  await expect(page.locator('[data-phone-empty]')).toBeHidden();
+
+  const openDlg=page.locator('[data-phone-open-dialog]');
+  await openDlg.click();
+  await expect(page.locator('[data-phone-dialog]')).toBeVisible();
+  await expect(page.locator('[data-phone-dialog-cancel]')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('[data-phone-dialog]')).toBeHidden();
+  await expect(openDlg).toBeFocused();
+
+  await openDlg.click();
+  await page.locator('[data-phone-dialog-confirm]').click();
+  await expect(page.locator('[data-phone-dialog]')).toBeHidden();
+  await expect(page.locator('[data-phone-snackbar]')).toContainText('已归档已完成任务');
+  await expect(page.locator('[data-phone-task="done"]')).toBeHidden();
+
+  await page.locator('[data-phone-tab="settings"]').click();
+  await page.locator('[data-phone-radio][value="manual"]').check();
+  await expect(page.locator('[data-phone-snackbar]')).toContainText('仅手动同步');
+  const phoneSlider=page.locator('[data-phone-slider]');
+  await phoneSlider.fill('80');
+  await phoneSlider.dispatchEvent('input');
+  await expect(page.locator('[data-phone-slider-output]')).toHaveText('80%');
+});
+
+test('switch toggles, updates live status and enforces disabled state',async({page})=>{
+  await visit(page,'switch');
+  const sync=page.locator('[data-switch-sync]');
+  const haptics=page.locator('[data-switch-haptics]');
+  const status=page.locator('[data-switch-status]');
+  await expect(sync).toBeChecked();
+  await expect(haptics).not.toBeChecked();
+  await haptics.focus();
+  await page.keyboard.press('Space');
+  await expect(haptics).toBeChecked();
+  await expect(status).toContainText('触觉反馈：已开启');
+  await sync.click();
+  await expect(sync).not.toBeChecked();
+  await expect(status).toContainText('自动同步：已关闭');
+  await expect(page.locator('#contract-demo input[disabled]')).toBeDisabled();
+});
+
+test('radio supports click and arrow-key navigation skipping disabled',async({page})=>{
+  await visit(page,'radio');
+  const first=page.locator('[data-radio-input][value="realtime"]');
+  const status=page.locator('[data-radio-status]');
+  await expect(first).toBeChecked();
+  await first.focus();
+  await page.keyboard.press('ArrowDown');
+  await expect(page.locator('[data-radio-input][value="battery"]')).toBeChecked();
+  await expect(status).toContainText('省电批处理 (battery)');
+  await page.keyboard.press('ArrowDown');
+  await expect(page.locator('[data-radio-input][value="manual"]')).toBeChecked();
+  await expect(status).toContainText('仅手动触发 (manual)');
+});
+
+test('slider adjusts via step buttons and keyboard arrows',async({page})=>{
+  await visit(page,'slider');
+  const input=page.locator('[data-slider-input]');
+  const output=page.locator('[data-slider-output]');
+  await expect(input).toHaveValue('60');
+  await page.locator('[data-slider-step="10"]').click();
+  await expect(output).toHaveText('70%');
+  await input.focus();
+  await page.keyboard.press('ArrowLeft');
+  await expect(output).toHaveText('65%');
+  await page.keyboard.press('End');
+  await expect(output).toHaveText('100%');
+});
+
+test('progress updates phases between in-progress, complete, error and reset',async({page})=>{
+  await visit(page,'progress');
+  const bar=page.locator('[data-progress-bar]');
+  const status=page.locator('[data-progress-status]');
+  await expect(bar).toHaveAttribute('value','65');
+  await page.locator('[data-progress-action="advance"]').click();
+  await expect(bar).toHaveAttribute('value','85');
+  await page.locator('[data-progress-action="complete"]').click();
+  await expect(bar).toHaveAttribute('value','100');
+  await expect(status).toContainText('100%');
+  await page.locator('[data-progress-action="error"]').click();
+  await expect(bar).toHaveClass(/danger/);
+  await page.locator('[data-progress-action="reset"]').click();
+  await expect(bar).toHaveAttribute('value','0');
+});
+
+test('badge counts increment, cap at 99+ and clear dot/pill safely',async({page})=>{
+  await visit(page,'badge');
+  const countPill=page.locator('[data-badge-count]');
+  const dot=page.locator('[data-badge-dot]');
+  const host=page.locator('[data-badge-host-count]');
+  await expect(countPill).toHaveText('3');
+  await page.locator('[data-badge-op="inc"]').click();
+  await expect(countPill).toHaveText('4');
+  await page.locator('[data-badge-op="overflow"]').click();
+  await expect(countPill).toHaveText('99+');
+  await expect(host).toHaveAttribute('aria-label',/99\+/);
+  await page.locator('[data-badge-op="clear"]').click();
+  await expect(countPill).toBeHidden();
+  await expect(dot).toBeHidden();
+  await expect(host).toHaveAttribute('aria-label',/暂无未读/);
+});
+
+test('dialog isolates modal interaction, confirms and restores focus on escape',async({page})=>{
+  await visit(page,'dialog');
+  const pubBtn=page.locator('[data-dialog-open="publish"]');
+  const revBtn=page.locator('[data-dialog-open="revoke"]');
+  const modal=page.locator('[data-dialog-modal]');
+  const status=page.locator('[data-dialog-status]');
+  await pubBtn.click();
+  await expect(modal).toBeVisible();
+  await expect(page.locator('[data-dialog-cancel]')).toBeFocused();
+  await page.locator('[data-dialog-confirm]').click();
+  await expect(modal).toBeHidden();
+  await expect(pubBtn).toBeFocused();
+  await expect(status).toContainText('发布工作区版本');
+
+  await revBtn.click();
+  await expect(modal).toBeVisible();
+  await expect(page.locator('[data-dialog-confirm]')).toHaveClass(/danger/);
+  await page.keyboard.press('Escape');
+  await expect(modal).toBeHidden();
+  await expect(revBtn).toBeFocused();
+  await expect(status).toContainText('已取消操作');
+});
+
 for(const theme of ['dark','light']) {
-  for(const id of ['menu','tabs','table','tree','splitter','input','button','feedback','chart','phone']) {
+  for(const id of ['menu','tabs','table','tree','splitter','input','button','switch','radio','slider','feedback','progress','badge','dialog','chart','phone']) {
     test(`axe and narrow reflow: ${id} / ${theme}`,async({page})=>{
       await page.addInitScript(value=>localStorage.setItem('xu-ui-theme',value),theme);
       await page.setViewportSize({width:320,height:800});await visit(page,id);

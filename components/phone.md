@@ -6,9 +6,9 @@ Adaptive mobile scaffold, navigation stack and modal bottom sheet for portrait a
 
 - Top bar: back trigger (shown when a detail route is pushed), centered or start-aligned title (by platform posture), and concise trailing action (`>= 44 px`).
 - Safe-area top and bottom tracks: explicit inset regions representing system bars and home indicator clearance, toggled cleanly without overlapping controls.
-- Content viewport: tab-scoped feed/settings/tasks preserving active tab state, plus pushed detail sub-route and optional single thumb primary action.
+- Content viewport: tab-scoped feed/tasks/settings views with mobile primitives (`Segmented` filter, `Progress` bar, `Badge`, `Divider`, `EmptyState`, `Switch` row, `Check` / `Radio` option rows, `Slider` row, and multiline `TextField`) preserving active tab state, pushed detail sub-route, and optional single thumb action.
 - Adaptive navigation: bottom navigation bar (`3–5` destinations) in compact portrait; left navigation rail (`>= 600 px` or landscape posture) switching smoothly without losing active route state.
-- Modal bottom sheet and snackbar slot: surface sheet with grabber (`36 × 4 px`), header, `>= 48 px` action rows, backdrop scrim and non-overlapping snackbar clearance above the bottom bar.
+- Modal bottom sheet, confirm `Dialog`, and snackbar slot: surface sheet with grabber (`36 × 4 px`), header, `>= 48 px` action rows, confirm alert dialog over `--xu-overlay`, backdrop scrim, and non-overlapping snackbar clearance above the bottom bar.
 
 ## State matrix
 
