@@ -159,6 +159,27 @@ test('phone switches posture, adapts navigation, manages route stack and restore
   await opener.click();
   await page.locator('[data-phone-sheet-action="notify"]').click();
   await expect(page.locator('[data-phone-snackbar]')).toBeVisible();
+  await page.locator('[data-phone-tab="settings"]').click();
+  await page.locator('[data-phone-ime]').click();
+  await expect(page.locator('[data-phone-device]')).toHaveAttribute('data-ime','false');
+  const note=page.locator('[data-phone-note-input]');
+  await note.focus();
+  await expect(page.locator('[data-phone-device]')).toHaveAttribute('data-ime','true');
+  await note.fill('x');
+  await expect(page.locator('[data-phone-note-clear]')).toBeVisible();
+  await page.locator('[data-phone-note-save]').click();
+  await expect(note).toHaveAttribute('aria-invalid','true');
+  await expect(note).toHaveValue('x');
+  await expect(page.locator('[data-phone-note-error]')).toBeVisible();
+  await page.locator('[data-phone-note-clear]').click();
+  await expect(note).toHaveValue('');
+  await expect(note).toBeFocused();
+  await note.fill('Phone IME ready');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('[data-phone-device]')).toHaveAttribute('data-ime','false');
+  await expect(note).toHaveValue('Phone IME ready');
+  await page.locator('[data-phone-note-save]').click();
+  await expect(page.locator('[data-phone-snackbar]')).toBeVisible();
 });
 
 for(const theme of ['dark','light']) {

@@ -18,25 +18,28 @@
 | 横屏／宽屏外壳 | 自动转换为左侧导航轨与分栏阅读空间，移除重复的底部导航栏 |
 | 二级详情推入态 | 显示显式返回入口与系统返回动作，返回后恢复原页签与局部状态 |
 | 底部抽屉展开态 | 显示背景遮罩、抓手条与关闭按钮，焦点迁入抽屉内直到显式关闭 |
-| 软键盘 / IME 激活态 | 视口底部抬升 `view_insets.bottom`，保证底部主动作与抽屉按钮不被遮挡 |
+| 软键盘 / IME 激活态 | 拉起输入法会话并将视口／抽屉底部抬升 `view_insets.bottom`，保证光标、preedit 下划线、`>= 44 px` 清空按钮及主动作可见 |
+| 输入校验错误态 | 以 `--xu-danger` 标识边框与底色并显示内联错误信息，同时原地保留用户已输入文本 |
 | Snackbar 提示态 | 悬浮于底栏与安全底部上方，不遮挡导航按钮且不抢占当前键盘焦点 |
 
 ## 键盘行为
 
 - 底部导航栏／导航轨项支持焦点切换与点击／回车激活，并通过 `aria-current="page"` 或选中状态表达当前位置。
 - 推入详情页后顶部返回按钮可聚焦、可触发，按下后弹出当前详情路由并将焦点恢复到合适位置。
+- 返回与 `Escape` 退回优先级：活跃 IME / 软键盘优先收起（保留草稿文本），其次关闭打开中的底部抽屉（焦点退回原触发按钮），最后退出推入的详情路由。
 - 打开底部抽屉后焦点立即进入抽屉关闭或首项控件；按 `Escape`、点击遮罩或关闭按钮均可收起抽屉并将焦点退回原触发按钮。
 
 ## Token 与尺寸
 
-使用 `--xu-canvas`、`--xu-surface`、`--xu-elevated`、`--xu-border`、`--xu-text`、`--xu-muted`、`--xu-brand`、`--xu-brand-soft`、`--xu-on-brand`、`--xu-focus`、`--xu-overlay` 与 `--xu-target-min`。可触控控件至少满足 `44 px`（移动端列表行与 Android 建议不低于 `48 px`），相邻按钮间距不少于 `8 px`（`--xu-space-2`）。须同时响应亮暗双主题切换与系统 `prefers-reduced-motion: reduce`。
+使用 `--xu-canvas`、`--xu-surface`、`--xu-elevated`、`--xu-border`、`--xu-text`、`--xu-muted`、`--xu-brand`、`--xu-brand-soft`、`--xu-on-brand`、`--xu-danger`、`--xu-danger-soft`、`--xu-focus`、`--xu-overlay` 与 `--xu-target-min`。可触控控件至少满足 `44 px`（移动端列表行、输入框与 Android 建议不低于 `48 px`），相邻按钮间距不少于 `8 px`（`--xu-space-2`）。须同时响应亮暗双主题切换与系统 `prefers-reduced-motion: reduce`。
 
 ## 原生映射
 
-对应 `#ui/phone` 外壳脚手架、路由栈、底部抽屉原语与 `xu/xuui_tokens/mod.xu`（`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`）。真实 iOS / Android 安全区插槽、惯性抛掷衰减、透明系统栏与预测返回手势须在对应原生宿主适配层实现并真机验证。
+对应 `#ui/phone` 外壳脚手架、`TextField`、路由栈、底部抽屉原语与 `xu/xuui_tokens/mod.xu`（`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`、`phone_input_height`）。真实 iOS / Android 安全区插槽、`UITextInput` / `InputConnection` 软键盘会话、惯性抛掷衰减、透明系统栏与预测返回手势须在对应原生宿主适配层实现并真机验证。
 
 ## 验收
 
 - 切换 iOS 与 Android 平台姿态时，顶栏对齐、返回手势说明与物理属性读数同步更新；切换竖屏与横屏时，底部导航栏与左侧导航轨互斥显示，且在 `320 px` 极窄浏览器宽度下零横向溢出。
+- 在设置页签聚焦草稿输入框可激活 IME 上抬，`>= 44 px` 清空按钮可清空草稿，非法提交保留用户输入并显示内联错误，按 `Escape` 可收起 IME 而不丢失已键入内容。
 - 打开底部抽屉后可经关闭按钮、点击遮罩或 `Escape` 退出，并将焦点准确恢复到触发按钮。
 - 亮暗双主题与中英双语页面在 `320 px` 视口及 WCAG 2.2 AA 自动化检测中均保持零违规。

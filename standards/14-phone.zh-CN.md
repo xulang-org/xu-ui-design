@@ -56,10 +56,11 @@ XUUI 通过[色彩与主题](02-color.zh-CN.md)保持跨端视觉一致，同时
   - 支持关闭按钮、点击遮罩、下滑超过抽屉高度 `30%` 或达到向下速度阈值关闭，以及键盘 `Escape` ／系统返回键关闭；关闭后将焦点恢复至原触发器。
   - 破坏性确认沿用[反馈与浮层](09-feedback.zh-CN.md)约定，默认聚焦取消且不嵌套第二层确认模态框。
 - **软键盘 / IME 避让**：当 `view_insets.bottom > 0` 时，应缩减可滚动表单区域高度并将当前聚焦输入框及主提交按钮滚入可视区；打开中的底部抽屉须同步上抬，不被输入法遮挡底端操作栏。
+- **移动端文本输入与 IME 组合输入**：输入框高度不少于 `48 px`（`phone_input_height`），提供清晰标签、不少于 `44 px` 的清空按钮（`phone_touch_target`）、明确的聚焦描边（`focus`）以及报错后原地保留用户输入的持久内联校验（`danger`）。输入法预编辑串（preedit / composing）须与已提交文本以独立下划线明确区分，并在点击完成或场外失焦时干净落字或收尾；系统返回按「软键盘 / 活跃输入 -> 底部抽屉 -> 二级详情页 -> 应用退后台」顺序逐级收起。
 - **Snackbar 与阻断错误**：瞬时非关键回执悬浮在 `bottom_bar_height + safe_bottom + 12 px` 之上，至多提供一个“撤销／重试”动作，不得覆盖底部导航或抢占焦点；表单校验失败与保存错误须原地持久保留，见[反馈与浮层](09-feedback.zh-CN.md)。
 
 ## 原生映射与验收
 
-- 生成文件 `xu/xuui_tokens/mod.xu` 已提供双主题语义色与移动端基础度量函数（`canvas`、`surface`、`brand`、`brand_soft`、`control_border`、`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`），使 `#ui/phone` 与原生画布渲染可直接对齐 Web 标准。
-- **能力边界声明**：本设计库展厅中的浏览器示例用于验证竖屏／横屏自适应切换、安全区边界、软键盘避让示意、路由进退、底部抽屉焦点恢复与 Snackbar 位置；真实触控 slop、速度惯性、输入法窗口回调、透明系统栏与原生返回手势由宿主运行时（`#ui/phone`、iOS `UIKit`/`WKWebView`、Android `WebView`/原生组件）负责实现与验收。
+- 生成文件 `xu/xuui_tokens/mod.xu` 已提供双主题语义色与移动端基础度量函数（`canvas`、`surface`、`brand`、`brand_soft`、`control_border`、`phone_touch_target`、`phone_bar_height`、`phone_nav_height`、`phone_rail_width`、`phone_gutter`、`phone_sheet_radius`、`phone_input_height`），使 `#ui/phone` 与原生画布渲染可直接对齐 Web 标准。
+- **能力边界声明**：本设计库展厅中的浏览器示例用于验证竖屏／横屏自适应切换、安全区边界、软键盘避让示意、校验失败保留输入内容、路由进退、底部抽屉焦点恢复与 Snackbar 位置；真实触控 slop、速度惯性、输入法窗口回调（`UITextInput` / `InputConnection`）、透明系统栏与原生返回手势由宿主运行时（`#ui/phone`、iOS `UIKit`/`WKWebView`、Android `WebView`/原生组件）负责实现与验收。
 - **验收要点**：`320 px` 至横屏宽视口下零整页横向溢出；亮暗双主题前景／背景与遮罩对比度通过校验；实机真机上的 VoiceOver 与 TalkBack 读屏播报仍为独立人工验收门槛，不被网页自动化扫描替代。

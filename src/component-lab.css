@@ -115,6 +115,15 @@
 .phone-row small { font: 400 var(--xu-text-xs)/1.4 var(--xu-font-sans); color: var(--xu-muted); overflow-wrap: anywhere; }
 .phone-thumb-cta { justify-self: stretch; min-height: var(--xu-control-lg); }
 .phone-setting-row { display: flex; justify-content: space-between; align-items: center; gap: var(--xu-space-3); min-height: var(--xu-control-lg); padding: var(--xu-space-3); border: 1px solid var(--xu-border); border-radius: var(--xu-radius-md); background: var(--xu-surface); font: 500 var(--xu-text-sm)/1.4 var(--xu-font-sans); }
+.phone-note-form { display: grid; gap: var(--xu-space-3); min-width: 0; }
+.phone-input-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: var(--xu-space-2); min-width: 0; }
+.phone-input-row .xu-input { min-width: 0; min-height: var(--xu-control-lg); }
+.phone-clear-btn { display: inline-flex; align-items: center; justify-content: center; width: var(--xu-target-min); height: var(--xu-control-lg); padding: 0; border: 1px solid var(--xu-control-border); border-radius: var(--xu-radius-md); background: var(--xu-surface); color: var(--xu-text); cursor: pointer; }
+.phone-clear-btn[hidden] { display: none; }
+.phone-clear-btn:hover { border-color: var(--xu-brand); background: var(--xu-elevated); }
+.phone-clear-btn:focus-visible { outline: 2px solid var(--xu-focus); outline-offset: 3px; }
+.phone-note-actions { display: flex; justify-content: flex-end; gap: var(--xu-space-2); }
+.phone-note-actions .xu-button { min-height: var(--xu-control-lg); }
 .phone-detail-heading, .phone-sheet-heading { margin: 0; font: 600 var(--xu-text-md)/1.35 var(--xu-font-sans); color: var(--xu-text); }
 .phone-back-hint { margin: 0; padding: var(--xu-space-2) var(--xu-space-3); border: 1px solid var(--xu-border); border-radius: var(--xu-radius-sm); background: var(--xu-surface); font: 400 var(--xu-text-xs)/1.45 var(--xu-font-mono); color: var(--xu-muted); }
 .phone-snackbar { margin: 0 var(--xu-space-3) var(--xu-space-3); padding: var(--xu-space-2) var(--xu-space-3); border: 1px solid var(--xu-control-border); border-radius: var(--xu-radius-md); background: var(--xu-elevated); color: var(--xu-text); display: flex; justify-content: space-between; align-items: center; gap: var(--xu-space-2); font-size: var(--xu-text-xs); }
