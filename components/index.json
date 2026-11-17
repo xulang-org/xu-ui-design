@@ -318,5 +318,45 @@
       "en": "#ui/phone adaptive shell, route stack, bottom sheet, confirm_dialog, toggle_switch, progress_bar, badge, slider, radio/check rows, divider, empty_state and xuui_tokens mobile metrics; device safe areas, IME insets and fling physics require host validation.",
       "zh-CN": "#ui/phone 自适应外壳、路由栈、底部抽屉、confirm_dialog、toggle_switch、progress_bar、badge、slider、单选/多选行、divider、empty_state 与 xuui_tokens 移动度量；真机安全区、软键盘与滚动物理须在宿主侧验证。"
     }
+  },
+  {
+    "id": "richtext",
+    "title": {
+      "en": "Rich text editor",
+      "zh-CN": "富文本编辑器"
+    },
+    "group": {
+      "en": "Input",
+      "zh-CN": "输入"
+    },
+    "summary": {
+      "en": "Formatted text, toolbar, inline runs, blocks and assistive tech",
+      "zh-CN": "格式化文本、工具栏、行内片段、块级段落与辅助技术"
+    },
+    "standard": "07-forms",
+    "native": {
+      "en": "widgets.RichEditor / widgets.rich_editor; native IME proxy and DirectWrite / CoreText multi-run text layouts with platform UIA / NSAccessibility text pattern bridging.",
+      "zh-CN": "widgets.RichEditor / widgets.rich_editor；原生 IME 代理与 DirectWrite / CoreText 多运行片段文本排版，并桥接平台 UIA / NSAccessibility 文本模式接口。"
+    }
+  },
+  {
+    "id": "workspace",
+    "title": {
+      "en": "Drag-and-drop workspace",
+      "zh-CN": "拖拽工作区"
+    },
+    "group": {
+      "en": "Layout",
+      "zh-CN": "布局"
+    },
+    "summary": {
+      "en": "Dockable panels, drag drop zones, tab reordering and keyboard moves",
+      "zh-CN": "可停靠面板、拖拽放置区、标签重排与键盘移动替代"
+    },
+    "standard": "04-layout",
+    "native": {
+      "en": "widgets.Workspace / widgets.SplitView; native multi-canvas host docking, OLE / Cocoa drag-and-drop protocol bridging with platform drop targets.",
+      "zh-CN": "widgets.Workspace / widgets.SplitView；原生多画布宿主停靠容器，桥接 Win32 OLE / macOS Cocoa 系统级拖放协议与目标注册。"
+    }
   }
 ]

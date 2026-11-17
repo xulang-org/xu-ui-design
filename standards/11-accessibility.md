@@ -53,6 +53,16 @@ showStatus(status, 'Copied. Paste into your project.');
 
 The receipt uses the sprite at ./assets/icons.svg; keep that resource path aligned when adopting it. The interactive motion showcase demonstrates copy, continuous tabs and progressive disclosure. Native products follow their host animation APIs; this Web controller does not add native SDK animation capabilities.
 
+## Assistive technology bridge
+
+Custom-drawn canvas controls must be exposed to operating system assistive technologies through a native accessibility tree bridge:
+
+- Platform accessibility providers map internal widget snapshots to native semantic nodes (Windows UI Automation, macOS NSAccessibility, Linux AT-SPI2).
+- Nodes declare semantic roles (button, text field, table, cell, tree item, slider, tab list) rather than drawing primitives.
+- States (focused, selected, checked, expanded, disabled, read-only) are updated reactively on each interaction frame.
+- Focus changes and live region updates (status, alerts, toasts) emit platform notifications to prompt screen-reader speech.
+- Platform compilation pass alone does not certify screen-reader support; speech output, navigation order and Braille displays must be verified with active assistive technology on each target OS.
+
 ## Acceptance steps
 
 - Use Tab, Shift+Tab, Enter, Space and Escape to go through navigation, forms, dialogs and icon details.

@@ -28,7 +28,7 @@ Use **English / 中文** in the header. The initial language follows the browser
 | Overview | XU identity, workspace preview and light/dark themes |
 | Standards | 14 documents in both languages, search, outline, reading and Markdown downloads |
 | Foundations | Theme values, CSS variable copying, contrast, type and spacing |
-| Component lab | Ten contracts: buttons, input, feedback, menus, tabs, tables, trees, split panels, charts and phone shells |
+| Component lab | Eighteen contracts: buttons, input, feedback, menus, tabs, tables, trees, split panels, charts, switch, radio, slider, progress, badge, dialog, phone, rich text and workspaces |
 | Icons | 60 SVGs, bilingual search, categories, inspector, four sizes, copying and downloads |
 | Motion and feedback | XU stamp receipts, continuous tabs, disclosure and reduced motion |
 | Patterns | Local settings, project search and status filters, sorting, details, in-place creation, new-row focus and empty states |

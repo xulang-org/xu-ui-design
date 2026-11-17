@@ -29,7 +29,7 @@ export function markdown(source, locale = 'zh-CN') {
       });
     return escape(encoded).replace(/\u0000(\d+)\u0000/g, (_, n) => protectedText[Number(n)]);
   };
-  const lines = source.split('\n');
+  const lines = source.replace(/\r/g, '').split('\n');
   const result = [];
   const cells = (line) => line.trim().replace(/^\||\|$/g, '').split('|').map((v) => v.trim());
   for (let i = 0; i < lines.length;) {
