@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
 import { readdir, access } from 'node:fs/promises';
 import { spawnSync, spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -74,7 +75,7 @@ for (const doc of docs) {
   assert.equal(outlines[0],outlines[1],`${doc.id}: keep section deep links aligned across languages`);
 }
 for (const file of ['src/app.js','src/boot.js','scripts/localize.mjs','scripts/build.mjs','scripts/serve.mjs','scripts/lib.mjs','scripts/package.mjs','scripts/check-hygiene.mjs','scripts/native-tokens.mjs','src/interactions.js','src/component-pages.js','src/motion.js','src/motion-page.js']) {
-  const result = spawnSync(process.execPath, ['--check', new URL(file, root).pathname], { encoding:'utf8' });
+  const result = spawnSync(process.execPath, ['--check', fileURLToPath(new URL(file, root))], { encoding:'utf8' });
   assert.equal(result.status, 0, result.stderr);
 }
 await import('./build.mjs');
@@ -103,10 +104,10 @@ for (const locale of ['en','zh-CN']) {
   const localized = await json(`dist/assets/data.${locale}.json`);
   assert.equal(localized.locale,locale);
   assert.equal(localized.docs.length,13);
-  assert.equal(localized.components.length,9);
+  assert.equal(localized.components.length,contracts.length);
   for (const file of ['app.js','component-pages.js','interactions.js','motion.js','motion-page.js']) {
     const path=`dist/assets/${locale}/${file}`;
-    const syntax=spawnSync(process.execPath,['--check',new URL(path,root).pathname],{encoding:'utf8'});
+    const syntax=spawnSync(process.execPath,['--check',fileURLToPath(new URL(path,root))],{encoding:'utf8'});
     assert.equal(syntax.status,0,syntax.stderr);
     if (locale === 'en') assert.ok(!/[\u3400-\u9fff]/u.test(await read(path)),`Untranslated client: ${path}`);
   }
@@ -133,12 +134,12 @@ assert.equal(await read('dist/downloads/SHA256SUMS'),`${createHash('sha256').upd
 const manifest=await json('dist/downloads/manifest.json');
 assert.equal(manifest.version,pkg.version);
 for(const path of ['tokens/tokens.json','icons/play.svg','xu/xuui_tokens/mod.xu','LICENSE','MIGRATIONS.md','MIGRATIONS.zh-CN.md','standards/05-icons.md','standards/05-icons.zh-CN.md','standards/13-drawing.md','standards/13-drawing.zh-CN.md','components/button.md','components/button.zh-CN.md','components/chart.md','components/chart.zh-CN.md','assets/en/interactions.js']) {
-  const result=spawnSync('tar',['-xOf',archive.pathname,path]);
+  const result=spawnSync('tar',['-xOf',fileURLToPath(archive),path]);
   assert.equal(result.status,0,result.stderr?.toString());
   assert.equal(createHash('sha256').update(result.stdout).digest('hex'),manifest.files[path],`Archive content mismatch: ${path}`);
 }
 // Exercise the actual preview server, including the root path and escape guard.
-const child = spawn(process.execPath, [new URL('scripts/serve.mjs', root).pathname], { cwd: root, env: { ...process.env, PORT:'0' }, stdio:['ignore','pipe','pipe'] });
+const child = spawn(process.execPath, [fileURLToPath(new URL('scripts/serve.mjs', root))], { cwd: root, env: { ...process.env, PORT:'0' }, stdio:['ignore','pipe','pipe'] });
 try {
   const url = await new Promise((resolve, reject) => {
     let output = '';
