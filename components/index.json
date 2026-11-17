@@ -180,6 +180,146 @@
     }
   },
   {
+    "id": "switch",
+    "title": {
+      "en": "Switch",
+      "zh-CN": "开关 Switch"
+    },
+    "group": {
+      "en": "Forms",
+      "zh-CN": "表单"
+    },
+    "summary": {
+      "en": "Immediate binary toggle switch with instant state readout and disabled preconditions",
+      "zh-CN": "即时生效的二元开关控件，提供实时状态读数与禁用前提说明"
+    },
+    "standard": "07-forms",
+    "native": {
+      "en": "widgets.Switch / widgets.switch_control and #ui/phone phone.toggle_switch; animated transitions honor reduced-motion settings.",
+      "zh-CN": "对应 widgets.Switch / widgets.switch_control 与 #ui/phone 的 phone.toggle_switch；滑块过渡遵循系统减动效偏好。"
+    }
+  },
+  {
+    "id": "radio",
+    "title": {
+      "en": "Radio group & options",
+      "zh-CN": "单选组与选项行"
+    },
+    "group": {
+      "en": "Forms",
+      "zh-CN": "表单"
+    },
+    "summary": {
+      "en": "Mutually exclusive single-choice option rows with fieldset semantics and keyboard arrows",
+      "zh-CN": "互斥单选列表行与分组语义，支持键盘方向键切换与选中高亮"
+    },
+    "standard": "07-forms",
+    "native": {
+      "en": "widgets.Radio / widgets.RadioGroup and #ui/phone radio_row / check_row / segmented; host group semantics live in widgets/phone modules.",
+      "zh-CN": "对应 widgets.Radio / widgets.RadioGroup 与 #ui/phone 的 radio_row / check_row / segmented；原生焦点切换由控件运行时承担。"
+    }
+  },
+  {
+    "id": "slider",
+    "title": {
+      "en": "Slider",
+      "zh-CN": "滑块 Slider"
+    },
+    "group": {
+      "en": "Forms",
+      "zh-CN": "表单"
+    },
+    "summary": {
+      "en": "Bounded continuous or stepped numeric adjustment with thumb target and tabular readout",
+      "zh-CN": "有界连续或步进数值调节器，配触控尺寸滑块与等宽实时读数"
+    },
+    "standard": "07-forms",
+    "native": {
+      "en": "widgets.Slider / widgets.RangeSlider and #ui/phone phone.slider; thumb geometry follows phone_slider_thumb.",
+      "zh-CN": "对应 widgets.Slider / widgets.RangeSlider 与 #ui/phone 的 phone.slider；移动端滑块尺寸对齐 phone_slider_thumb。"
+    }
+  },
+  {
+    "id": "progress",
+    "title": {
+      "en": "Progress & busy",
+      "zh-CN": "进度条与加载指示"
+    },
+    "group": {
+      "en": "Feedback",
+      "zh-CN": "反馈"
+    },
+    "summary": {
+      "en": "Determinate progress bar with semantic phases and reduced-motion spinner fallback",
+      "zh-CN": "确定任务进度条与多语义状态阶段，支持忙碌指示与减动效静态回退"
+    },
+    "standard": "09-feedback",
+    "native": {
+      "en": "widgets.Progress / widgets.ProgressBar and #ui/phone phone.progress_bar; track height aligns with phone_progress_height.",
+      "zh-CN": "对应 widgets.Progress / widgets.ProgressBar 与 #ui/phone 的 phone.progress_bar；移动端轨道高度对齐 phone_progress_height。"
+    }
+  },
+  {
+    "id": "badge",
+    "title": {
+      "en": "Badge & dot",
+      "zh-CN": "徽标与状态点"
+    },
+    "group": {
+      "en": "Feedback",
+      "zh-CN": "反馈"
+    },
+    "summary": {
+      "en": "Semantic inline pills, 99+ counters and labeled unread status dots",
+      "zh-CN": "语义状态胶囊、99+ 计数角标与带无障碍说明的未读状态点"
+    },
+    "standard": "09-feedback",
+    "native": {
+      "en": "widgets.Badge / badge_attachment (status, count, dot) and #ui/phone phone.badge; count badge uses brand + on_brand.",
+      "zh-CN": "对应 widgets.Badge / badge_attachment（状态、计数、圆点）与 #ui/phone 的 phone.badge；计数底色取自 brand / on_brand。"
+    }
+  },
+  {
+    "id": "dialog",
+    "title": {
+      "en": "Modal dialog",
+      "zh-CN": "模态对话框 Dialog"
+    },
+    "group": {
+      "en": "Feedback",
+      "zh-CN": "反馈"
+    },
+    "summary": {
+      "en": "Blocking confirmation overlay with focus containment, Escape dismissal and focus restore",
+      "zh-CN": "带遮罩的阻断式确认弹窗，锁定内部焦点并在退出时恢复原焦点"
+    },
+    "standard": "09-feedback",
+    "native": {
+      "en": "widgets.Modal / modal_dialog with xuui_tokens.overlay(dark) and #ui/phone confirm_dialog (phone_dialog_radius).",
+      "zh-CN": "对应 widgets.Modal / modal_dialog（使用 xuui_tokens.overlay(dark)）与 #ui/phone 的 confirm_dialog（phone_dialog_radius）。"
+    }
+  },
+  {
+    "id": "phone",
+    "title": {
+      "en": "Phone shell & widgets",
+      "zh-CN": "Phone 外壳与移动端控件"
+    },
+    "group": {
+      "en": "Mobile",
+      "zh-CN": "移动端"
+    },
+    "summary": {
+      "en": "Adaptive bottom bar vs rail, safe areas, pushed routes, bottom sheet, confirm dialog and mobile form/list primitives",
+      "zh-CN": "自适应底栏与导航轨、安全区避让、路由栈、底部抽屉、确认弹窗及全套移动端表单与列表原语"
+    },
+    "standard": "14-phone",
+    "native": {
+      "en": "#ui/phone adaptive shell, route stack, bottom sheet, confirm_dialog, toggle_switch, progress_bar, badge, slider, radio/check rows, divider, empty_state and xuui_tokens mobile metrics; device safe areas, IME insets and fling physics require host validation.",
+      "zh-CN": "#ui/phone 自适应外壳、路由栈、底部抽屉、confirm_dialog、toggle_switch、progress_bar、badge、slider、单选/多选行、divider、empty_state 与 xuui_tokens 移动度量；真机安全区、软键盘与滚动物理须在宿主侧验证。"
+    }
+  },
+  {
     "id": "richtext",
     "title": {
       "en": "Rich text editor",

@@ -56,7 +56,7 @@ for (const item of icons) {
   }
 }
 assert.ok(icons.length >= 48, 'Preserve the original icon inventory.');
-assert.equal(docs.length, 13, 'Update documented standard inventory when changing the index.');
+assert.equal(docs.length, 14, 'Update documented standard inventory when changing the index.');
 assert.equal(new Set(docs.map((doc) => doc.id)).size, docs.length);
 for (const doc of docs) {
   assert.match(doc.id, /^\d{2}-[a-z-]+$/);
@@ -103,7 +103,7 @@ assert.equal(new Set(contracts.map(item=>item.id)).size,contracts.length);
 for (const locale of ['en','zh-CN']) {
   const localized = await json(`dist/assets/data.${locale}.json`);
   assert.equal(localized.locale,locale);
-  assert.equal(localized.docs.length,13);
+  assert.equal(localized.docs.length,14);
   assert.equal(localized.components.length,contracts.length);
   for (const file of ['app.js','component-pages.js','interactions.js','motion.js','motion-page.js']) {
     const path=`dist/assets/${locale}/${file}`;
@@ -133,7 +133,7 @@ const archiveBytes=await readFile(archive);
 assert.equal(await read('dist/downloads/SHA256SUMS'),`${createHash('sha256').update(archiveBytes).digest('hex')}  ${archiveName}\n`);
 const manifest=await json('dist/downloads/manifest.json');
 assert.equal(manifest.version,pkg.version);
-for(const path of ['tokens/tokens.json','icons/play.svg','xu/xuui_tokens/mod.xu','LICENSE','MIGRATIONS.md','MIGRATIONS.zh-CN.md','standards/05-icons.md','standards/05-icons.zh-CN.md','standards/13-drawing.md','standards/13-drawing.zh-CN.md','components/button.md','components/button.zh-CN.md','components/chart.md','components/chart.zh-CN.md','assets/en/interactions.js']) {
+for(const path of ['tokens/tokens.json','icons/play.svg','xu/xuui_tokens/mod.xu','LICENSE','MIGRATIONS.md','MIGRATIONS.zh-CN.md','standards/05-icons.md','standards/05-icons.zh-CN.md','standards/13-drawing.md','standards/13-drawing.zh-CN.md','standards/14-phone.md','standards/14-phone.zh-CN.md','components/button.md','components/button.zh-CN.md','components/switch.md','components/switch.zh-CN.md','components/radio.md','components/radio.zh-CN.md','components/slider.md','components/slider.zh-CN.md','components/progress.md','components/progress.zh-CN.md','components/badge.md','components/badge.zh-CN.md','components/dialog.md','components/dialog.zh-CN.md','components/chart.md','components/chart.zh-CN.md','components/phone.md','components/phone.zh-CN.md','assets/en/interactions.js']) {
   const result=spawnSync('tar',['-xOf',fileURLToPath(archive),path]);
   assert.equal(result.status,0,result.stderr?.toString());
   assert.equal(createHash('sha256').update(result.stdout).digest('hex'),manifest.files[path],`Archive content mismatch: ${path}`);

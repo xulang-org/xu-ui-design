@@ -87,6 +87,30 @@
 .xu-progress::-webkit-progress-bar { background: var(--xu-elevated); }
 .xu-progress::-webkit-progress-value { background: var(--xu-brand); }
 .xu-progress::-moz-progress-bar { background: var(--xu-brand); }
+.xu-progress.success::-webkit-progress-value { background: var(--xu-success); }
+.xu-progress.success::-moz-progress-bar { background: var(--xu-success); }
+.xu-progress.warning::-webkit-progress-value { background: var(--xu-warning); }
+.xu-progress.warning::-moz-progress-bar { background: var(--xu-warning); }
+.xu-progress.danger::-webkit-progress-value { background: var(--xu-danger); }
+.xu-progress.danger::-moz-progress-bar { background: var(--xu-danger); }
+.xu-badge.brand { background: var(--xu-brand-soft); color: var(--xu-brand); }
+.xu-badge[data-variant="count"] { min-width: 22px; height: 22px; justify-content: center; padding: 0 7px; border-radius: var(--xu-radius-full); background: var(--xu-brand); color: var(--xu-on-brand); font-variant-numeric: tabular-nums; font-weight: 600; }
+.xu-badge[data-variant="dot"] { width: 8px; height: 8px; padding: 0; border-radius: 50%; background: var(--xu-brand); flex-shrink: 0; }
+.xu-badge[hidden] { display: none; }
+.xu-divider { border: 0; border-top: 1px solid var(--xu-border); margin: 0; width: 100%; }
+.xu-radio-group { display: grid; gap: var(--xu-space-2); margin: 0; padding: 0; border: 0; min-width: 0; }
+.xu-radio-group > legend { margin-bottom: var(--xu-space-2); font-size: var(--xu-text-sm); font-weight: 600; color: var(--xu-text); }
+.xu-radio { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: start; gap: var(--xu-space-3); min-height: var(--xu-target-min); padding: var(--xu-space-3) var(--xu-space-4); border: 1px solid var(--xu-border); border-radius: var(--xu-radius-md); background: var(--xu-surface); cursor: pointer; }
+.xu-radio:hover:not(:has(input:disabled)) { border-color: var(--xu-control-border); background: var(--xu-elevated); }
+.xu-radio:has(input:checked) { border-color: var(--xu-brand); box-shadow: inset 0 0 0 1px var(--xu-brand); background: var(--xu-surface); }
+.xu-radio:has(input:disabled) { opacity: .55; cursor: not-allowed; }
+.xu-radio input[type="radio"] { accent-color: var(--xu-brand); width: 18px; height: 18px; margin: 2px 0 0; }
+.xu-radio > span { display: grid; gap: 2px; min-width: 0; }
+.xu-radio strong { font: 500 var(--xu-text-sm)/1.4 var(--xu-font-sans); color: var(--xu-text); overflow-wrap: anywhere; }
+.xu-radio small { font: 400 var(--xu-text-xs)/1.45 var(--xu-font-sans); overflow-wrap: anywhere; }
+.xu-range { width: 100%; min-width: 0; min-height: var(--xu-target-min); accent-color: var(--xu-brand); background: transparent; cursor: pointer; margin: 0; }
+.xu-range:disabled { opacity: .5; cursor: not-allowed; }
+.xu-range:focus-visible { outline: 2px solid var(--xu-focus); outline-offset: 2px; border-radius: var(--xu-radius-sm); }
 .xu-spinner { animation: xu-spin 1s linear infinite; }
 @keyframes xu-spin { to { transform: rotate(360deg); } }
 @media (pointer: coarse), (max-width: 719px) {
